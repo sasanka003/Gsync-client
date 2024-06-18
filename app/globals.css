@@ -1,0 +1,162 @@
+@tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  @layer base {
+    :root {
+      --background: 0 0% 95%;
+      --foreground: 0 0% 0%;
+
+      --card: 0 0% 100%;
+      --card-foreground: 152 67% 16%;
+
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+
+      --primary: 152 67% 16%;
+      --primary-foreground: 0 0% 95%;
+
+      --secondary: 0 0% 95%;
+      --secondary-foreground: 152 68% 20%;
+
+      --muted: 218 11% 65%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+
+      --accent: 137 61% 90%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+
+      --destructive: 0 72% 51%;
+      --destructive-foreground: 210 40% 98%;
+
+      --border: 152 67% 16%;
+      --input: 152 68% 20%;
+      --ring: 222.2 84% 4.9%;
+
+      --radius: 0.5rem;
+
+      /* Font Sizes */
+
+      --fs-h1: 3rem;
+      --lh-h1: 3rem;
+      --fw-h1: 800;
+
+      --fs-h2: 1.875rem;
+      --lh-h2: 2.25rem;
+      --fw-h2: 600;
+
+      --fs-h3: 1.5rem;
+      --lh-h3: 2rem;
+      --fw-h3: 600;
+
+      --fs-h4: 1.25rem;
+      --lh-h4: 1.75rem;
+      --fw-h4: 600;
+
+      --fs-large: 1.125rem;
+      --lh-large: 1.75rem;
+      --fw-large: 600;
+
+      --fs-lead: 1.25rem;
+      --lh-lead: 1.75rem;
+      --fw-h2: 400;
+
+      --fs-p: 1rem;
+      --lh-p: 1.75rem;
+      --fw-p: 400;
+
+      --fs-p-ui: 1rem;
+      --lh-p-ui: 1.5rem;
+      --fw-p-ui: 400;
+
+      --fs-p-ui-medium: 1rem;
+      --lh-p-ui-medium: 1.5rem;
+      --fw-p-ui-medium: 500;
+
+      --fs-list: 1rem;
+      --lh-list: 1.5rem;
+      --fw-list: 400;
+
+      --fs-body: 0.875rem;
+      --lh-body: 1.5rem;
+      --fw-body: 400;
+
+      --fs-body-medium: 0.875rem;
+      --lh-body-medium: 1.5rem;
+      --fw-body-medium: 500;
+
+      --fs-subtle: 0.875rem;
+      --lh-subtle: 1.25rem;
+      --fw-subtle: 400;
+
+      --fs-subtle-medium: 0.875rem;
+      --lh-subtle-medium: 1.25rem;
+      --fw-subtle-medium: 500;
+
+      --fs-suble-semibold: 0.875rem;
+      --lh-suble-semibold: 1.25rem;
+      --fw-suble-semibold: 600;
+
+      --fs-small: 0.875rem;
+      --lh-small: 0.875rem;
+      --fw-small: 500;
+
+      --fs-detail: 0.75rem;
+      --lh-detail: 1.25rem;
+      --fw-detail: 500;
+
+      --fs-blockquote: 1rem;
+      --lh-blockquote: 1.5rem;
+      --fw-blockquote: 400;
+
+      --fs-table-head: 1rem;
+      --lh-table-head: 1.5rem;
+      --fw-table-head: 700;
+
+      --fs-table-item: 1rem;
+      --lh-table-item: 1.5rem;
+      --fw-table-item: 400;
+
+
+
+
+    }
+
+    .dark {
+      --background: 0 0% 7%;
+      --foreground: 149 65% 39%;
+
+      --card: 0 0% 10%;
+      --card-foreground: 149 65% 39%;
+
+      --popover: 222.2 84% 4.9%;
+      --popover-foreground: 210 40% 98%;
+
+      --primary: 152 67% 16%;
+      --primary-foreground: 0 0% 95%;
+
+      --secondary: 0 0% 10%;
+      --secondary-foreground: 149 65% 39%;
+
+      --muted: 218 11% 65%;
+      --muted-foreground: 215 20.2% 65.1%;
+
+      --accent: 137 61% 90%;
+      --accent-foreground: 210 40% 98%;
+
+      --destructive: 0 84% 60%;
+      --destructive-foreground: 210 40% 98%;
+
+      --border: 149 65% 39%;
+      --input: 151 73% 24%;
+      --ring: 212.7 26.8% 83.9%;
+    }
+  }
+
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
+  }
