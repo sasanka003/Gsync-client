@@ -1,6 +1,7 @@
 import Plans from "@/components/layouts/Plans";
 import AuthButton from "../components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
+import PlantCard from "@/components/PlantCard";
 
 export default async function Index() {
   const canInitSupabaseClient = () => {
@@ -24,6 +25,12 @@ export default async function Index() {
         </div>
       </nav>
       <Plans />
+      {/* <PlantCard 
+     title="Total Plant Beds" 
+     content="08" 
+     altText="Alternate Text"
+   /> */}
     </div>
+   
   );
 }
