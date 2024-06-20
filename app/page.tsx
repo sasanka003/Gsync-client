@@ -1,3 +1,4 @@
+import Plans from "@/components/layouts/Plans";
 import AuthButton from "../components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
 
@@ -22,6 +23,7 @@ export default async function Index() {
           {isSupabaseConnected && <AuthButton />}
         </div>
       </nav>
+      <Plans />
     </div>
   );
 }
