@@ -1,8 +1,6 @@
 import React from "react";
 import PlanCard from "../PlanCard";
 import { CrownIcon, RocketIcon, TagIcon } from "../Icons";
-import PlantCard from "../PlantCard";
-
 const Plans: React.FC = () => {
   const plans = [
     {
@@ -49,7 +47,6 @@ const Plans: React.FC = () => {
           />
         ))}
       </div>
-      <PlantCard />
     </div>
   );
 };
