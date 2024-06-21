@@ -4,7 +4,7 @@ type Props = {
   // Define your component props here
 };
 
-const MyComponent: React.FC<Props> = (props) => {
+const Home: React.FC<Props> = (props) => {
   // Component logic goes here
 
   return (
@@ -13,4 +13,4 @@ const MyComponent: React.FC<Props> = (props) => {
   );
 };
 
-export default MyComponent;
+export default Home;
