@@ -1,6 +1,8 @@
 import Plans from "@/components/layouts/Plans";
 import AuthButton from "../components/AuthButton";
 import { createClient } from "@/utils/supabase/server";
+import Hero from "@/components/layouts/Hero";
+
 
 export default async function Index() {
   const canInitSupabaseClient = () => {
@@ -24,6 +26,7 @@ export default async function Index() {
         </div>
       </nav>
       <Plans />
+      <Hero/>
     </div>
   );
 }
