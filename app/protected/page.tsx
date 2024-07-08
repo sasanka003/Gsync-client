@@ -1,5 +1,6 @@
 import AuthButton from "@/components/AuthButton";
 import Features from "@/components/layouts/Features";
+import Hero from "@/components/layouts/Hero";
 import Posts from "@/components/layouts/Posts";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -23,6 +24,7 @@ export default async function ProtectedPage() {
             <AuthButton />
           </div>
         </div>
+        <Hero />
         <Posts />
         <Features />
       </div>
