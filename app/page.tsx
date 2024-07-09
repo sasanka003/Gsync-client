@@ -1,3 +1,5 @@
+import About from "@/components/layouts/About";
+import Hero from "@/components/layouts/Hero";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function Index() {
@@ -12,12 +14,8 @@ export default async function Index() {
 
   const isSupabaseConnected = canInitSupabaseClient();
   return (
-    <div className="flex-1 w-full flex flex-col gap-20 items-center">
-      {/* <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-        <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-          {isSupabaseConnected && <AuthButton />}
-        </div>
-      </nav> */}
+    <div className="flex-1 w-full flex flex-col gap-8 items-center mt-8">
+      <Hero />
     </div>
   );
 }
