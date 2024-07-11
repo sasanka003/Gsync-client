@@ -1,7 +1,6 @@
 import About from "@/components/layouts/About";
 import Hero from "@/components/layouts/Hero";
 import { createClient } from "@/utils/supabase/server";
-import Contact from "@/components/layouts/Contact";
 
 
 export default async function Index() {
@@ -18,7 +17,6 @@ export default async function Index() {
   return (
     <div className="flex-1 w-full flex flex-col gap-8 items-center mt-8">
       <Hero />
-      <Contact />
     </div>
   );
 }

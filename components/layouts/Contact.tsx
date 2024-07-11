@@ -42,9 +42,9 @@ const ContactForm = () => {
   };
 
   return (
-    <div className="max-w-[270px] md:min-w-[560px] lg:min-w-[960px] mx-auto p-4">
-      <div className="sm:min-w-[235px] md:max-w-[560px] lg:max-w-[560px] mx-auto">
-        <h1 className="text-h2 md:text-h1 lg:text-h1 font-bold text-center mb-1">
+    <div className="max-w-[270px] md:max-w-[560px] lg:max-w-[960px] mx-auto p-4">
+      <div className="max-w-[235px] md:max-w-[560px] lg:max-w-[560px] mx-auto">
+        <h1 className="text-h2 font-bold text-center md:text-h1 lg:text-h1 mb-1">
           Contact
         </h1>
         <p className="text-center text-subtle md:text-p lg:text-p text-[#0E462C] mb-10 md:whitespace-nowrap lg:whitespace-nowrap">
@@ -55,7 +55,7 @@ const ContactForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="md:flex md:space-x-10 lg:flex lg:space-x-20 sm:flex-row">
-            <div className="flex-1 space-y-2 lg:space-y-4 sm:max-w-[262px] md:min-w-[262px] lg:min-w-[440px]">
+            <div className="flex-1 space-y-2 min-w-[262px] md:min-w-[262px] lg:min-w-[440px] lg:space-y-4">
               <FormField
                 control={form.control}
                 name="firstName"
@@ -110,7 +110,7 @@ const ContactForm = () => {
                 )}
               />
             </div>
-            <div className="lg:flex-1 space-y-2 lg:space-y-4 max-w-[262px] md:min-w-[262px] lg:min-w-[440px] mt-2 md:mt-0 lg:mt-0">
+            <div className="lg:flex-1 space-y-2 min-w-[262px] md:min-w-[262px] lg:space-y-4 lg:min-w-[440px] mt-2 md:mt-0 lg:mt-0">
               <FormField
                 control={form.control}
                 name="subject"
@@ -146,7 +146,7 @@ const ContactForm = () => {
                 )}
               />
 
-              <div className="flex lg:justify-start space-x-4 justify-center">
+              <div className="flex lg:justify-start space-x-4 justify-center mt-4">
                 <Button type="submit">Send Message</Button>
                 <Button
                   type="button"
