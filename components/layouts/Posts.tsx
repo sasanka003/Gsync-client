@@ -1,7 +1,7 @@
 import React from "react";
 import PostCard from "../PostCard";
 
-const Plans: React.FC = () => {
+const Posts: React.FC = () => {
   return (
     <div className="p-4 mb-4 w-auto max-w-[700px]">
       <PostCard
@@ -18,4 +18,4 @@ const Plans: React.FC = () => {
   );
 };
 
-export default Plans;
+export default Posts;
