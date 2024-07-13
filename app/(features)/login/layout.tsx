@@ -1,5 +1,4 @@
 import LoginNav from "./components/LoginNav";
-import PlantationForm from "./components/PlantationDetailsForm";
 
 export default function AuthLayout({
   children,
@@ -8,9 +7,8 @@ export default function AuthLayout({
 }) {
   return (
     <div>
-      {/* <LoginNav /> */}
-      <PlantationForm />
-      {/* {children} */}
+      <LoginNav />
+      {children}
     </div>
   );
 }
