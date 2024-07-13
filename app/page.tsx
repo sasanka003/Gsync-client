@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import About from "./(features)/Home/layouts/About";
 import Features from "./(features)/Home/layouts/Features";
 import Plans from "./(features)/Home/layouts/Plans";
+import Contact from "./(features)/Home/layouts/Contact";
 
 export default async function Index() {
   const canInitSupabaseClient = () => {
@@ -21,6 +22,7 @@ export default async function Index() {
       <About />
       <Features />
       <Plans />
+      <Contact />
     </div>
   );
 }
