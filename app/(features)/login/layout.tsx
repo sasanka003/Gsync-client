@@ -1,3 +1,5 @@
+import LoginNav from "./components/LoginNav";
+
 export default function AuthLayout({
   children,
 }: {
@@ -5,7 +7,7 @@ export default function AuthLayout({
 }) {
   return (
     <div>
-      <nav></nav>
+      <LoginNav />
       {children}
     </div>
   );

@@ -44,10 +44,10 @@ const ContactForm = () => {
   return (
     <div className="max-w-[270px] md:max-w-[560px] lg:max-w-[960px] mx-auto p-4">
       <div className="max-w-[235px] md:max-w-[560px] lg:max-w-[560px] mx-auto">
-        <h1 className="text-h2 font-bold text-center md:text-h1 lg:text-h1 mb-1">
+        <p className="text-h2 font-bold text-center md:text-h1 md:text-common mb-1">
           Contact
-        </h1>
-        <p className="text-center text-subtle md:text-p lg:text-p text-[#0E462C] mb-10 md:whitespace-nowrap lg:whitespace-nowrap">
+        </p>
+        <p className="text-center text-subtle md:text-p lg:text-p text-text mb-10 md:whitespace-nowrap lg:whitespace-nowrap">
           We'd love to talk about your plans & to assist you in the best way
           possible.
         </p>
@@ -61,7 +61,9 @@ const ContactForm = () => {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-h4">First Name*</FormLabel>
+                    <FormLabel className="text-h4 text-common">
+                      First Name*
+                    </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -78,7 +80,9 @@ const ContactForm = () => {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-h4">Last Name*</FormLabel>
+                    <FormLabel className="text-h4 text-common">
+                      Last Name*
+                    </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -95,7 +99,7 @@ const ContactForm = () => {
                 name="enterprise"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-h4">
+                    <FormLabel className="text-h4 text-common">
                       Enterprise/Organization*
                     </FormLabel>
                     <FormControl>
@@ -116,7 +120,9 @@ const ContactForm = () => {
                 name="subject"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-h4">Subject*</FormLabel>
+                    <FormLabel className="text-h4 text-common">
+                      Subject*
+                    </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -133,7 +139,9 @@ const ContactForm = () => {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-h4">Message*</FormLabel>
+                    <FormLabel className="text-h4 text-common">
+                      Message*
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
