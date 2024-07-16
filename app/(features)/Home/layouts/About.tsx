@@ -10,8 +10,9 @@ const About: React.FC = () => {
         <Logo />
       </div>
       <p className=" text-detail lg:text-lead text-center">
-        Lorem Ipsum has been the industry's standard dummy text ever since the
-        1500s, when an unknown printer took a galley of type and scrambled
+      Gsync helps you grow plants better with smart technology. 
+      It monitors soil and plant health, suggests the best plants to grow, and connects you with gardening experts.
+      Perfect for both home gardeners and businesses, Gsync makes your plantation more productive and profitable.
       </p>
       <Image
         src="/images/AboutImage.png"
