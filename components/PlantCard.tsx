@@ -17,7 +17,9 @@ const PlantCard: React.FC<PlantBedCardProps> = ({
   return (
     <Card className="p-0 mb-4 py-2 px-4 lg:w-[344px] h-[136px]">
       <div className="w-[312px]">
-        <CardTitle className="md:text-h2 text-foreground h-[36px]">{title}</CardTitle>
+        <CardTitle className="md:text-h2 text-common h-[36px]">
+          {title}
+        </CardTitle>
         <CardContent className="md:text-h2 p-0 h-[36px]">{content}</CardContent>
       </div>
       <div className="flex items-center mt-4 text-muted-foreground">
