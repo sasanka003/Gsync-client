@@ -1,4 +1,5 @@
 import LoginNav from "./components/LoginNav";
+import CreateAccount from "./components/CreateAccount";
 
 export default function AuthLayout({
   children,
@@ -9,6 +10,7 @@ export default function AuthLayout({
     <div>
       <LoginNav />
       {children}
+      <CreateAccount />
     </div>
   );
 }
