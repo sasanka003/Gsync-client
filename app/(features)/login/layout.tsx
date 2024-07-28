@@ -1,4 +1,5 @@
 import LoginNav from "./components/LoginNav";
+import PostCard3 from "../../../components/PostCard3";
 
 export default function AuthLayout({
   children,
@@ -9,6 +10,7 @@ export default function AuthLayout({
     <div>
       <LoginNav />
       {children}
+      <PostCard3 />
     </div>
   );
 }
