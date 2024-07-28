@@ -2,7 +2,13 @@ import React from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
-const CreatePost = () => {
+interface PostCard3Props {
+    name: string;
+    position: string;
+    date: string;
+  }
+
+  const PostCard3: React.FC<PostCard3Props> = ({ name,position,date }) =>{
   return (
     <div className="border border-text rounded-lg p-4 w-[712px] mx-auto">
       <div className="flex items-center mb-4">
@@ -12,11 +18,11 @@ const CreatePost = () => {
           className="w-10 h-10 rounded-full"
         />
         <div className="ml-4">
-          <div className="font-semibold text-large">Waruna Parackkrama</div>
-          <div className="text-detail text-grey">Small-Scale Gardener</div>
+          <div className="font-semibold text-large">{name}</div>
+          <div className="text-detail text-grey">{position}</div>
         </div>
         <div className="ml-auto text-sm text-grey">
-          <span>12.30AM</span> | <span>12th December 2024</span>
+            {date}
         </div>
       </div>
       <textarea
@@ -42,4 +48,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default PostCard3;

@@ -1,5 +1,7 @@
 import LoginNav from "./components/LoginNav";
-import PostCard3 from "../../../components/PostCard3";
+import ActiveUsers from "../../../components/ActiveUsers";
+import Posts from "../../../components/layouts/Posts";
+import TrendingTopics from "../../../components/TrendingTopics";
 
 export default function AuthLayout({
   children,
@@ -10,7 +12,9 @@ export default function AuthLayout({
     <div>
       <LoginNav />
       {children}
-      <PostCard3 />
+      <ActiveUsers />
+      <Posts/>
+      <TrendingTopics />
     </div>
   );
 }
