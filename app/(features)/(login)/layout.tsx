@@ -1,5 +1,3 @@
-import LoginNav from "./components/LoginNav";
-
 export default function AuthLayout({
   children,
 }: {
