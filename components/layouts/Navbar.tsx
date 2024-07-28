@@ -4,6 +4,7 @@ import { ModeToggle } from "../ModeToggle";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import NavMenu from "../NavMenu";
+import Link from "next/link";
 
 const NavBar: React.FC = () => {
   return (
@@ -27,9 +28,11 @@ const NavBar: React.FC = () => {
           <Button className="text-body-medium" variant="outline">
             Sign In
           </Button>
-          <Button className="hidden md:flex text-body-medium text-white">
-            Sign Up
-          </Button>
+          <Link href="/sign-up">
+            <Button className="hidden md:flex text-body-medium text-white">
+              Sign Up
+            </Button>
+          </Link>
         </div>
         <div
           className="items-center justify-between hidden w-full md:flex md:w-auto md:order-2"

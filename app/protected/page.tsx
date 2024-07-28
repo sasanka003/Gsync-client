@@ -3,7 +3,7 @@ import Hero from "@/app/(features)/home/layouts/Hero";
 import Posts from "@/components/layouts/Posts";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import AuthButton from "../(features)/login/components/AuthButton";
+import AuthButton from "../(features)/(login)/components/AuthButton";
 
 export default async function ProtectedPage() {
   const supabase = createClient();
