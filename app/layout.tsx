@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import NavBar from "@/components/layouts/Navbar";
+import Header from "@/components/layouts/Header";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -32,10 +32,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavBar />
-          <main className="min-h-screen flex flex-col items-center">
-            {children}
-          </main>
+          <Header />
+          <main className="">{children}</main>
         </ThemeProvider>
       </body>
     </html>
