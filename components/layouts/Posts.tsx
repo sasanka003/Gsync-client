@@ -1,5 +1,7 @@
 import React from "react";
 import PostCard from "../PostCard";
+import PostCard3 from "../PostCard3";
+
 import PostCard2 from "../PostCard2";
 const Posts: React.FC = () => {
   return (
@@ -13,6 +15,11 @@ const Posts: React.FC = () => {
         title="White dust on tomato leaves"
         content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s..."
         author="Waruna Parackkrama"
+      />
+      <PostCard3
+        name="Waruna Parackkrama"
+        position="Small-Scale Gardener"
+        date="12th December 2024, 12:30AM"
       />
       <div>
         <PostCard2
