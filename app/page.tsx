@@ -21,11 +21,21 @@ export default async function Index() {
     <>
       <Navbar />
       <div className="flex-1 w-full flex flex-col gap-16 items-center mt-8 mb-10">
-        <Hero />
-        <About />
-        <Features />
-        <Plans />
-        <Contact />
+        <div id="home">
+          <Hero />
+        </div>
+        <div id="about">
+          <About />
+        </div>
+        <div id="features">
+          <Features />
+        </div>
+        <div id="plans">
+          <Plans />
+        </div>
+        <div id="contact">
+          <Contact />
+        </div>
       </div>
     </>
   );

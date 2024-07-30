@@ -1,8 +1,16 @@
 import React from "react";
 import PlanCard from "../components/PlanCard";
 import { CrownIcon, RocketIcon, TagIcon } from "../../../../components/Icons";
-import { Button } from "@/components/ui/button";
+
 const Plans: React.FC = () => {
+  const allFeatures = [
+    "Expert support & Connectivity with Gsync community",
+    "Smart & Real-time guidance with AI Assistant*",
+    "Connect plantations with IoT devices",
+    "Data driven crop productivity enhancement",
+    "Complete analytical & automation control",
+  ];
+
   const plans = [
     {
       icon: <TagIcon />,
@@ -18,8 +26,10 @@ const Plans: React.FC = () => {
       title: "Gardener",
       price: "$9.99",
       features: [
-        "Subscription plan feature goes here",
-        "Subscription plan feature goes here",
+        "Expert support & Connectivity with Gsync community",
+        "Smart & Real-time guidance with AI Assistant*",
+        "Connect plantations with IoT devices",
+        "Data driven crop productivity enhancement",
       ],
     },
     {
@@ -27,11 +37,15 @@ const Plans: React.FC = () => {
       title: "Enterprise",
       price: "$19.99",
       features: [
-        "Subscription plan feature goes here",
-        "Subscription plan feature goes here",
+        "Expert support & Connectivity with Gsync community",
+        "Smart & Real-time guidance with AI Assistant*",
+        "Connect plantations with IoT devices",
+        "Data driven crop productivity enhancement",
+        "Complete analytical & automation control",
       ],
     },
   ];
+
   return (
     <div className="flex flex-col gap-10 items-center">
       <div className="flex flex-col gap-2">
@@ -43,10 +57,12 @@ const Plans: React.FC = () => {
       <div className="flex flex-col lg:flex-row md:flex-wrap justify-center gap-6 items-start">
         {plans.map((plan) => (
           <PlanCard
-            title={plan.title!}
+            key={plan.title}
+            title={plan.title}
             icon={plan.icon}
             price={plan.price}
             features={plan.features}
+            availableFeatures={allFeatures}
           />
         ))}
       </div>

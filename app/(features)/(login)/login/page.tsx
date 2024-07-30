@@ -73,7 +73,7 @@ const CreateAccountForm = () => {
     supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: location.origin + "/auth/callback",
+        redirectTo: location.origin + "/auth/confirm",
       },
     });
   };
@@ -82,10 +82,10 @@ const CreateAccountForm = () => {
     <div className="lg:w-[715px] md:w-[664px] mx-auto p-4">
       <div className="mb-5">
         <h1 className="text-h2 font-bold md:text-h1 md:font-bold text-center text-common">
-          Create an Account
+          Log in
         </h1>
         <div className="text-subtle text-center text-accent-foreground md:text-p">
-          Start today with creating your free account
+          Enter your credentials to login to your account
         </div>
       </div>
 
@@ -149,15 +149,6 @@ const CreateAccountForm = () => {
               </FormItem>
             )}
           />
-
-          <div>
-            <span className="text-common">
-              By creating an account, you agree to our{" "}
-              <a href="#" className="text-text underline">
-                Terms & Conditions & Privacy Policy.
-              </a>
-            </span>
-          </div>
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <Checkbox className="w-4 h-4 bg-fill" />

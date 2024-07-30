@@ -21,13 +21,17 @@ const NavBar: React.FC = () => {
           </SheetContent>
         </Sheet>
         <div className="order-2 md:order-1">
-          <Logo />
+          <Link href="/">
+            <Logo />
+          </Link>
         </div>
         <div className="flex items-center order-3 gap-2">
           <ModeToggle />
-          <Button className="text-body-medium" variant="outline">
-            Sign In
-          </Button>
+          <Link href="/login">
+            <Button className="text-body-medium" variant="outline">
+              Sign In
+            </Button>
+          </Link>
           <Link href="/sign-up">
             <Button className="hidden md:flex text-body-medium text-white">
               Sign Up

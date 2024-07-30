@@ -18,14 +18,22 @@ import { EyeOff, Eye } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { BeatLoader } from "react-spinners";
 
-const schema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Contact number is required"),
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+const schema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+    username: z.string().min(1, "Username is required"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z
+      .string()
+      .min(8, "Confirm Password must be at least 8 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords must match",
+  });
 
 const CreateAccountForm = () => {
   const form = useForm<z.infer<typeof schema>>({
@@ -33,7 +41,6 @@ const CreateAccountForm = () => {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
       username: "",
       password: "",
     },
@@ -56,14 +63,14 @@ const CreateAccountForm = () => {
       options: {
         data: {
           name: values.name,
-          phone: values.phone,
           username: values.username,
         },
-        emailRedirectTo: location.origin + "/auth/callback",
+        emailRedirectTo: location.origin + "/auth/confirm",
       },
     });
     console.log(data);
     if (error) {
+      setIsLoading(false);
       return toast({
         title: "Error",
         description: error.message,
@@ -84,7 +91,7 @@ const CreateAccountForm = () => {
     supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: location.origin + "/auth/callback",
+        redirectTo: location.origin + "/auth/confirm",
       },
     });
   };
@@ -136,27 +143,6 @@ const CreateAccountForm = () => {
                   <Input
                     {...field}
                     placeholder="Enter your email (yourname@example.com)"
-                    className="placeholder:text-p"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <div className="text-subtle-medium md:text-p text-common">
-                    Contact number*{" "}
-                  </div>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="+94 77 123 4567"
                     className="placeholder:text-p"
                   />
                 </FormControl>
@@ -225,6 +211,32 @@ const CreateAccountForm = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <div className="flex items-center justify-between">
+                    <div className="text-subtle-medium md:text-p text-common">
+                      Confirm Password*
+                    </div>
+                  </div>
+                </FormLabel>
+                <FormControl>
+                  <div className="relative flex items-center">
+                    <Input
+                      {...field}
+                      type={showPassword ? "text" : "password"}
+                      placeholder="*********"
+                      className="placeholder:text-p"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div>
             <span className="text-common">
               By creating an account, you agree to our{" "}
@@ -238,7 +250,14 @@ const CreateAccountForm = () => {
               type="submit"
               className="w-full text-body-medium text-fill dark:text-common mt-4"
             >
-              Create Account
+              {loading ? (
+                <span className="flex justify-center items-center gap-2">
+                  <BeatLoader size="5" color="#ffffff" />
+                  <span className="ml-2">Creating Account..</span>
+                </span>
+              ) : (
+                "Create Account"
+              )}
             </Button>
           </div>
         </form>

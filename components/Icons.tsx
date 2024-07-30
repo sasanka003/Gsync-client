@@ -131,7 +131,7 @@ export const CrownIcon = () => {
 };
 
 // Export function for CheckIcon
-export const CheckIcon = () => {
+export const CheckIcon = ({ color }: { color: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ export const CheckIcon = () => {
       height="25"
       viewBox="0 0 24 25"
       fill="none"
-      style={{ color: "var(--common)" }}
+      style={{ color: color }}
     >
       <path
         d="M20 6.26782L9 17.2678L4 12.2678"
