@@ -15,15 +15,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeOff, Eye } from "lucide-react";
+import { Checkbox } from "../../../../components/ui/checkbox";
 import { createClient } from "@/utils/supabase/client";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const schema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Contact number is required"),
-  username: z.string().min(1, "Username is required"),
+  email: z.string().min(1, "Username is required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -31,10 +30,7 @@ const CreateAccountForm = () => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "",
       email: "",
-      phone: "",
-      username: "",
       password: "",
     },
   });
@@ -43,24 +39,18 @@ const CreateAccountForm = () => {
 
   const [loading, setIsLoading] = useState(false);
 
+  const supabase = createClient();
+
   const router = useRouter();
 
-  const supabase = createClient();
+  const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof schema>) {
     setIsLoading(true);
     console.log(values);
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: values.email,
       password: values.password,
-      options: {
-        data: {
-          name: values.name,
-          phone: values.phone,
-          username: values.username,
-        },
-        emailRedirectTo: location.origin + "/auth/callback",
-      },
     });
     console.log(data);
     if (error) {
@@ -72,10 +62,9 @@ const CreateAccountForm = () => {
     }
     setIsLoading(false);
     toast({
-      title: "Account created",
-      description: "Your account has been created successfully",
+      title: "Login Successfully",
     });
-    router.push("sign-up/verify");
+    router.push("/dashboard");
   }
 
   const handleLoginWithOAuth = (provider: "google" | "apple" | "facebook") => {
@@ -99,29 +88,9 @@ const CreateAccountForm = () => {
           Start today with creating your free account
         </div>
       </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <div className="text-subtle-medium md:text-p text-common">
-                    Name*
-                  </div>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter your name (John Doe)"
-                    className="placeholder:text-p"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="email"
@@ -129,13 +98,13 @@ const CreateAccountForm = () => {
               <FormItem>
                 <FormLabel>
                   <div className="text-subtle-medium md:text-p text-common">
-                    Email*{" "}
+                    Email*
                   </div>
                 </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter your email (yourname@example.com)"
+                    placeholder="Enter your email (JohnD)"
                     className="placeholder:text-p"
                   />
                 </FormControl>
@@ -143,48 +112,7 @@ const CreateAccountForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <div className="text-subtle-medium md:text-p text-common">
-                    Contact number*{" "}
-                  </div>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="+94 77 123 4567"
-                    className="placeholder:text-p"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <div className="text-subtle-medium md:text-p text-common">
-                    Username*{" "}
-                  </div>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="Enter your username (JohnD)"
-                    className="placeholder:text-p"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <FormField
             control={form.control}
             name="password"
@@ -193,7 +121,7 @@ const CreateAccountForm = () => {
                 <FormLabel>
                   <div className="flex items-center justify-between">
                     <div className="text-subtle-medium md:text-p text-common">
-                      Create Password*
+                      Password*
                     </div>
                     <button
                       type="button"
@@ -217,14 +145,11 @@ const CreateAccountForm = () => {
                     />
                   </div>
                 </FormControl>
-                <div className="text-body text-muted-foreground mt-1">
-                  Use 8 or more characters with a mix of letters, numbers &
-                  symbols
-                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <div>
             <span className="text-common">
               By creating an account, you agree to our{" "}
@@ -233,21 +158,28 @@ const CreateAccountForm = () => {
               </a>
             </span>
           </div>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              <Checkbox className="w-4 h-4 bg-fill" />
+              <div className=" text-small">Keep me logged in</div>
+            </div>
+            <div className="text-LM underline text-text">Forgot Password?</div>
+          </div>
           <div>
             <Button
               type="submit"
-              className="w-full text-body-medium text-fill dark:text-common mt-4"
+              className="w-full text-body-medium text-fill dark:text-common mt-2"
             >
-              Create Account
+              Log In
             </Button>
           </div>
         </form>
       </Form>
       <div className="mt-8 text-center">
-        <p className="mb-4">Or Continue with</p>
+        <p className="mb-4 text-common">Or Continue with</p>
         <div className="flex justify-center space-x-6 mt-2">
           <button
-            className="flex items-center px-4 py-2 bg-white rounded text-suble-semibold lg:w-[220px] gap-2"
+            className="flex items-center px-4 py-2 bg-fill rounded text-suble-semibold lg:w-[220px] gap-2 text-common"
             onClick={() => handleLoginWithOAuth("google")}
           >
             <img
@@ -259,10 +191,7 @@ const CreateAccountForm = () => {
               Sign in with Google
             </span>
           </button>
-          <button
-            className="flex items-center px-4 py-2 bg-black rounded text-fill text-suble-semibold lg:w-[220px] gap-2"
-            onClick={() => handleLoginWithOAuth("apple")}
-          >
+          <button className="flex items-center px-4 py-2 bg-common rounded\ text-suble-semibold lg:w-[220px] gap-2 text-common">
             <img
               src="/images/AppleIcon.png"
               alt="Apple icon"
@@ -272,10 +201,7 @@ const CreateAccountForm = () => {
               Sign in with Apple
             </span>
           </button>
-          <button
-            className="flex items-center px-4 py-2 bg-[#1877F2] rounded text-suble-semibold lg:w-[220px] gap-2 text-common"
-            onClick={() => handleLoginWithOAuth("facebook")}
-          >
+          <button className="flex items-center px-4 py-2 bg-[#1877F2] rounded text-suble-semibold lg:w-[220px] gap-2 text-common">
             <img
               src="/images/FacebookIcon.png"
               alt="Facebook icon"
@@ -287,10 +213,10 @@ const CreateAccountForm = () => {
           </button>
         </div>
         <p className="mt-6 text-common">
-          Already have an account?{" "}
-          <a href="/login" className="text-accent-foreground underline">
-            Log in
-          </a>
+          New to Gsync??{" "}
+          <Link href="/sign-up" className="text-accent-foreground underline">
+            Create an Account
+          </Link>
         </p>
       </div>
     </div>

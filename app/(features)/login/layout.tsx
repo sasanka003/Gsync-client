@@ -11,7 +11,7 @@ export default function AuthLayout({
     <div>
       <LoginNav />
       {children}
-     <Posts/>
+      <Posts />
     </div>
   );
 }
