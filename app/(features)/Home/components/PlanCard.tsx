@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "../../../../components/ui/card";
 import { CheckIcon } from "../../../../components/Icons";
+import { Button } from "@/components/ui/button";
 
 interface PlanCardProps {
   title?: string;
@@ -29,13 +30,14 @@ const PlanCard: React.FC<PlanCardProps> = ({
         </div>
         <p className="text-h3 font-semibold">{price}</p>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2 p-0">
+      <CardContent className="flex flex-col gap-2 p-0 items-center">
         {features?.map((feature) => (
           <div className="flex gap-2">
             <CheckIcon />
             <p className="text-common">{feature}</p>
           </div>
         ))}
+        <Button className="w-28">Choose Plan</Button>
       </CardContent>
     </Card>
   );
