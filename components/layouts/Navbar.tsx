@@ -5,8 +5,21 @@ import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import NavMenu from "../NavMenu";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
+import { UserNav } from "../dashboard/user-nav";
 
-const NavBar: React.FC = () => {
+export default async function NavBar() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const getFirstLetter = (name: string) => {
+    return name ? name.charAt(0).toUpperCase() : "";
+  };
+
+  const firstLetter = getFirstLetter(user?.user_metadata.name);
+
   return (
     <nav className="w-full z-20 top-0 start-0">
       <div className="flex flex-row items-center justify-between px-8 md:px-16 py-5">
@@ -27,16 +40,26 @@ const NavBar: React.FC = () => {
         </div>
         <div className="flex items-center order-3 gap-2">
           <ModeToggle />
-          <Link href="/login">
-            <Button className="text-body-medium" variant="outline">
-              Sign In
-            </Button>
-          </Link>
-          <Link href="/sign-up">
-            <Button className="hidden md:flex text-body-medium text-white">
-              Sign Up
-            </Button>
-          </Link>
+          {user !== null ? (
+            <UserNav
+              email={user.email}
+              name={user.user_metadata.name}
+              firstLetter={firstLetter}
+            />
+          ) : (
+            <>
+              <Link href="/login">
+                <Button className="text-body-medium" variant="outline">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/sign-up">
+                <Button className="hidden md:flex text-body-medium text-white">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
         <div
           className="items-center justify-between hidden w-full ml-24 md:flex md:w-auto md:order-2"
@@ -47,6 +70,4 @@ const NavBar: React.FC = () => {
       </div>
     </nav>
   );
-};
-
-export default NavBar;
+}

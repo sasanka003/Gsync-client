@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { CollapseMenuButton } from "./collapse-menu-button";
 import { getMenuList } from "@/lib/menu-list";
+import { signout } from "@/app/auth/actions";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -108,7 +109,7 @@ export function Menu({ isOpen }: MenuProps) {
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => {}}
+                    onClick={() => signout}
                     variant="outline"
                     className="w-full justify-center h-10 mt-5"
                   >
