@@ -1,7 +1,7 @@
 import React from "react";
 import { Calendar } from "lucide-react";
 
-const MostActiveUsers = () => {
+const ActiveUsers = () => {
   const users = [
     { name: "Waruna Parackkrama", role: "Small-Scale Gardener" },
     { name: "Waruna Parackkrama", role: "Small-Scale Gardener" },
@@ -40,4 +40,4 @@ const MostActiveUsers = () => {
   );
 };
 
-export default MostActiveUsers;
+export default ActiveUsers;
