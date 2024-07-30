@@ -8,9 +8,12 @@ interface PostCardProps {
   title: string;
   content: string;
   author: string;
+  upvotes: number;
+  downvotes: number;
+  commentsCount: number;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ title, content, author }) => {
+const PostCard: React.FC<PostCardProps> = ({ title, content, author, upvotes, downvotes, commentsCount }) => {
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
       <div className="flex items-center mb-2">
@@ -31,19 +34,19 @@ const PostCard: React.FC<PostCardProps> = ({ title, content, author }) => {
               <span>
                 <ArrowBigUp fill="#0E462C" size={30}/>
               </span>
-              <span className="text-text">999</span>
+              <span className="text-text">{upvotes}</span>
             </div>
             <div className="flex items-center">
               <span>
                 <ArrowBigDown size={30} />
               </span>
-              <span className="text-text">999</span>
+              <span className="text-text">{downvotes}</span>
             </div>
             <div className="flex items-center">
               <span className="mr-2">
                 <MessageSquare style={{ color: "#105535" }} />
               </span>
-              <span className="text-text">999</span>
+              <span className="text-text">{commentsCount}</span>
             </div>
           </div>
         </div>

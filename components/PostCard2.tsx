@@ -7,6 +7,9 @@ interface PostCard2Props {
   title: string;
   content: string;
   author: string;
+  upvotes: number;
+  downvotes: number;
+  commentsCount: number;
   image1Url: string;
   image2Url: string;
 }
@@ -15,6 +18,9 @@ const PostCard2: React.FC<PostCard2Props> = ({
   title,
   content,
   author,
+  upvotes,
+  downvotes,
+  commentsCount,
   image1Url,
   image2Url,
 }) => {
@@ -34,23 +40,23 @@ const PostCard2: React.FC<PostCard2Props> = ({
         </div>
         <div className="flex">
           <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center">
+            <div className="flex items-center">
               <span>
-                <ArrowBigUp fill="#0E462C" size={30}/>
+                <ArrowBigUp fill="#0E462C" size={30} />
               </span>
-              <span className="text-text">999</span>
+              <span className="text-text">{upvotes}</span>
             </div>
             <div className="flex items-center">
               <span>
                 <ArrowBigDown size={30} />
               </span>
-              <span className="text-text">999</span>
+              <span className="text-text">{downvotes}</span>
             </div>
             <div className="flex items-center">
               <span className="mr-2">
                 <MessageSquare style={{ color: "#105535" }} />
               </span>
-              <span className="text-text">999</span>
+              <span className="text-text">{commentsCount}</span>
             </div>
           </div>
         </div>
