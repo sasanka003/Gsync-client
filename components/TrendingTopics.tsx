@@ -13,7 +13,7 @@ const TrendingTopics = () => {
 
   return (
     <div className="border border-text rounded-lg p-4 w-[344px]">
-      <h2 className="font-semibold text-h2 mb-4">Trending Topics</h2>
+      <h2 className="font-semibold text-h2 mb-4 text-common">Trending Topics</h2>
       {topics.map((topic, index) => (
         <div key={index} className="flex justify-between items-center w-full">
           <div className="flex flex-col mb-2">

@@ -18,7 +18,7 @@ interface PostCard3Props {
           className="w-10 h-10 rounded-full"
         />
         <div className="ml-4">
-          <div className="font-semibold text-large">{name}</div>
+          <div className="font-semibold text-large text-common">{name}</div>
           <div className="text-detail text-grey">{position}</div>
         </div>
         <div className="ml-auto text-sm text-grey">
@@ -36,7 +36,7 @@ interface PostCard3Props {
           <Input id="picture" type="file" />
         </div>
         <div className="flex items-center space-x-2">
-          <button className="py-2 rounded-lg bg-text text-fill w-[64px]">
+          <button className="py-2 rounded-lg bg-text text-fill w-[64px] dark:text-common">
             Post
           </button>
           <button className="px-4 py-2 rounded-lg border border-text text-text">

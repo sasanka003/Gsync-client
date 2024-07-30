@@ -275,7 +275,7 @@ const ProfileForm = () => {
                         </FormItem>
                       )}
                     />
-                    <div className="flex space-x-4 justify-end pt-6">
+                    <div className="flex space-x-4 justify-end pt-6 pb-6">
                       <Button type="submit">Save Changes</Button>
                       <Button
                         variant="outline"

@@ -25,7 +25,7 @@ const PostCard: React.FC<PostCardProps> = ({ title, content, author, upvotes, do
           className="mr-4"
         />
         <div className="flex-1">
-          <CardTitle className="text-lg font-bold">{title}</CardTitle>
+          <CardTitle className="text-lg font-bold text-common">{title}</CardTitle>
           <p className="text-detail text-[#6B7280]">By {author}</p>
         </div>
         <div className="flex">
@@ -51,7 +51,7 @@ const PostCard: React.FC<PostCardProps> = ({ title, content, author, upvotes, do
           </div>
         </div>
       </div>
-      <CardContent className="text-subtle p-0 mb-4 ml-14">
+      <CardContent className="text-common p-0 mb-4 ml-14">
         {content}
       </CardContent>
       <div className="flex items-center text-[#6B7280] text-detail ml-14">

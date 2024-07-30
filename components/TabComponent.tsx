@@ -8,8 +8,8 @@ const TabComponent: React.FC = () => {
       <button
         className={`px-4 py-2 rounded-md ${
           activeTab === "general"
-            ? "bg-white text-green-700"
-            : "bg-green-700 text-white"
+            ? "bg-fill text-green-700"
+            : "bg-green-700 text-fill"
         }`}
         onClick={() => setActiveTab("general")}
       >
@@ -18,8 +18,8 @@ const TabComponent: React.FC = () => {
       <button
         className={`px-4 py-2 rounded-md ${
           activeTab === "advanced"
-            ? "bg-white text-green-700"
-            : "bg-green-700 text-white"
+            ? "bg-fill text-green-700"
+            : "bg-green-700 text-fill"
         }`}
         onClick={() => setActiveTab("advanced")}
       >

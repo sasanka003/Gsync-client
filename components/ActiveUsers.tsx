@@ -12,7 +12,7 @@ const ActiveUsers = () => {
 
   return (
     <div className="border border-text rounded-lg p-4 w-[344px]">
-      <h2 className="text-h2 mb-4">Most Active Users</h2>
+      <h2 className="text-h2 mb-4 text-common">Most Active Users</h2>
       {users.map((user, index) => (
         <div key={index} className="flex items-center mb-4">
           <img
@@ -21,7 +21,7 @@ const ActiveUsers = () => {
             className="w-10 h-10 rounded-full mr-4"
           />
           <div className="flex-1">
-            <div className="font-semibold text-large">{user.name}</div>
+            <div className="font-semibold text-large text-common">{user.name}</div>
             <div className="flex justify-between">
             <div className="text-detail text-grey">{user.role}</div>
              <a href="#" className="text-text text-detail underline">

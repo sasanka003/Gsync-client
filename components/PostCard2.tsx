@@ -35,7 +35,7 @@ const PostCard2: React.FC<PostCard2Props> = ({
           className="mr-4 rounded-full"
         />
         <div className="flex-1">
-          <CardTitle className="text-lg font-bold">{title}</CardTitle>
+          <CardTitle className="text-lg font-bold text-common">{title}</CardTitle>
           <p className="text-detail text-grey">By {author}</p>
         </div>
         <div className="flex">
@@ -69,7 +69,7 @@ const PostCard2: React.FC<PostCard2Props> = ({
           alt="Post image"
           className="mb-4 rounded ml-14 mr-6"
         />
-        <CardContent className="text-subtle p-0 mb-4">
+        <CardContent className="text-common  p-0 mb-4">
           {content}
           <div className="flex items-center text-grey text-detail mt-3">
             12th December 2024 | 12:30AM
