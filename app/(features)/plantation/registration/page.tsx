@@ -68,7 +68,7 @@ const PlantationForm = () => {
 
     if (plan === "Gardener") {
       setShowPopup(true);
-      //router.push("/dashboard");
+      router.push("/dashboard");
     } else if (plan === "Enterprise") {
       setPlantationCount(plantationCount + 1);
       if (plantationCount + 1 >= 3) {
