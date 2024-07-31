@@ -99,9 +99,9 @@ export function getAdminMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/admin/plantation",
+          href: "/admin/plantation-requests",
           label: "Plantations",
-          active: pathname.includes("/admin/plantation"),
+          active: pathname.includes("/admin/plantation-requests"),
           icon: Leaf,
           submenus: []
         }
