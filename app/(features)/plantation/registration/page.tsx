@@ -57,6 +57,7 @@ const PlantationForm = () => {
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
   const [plantationCount, setPlantationCount] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -66,6 +67,7 @@ const PlantationForm = () => {
     setCountry("");
 
     if (plan === "Gardener") {
+      setShowPopup(true);
       router.push("/dashboard");
     } else if (plan === "Enterprise") {
       setPlantationCount(plantationCount + 1);
