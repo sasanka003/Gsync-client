@@ -5,7 +5,12 @@ import TrendingTopics from "@/components/TrendingTopics";
 import ActiveUsers from "@/components/ActiveUsers";
 import PostCard3 from "@/components/PostCard3";
 
-export default function CommunityPage() {
+export default async function CommunityPage() {
+  const data: Post[] = await fetch("http://127.0.0.1:8000/post/all", {}).then(
+    (res) => {
+      return res.json();
+    }
+  );
   return (
     <ContentLayout title="Community">
       <div className="flex flex-row gap-5 justify-between pl-8 pr-20 pt-10">
@@ -17,24 +22,16 @@ export default function CommunityPage() {
           />
           <div className="w-[712px] border border-text rounded-lg mt-6 p-4">
             <div className="text-h2 mb-4 text-common">Community Posts</div>
-            <PostCard
-              title="Tomato Leaves turned into Yellow"
-              content="The leaves in my tomato plantation turned into yellow color, any suggestions why this could happen?"
-              author="Sasanka"
-              upvotes={12}
-              downvotes={2}
-              commentsCount={5}
-            />
-            <PostCard2
-              title="Tomato Leaves turned into Yellow"
-              content="The leaves in my tomato plantation turned into yellow color, any suggestions why this could happen?"
-              author="Sasanka"
-              upvotes={12}
-              downvotes={2}
-              commentsCount={5}
-              image1Url="/images/profile.png"
-              image2Url="/images/1623948291963.webp"
-            />
+            {data.map((post) => (
+              <PostCard
+                title={post.title}
+                content={post.content}
+                author={post.user_id}
+                upvotes={0}
+                downvotes={0}
+                commentsCount={0}
+              />
+            ))}
             <button className="py-2 rounded-lg bg-text text-fill w-full dark:text-common">
               Load More Posts
             </button>
