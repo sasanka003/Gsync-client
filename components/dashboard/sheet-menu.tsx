@@ -31,7 +31,7 @@ export function SheetMenu() {
             </Link>
           </Button>
         </SheetHeader>
-        <Menu isOpen />
+        <Menu />
       </SheetContent>
     </Sheet>
   );

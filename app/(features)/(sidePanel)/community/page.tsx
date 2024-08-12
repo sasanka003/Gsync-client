@@ -1,16 +1,18 @@
 import { ContentLayout } from "@/components/dashboard/content-layout";
 import PostCard from "@/components/PostCard";
-import PostCard2 from "@/components/PostCard2";
 import TrendingTopics from "@/components/TrendingTopics";
 import ActiveUsers from "@/components/ActiveUsers";
 import PostCard3 from "@/components/PostCard3";
+import { authenticatedFetch } from "@/utils/authenticatedFetch";
 
 export default async function CommunityPage() {
-  const data: Post[] = await fetch("http://127.0.0.1:8000/post/all", {}).then(
-    (res) => {
-      return res.json();
-    }
-  );
+  let data: Post[] = [];
+  try {
+    const response = await authenticatedFetch("http://127.0.0.1:8000/post/all");
+    data = await response.json();
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+  }
   return (
     <ContentLayout title="Community">
       <div className="flex flex-row gap-5 justify-between pl-8 pr-20 pt-10">
@@ -22,13 +24,14 @@ export default async function CommunityPage() {
           />
           <div className="w-[712px] border border-text rounded-lg mt-6 p-4">
             <div className="text-h2 mb-4 text-common">Community Posts</div>
-            {data.map((post) => (
+            {data.map((post, index) => (
               <PostCard
+                key={index}
                 title={post.title}
                 content={post.content}
-                author={post.user_id}
-                upvotes={0}
-                downvotes={0}
+                upvotes={post.upvotes}
+                downvotes={post.downvotes}
+                author={""}
                 commentsCount={0}
               />
             ))}

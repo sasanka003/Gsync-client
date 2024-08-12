@@ -2,19 +2,12 @@
 
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./sidebar";
-// import { useStore } from "@/hooks/use-store";
-// import { Footer } from "@/components/admin-panel/footer";
-// import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 
 export default function AdminPanelLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // const sidebar = useStore(useSidebarToggle, (state) => state);
-
-  // if (!sidebar) return null;
-
   return (
     <>
       <Sidebar />
@@ -25,13 +18,6 @@ export default function AdminPanelLayout({
       >
         {children}
       </main>
-      {/* <footer
-        className={cn(
-          "transition-[margin-left] ease-in-out duration-300 lg:ml-72"
-        )}
-      >
-        <Footer />
-      </footer> */}
     </>
   );
 }
