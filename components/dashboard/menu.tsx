@@ -7,12 +7,15 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getMenuList } from "@/lib/menu-list";
+import { getAdminMenuList, getMenuList } from "@/lib/menu-list";
 import { signout } from "@/app/auth/actions";
 
 export function Menu() {
   const pathname = usePathname();
-  const menuList = getMenuList(pathname);
+  const isAdminRoute = pathname.startsWith("/admin");
+  const menuList = isAdminRoute
+    ? getAdminMenuList(pathname)
+    : getMenuList(pathname);
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
