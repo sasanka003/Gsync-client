@@ -1,14 +1,12 @@
 import * as React from "react";
 import { Clock } from "lucide-react";
-
 import {
   Card,
   CardHeader,
-  CardFooter,
-  CardTitle,
   CardDescription,
   CardContent,
-} from "../../../../components/ui/card";
+  CardFooter,
+} from "@/components/ui/card";
 
 interface EnvironmentalCardProps {
   title: string;
@@ -63,7 +61,7 @@ const EnvironmentalCard: React.FC<EnvironmentalCardProps> = ({
       <CardFooter className="p-0 mt-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-1">
-            <Clock size={24} className="text-muted-foreground"/>
+            <Clock size={24} className="text-muted-foreground" />
             <div className="text-muted-foreground text-p ml-2">
               {lastChecked}
             </div>

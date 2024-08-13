@@ -1,11 +1,11 @@
 import React from "react";
 import { ContentLayout } from "@/components/dashboard/content-layout";
 import PlantCard from "@/components/PlantCard";
-import EnvironmentDetails from "../../EnterpriseGardener/Components/EnvironmentDetails";
-import SuggestedActionCard from "../../EnterpriseGardener/Components/SuggestedActions";
-import CameraFootageCard from "../../EnterpriseGardener/Components/CameraFootage";
-import IoTDevicesCard from "../../EnterpriseGardener/Components/IoTDevices";
 import { Clock, Leaf } from "lucide-react";
+import EnvironmentDetails from "./Components/EnvironmentDetails";
+import SuggestedActionCard from "./Components/SuggestedActions";
+import CameraFootageCard from "./Components/CameraFootage";
+import IoTDevicesCard from "./Components/IoTDevices";
 
 const PlantationInfo = () => {
   const plantationData = [

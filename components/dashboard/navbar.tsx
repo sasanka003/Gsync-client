@@ -1,23 +1,41 @@
-import { createClient } from "@/utils/supabase/server";
+"use client";
+
+import { useState, useEffect } from "react";
 import { ModeToggle } from "../ModeToggle";
 import { SheetMenu } from "./sheet-menu";
 import { UserNav } from "./user-nav";
+import { User } from "@/types/User";
 
 interface NavbarProps {
   title: string;
 }
 
-export async function Navbar({ title }: NavbarProps) {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export function Navbar({ title }: NavbarProps) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await fetch("/api/user");
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        const data = await response.json();
+        if (data.safeUser) {
+          setUser(data.safeUser);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    }
+    fetchUser();
+  }, []);
 
   const getFirstLetter = (name: string) => {
     return name ? name.charAt(0).toUpperCase() : "";
   };
 
-  const firstLetter = getFirstLetter(user?.user_metadata.name);
+  const firstLetter = user ? getFirstLetter(user.name) : "";
 
   return (
     <header className="sticky top-0 z-10 w-full bg-background/95 shadow backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:shadow-secondary">
@@ -28,11 +46,13 @@ export async function Navbar({ title }: NavbarProps) {
         </div>
         <div className="flex flex-1 items-center space-x-2 justify-end">
           <ModeToggle />
-          <UserNav
-            email={user!.email}
-            name={user!.user_metadata.name}
-            firstLetter={firstLetter}
-          />
+          {user && (
+            <UserNav
+              email={user.email}
+              name={user.name}
+              firstLetter={firstLetter}
+            />
+          )}
         </div>
       </div>
     </header>

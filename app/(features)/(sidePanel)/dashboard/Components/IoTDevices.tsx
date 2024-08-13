@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Clock } from "lucide-react";
-
-import { Card, CardContent } from "../../../../components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface Device {
   id: string;

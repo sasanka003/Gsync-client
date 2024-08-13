@@ -2,15 +2,7 @@ import * as React from "react";
 import { Clock } from "lucide-react";
 import plantation from "../../../../assets/images/plantation.png";
 import Image from "next/image";
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "../../../../components/ui/card";
+import { Card } from "@/components/ui/card";
 
 interface CameraFootageCardProps {
   cameraTitle: string;
@@ -34,8 +26,10 @@ const CameraFootageCard: React.FC<CameraFootageCardProps> = ({
           <div className="text-h2 text-common">{cameraTitle}</div>
         </div>
         <div className="flex space-x-28 mt-1">
-        <div className="text-p text-muted-foreground mr-4">{cameraLocation}</div>
-        <div className="text-p underline ml-2">{switchCamera}</div>
+          <div className="text-p text-muted-foreground mr-4">
+            {cameraLocation}
+          </div>
+          <div className="text-p underline ml-2">{switchCamera}</div>
         </div>
       </div>
 
