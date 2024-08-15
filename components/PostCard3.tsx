@@ -1,10 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { authenticatedFetch } from "@/utils/authenticatedFetch";
+import { Button } from "./ui/button";
 import { handlePostCreation } from "@/app/(features)/(sidePanel)/community/createPost";
+
+const postSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  picture: z.any().optional(),
+});
+
+type PostFormValues = z.infer<typeof postSchema>;
+
 interface PostCard3Props {
   name: string;
   position: string;
@@ -12,9 +24,19 @@ interface PostCard3Props {
 }
 
 const PostCard3: React.FC<PostCard3Props> = ({ name, position, date }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<PostFormValues>({
+    resolver: zodResolver(postSchema),
+  });
+
+  const onSubmit = async (data: PostFormValues) => {
+    await handlePostCreation(data.title, data.content);
+    reset();
+  };
 
   return (
     <div className="border border-text rounded-lg p-4 w-[712px] mx-auto">
@@ -30,44 +52,61 @@ const PostCard3: React.FC<PostCard3Props> = ({ name, position, date }) => {
         </div>
         <div className="ml-auto text-sm text-grey">{date}</div>
       </div>
-      <textarea
-        className="w-full p-2 border rounded-lg"
-        placeholder="Title..."
-        rows={1}
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        className="w-full p-2 border rounded-lg"
-        placeholder="What's on your mind..."
-        rows={6}
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center w-[220px]">
-          <Label htmlFor="picture"></Label>
-          <Input id="picture" type="file" />
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-4">
+          <textarea
+            {...register("title")}
+            className="w-full p-2 border rounded-lg"
+            placeholder="Title..."
+            rows={1}
+          />
+          {errors.title && (
+            <p className="text-destructive text-sm">{errors.title.message}</p>
+          )}
         </div>
-        <div className="flex items-center space-x-2">
-          <button
-            className="py-2 rounded-lg bg-text text-fill w-[64px] dark:text-common"
-            onClick={async () => {
-              setIsLoading(true);
-              await handlePostCreation(title, content);
-              setTitle("");
-              setContent("");
-              setIsLoading(false);
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? "Posting..." : "Post"}
-          </button>
-          <button className="px-4 py-2 rounded-lg border border-text text-text">
-            Cancel
-          </button>
+        <div className="mb-4">
+          <textarea
+            {...register("content")}
+            className="w-full p-2 border rounded-lg"
+            placeholder="What's on your mind..."
+            rows={6}
+          />
+          {errors.content && (
+            <p className="text-destructive text-sm">{errors.content.message}</p>
+          )}
         </div>
-      </div>
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center w-[350px]">
+            <div className="w-[200px]">
+              <Label htmlFor="picture">Upload Picture</Label>
+            </div>
+            <Input id="picture" type="file" {...register("picture")} />
+            {errors.picture && (
+              <p className="text-destructive text-sm">
+                {errors.picture?.message?.toString()}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              type="submit"
+              className="py-2 rounded-lg bg-text text-fill w-[64px] dark:text-common"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Posting..." : "Post"}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="px-4 py-2 rounded-lg border border-text text-text"
+              onClick={() => reset()}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };
