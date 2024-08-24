@@ -62,7 +62,7 @@ export default async function NavBar() {
           )}
         </div>
         <div
-          className="items-center justify-between hidden w-full ml-24 md:flex md:w-auto md:order-2"
+          className="items-center justify-between pr-10 hidden md:flex md:w-auto md:order-2"
           id="navbar-sticky"
         >
           <NavMenu className="text-subtle-medium text-common px-2 hover:bg-accent hover:rounded-[6px] hover:py-2 hover:px-4 hover:text-black" />

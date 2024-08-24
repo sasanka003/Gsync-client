@@ -1,4 +1,4 @@
-import AdminPanelLayout from "@/components/dashboard copy/admin-panel-layout";
+import AdminPanelLayout from "@/components/dashboard/admin-panel-layout";
 
 export default function DemoLayout({
   children,
