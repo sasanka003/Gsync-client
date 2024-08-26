@@ -4,7 +4,7 @@ import { ContentLayout } from "@/components/dashboard/content-layout";
 
 const ChartInfo = () => {
   const data = {
-    labels: ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sun"],
+    labels: ["Mon", "Tue", "Wed", "Thur", "Fri", "Sat", "Sunday"],
     datasets: [
       {
         label: "Dataset 1",

@@ -5,6 +5,7 @@ import ActiveUsers from "@/components/ActiveUsers";
 import PostCard3 from "@/components/PostCard3";
 import { authenticatedFetch } from "@/utils/authenticatedFetch";
 
+
 export default async function CommunityPage() {
   let data: Post[] = [];
   try {
