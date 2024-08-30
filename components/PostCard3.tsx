@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { authenticatedFetch } from "@/utils/authenticatedFetch";
-import { handlePostCreation } from "@/app/(features)/(sidePanel)/community/createPost";
+import { useCreatePostMutation } from "@/app/services/postSlice";
+import { createClient } from "@/utils/supabase/client";
 interface PostCard3Props {
   name: string;
   position: string;
@@ -14,7 +14,36 @@ interface PostCard3Props {
 const PostCard3: React.FC<PostCard3Props> = ({ name, position, date }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const supabase = createClient();
+  const [createPost, { isLoading }] = useCreatePostMutation();
+
+  const handleSubmit = async () => {
+    if (!title || !content) {
+      alert("Title and content are required");
+      return;
+    }
+
+    const postData = {
+      title,
+      content,
+      post_type: "Question",
+      user_id: "fd81d387-abc6-4c2f-bc45-55c5e98192d8",
+      parent_post_id: "0",
+      file: file || undefined,
+    };
+
+    try {
+      await createPost(postData).unwrap();
+      // Reset form after successful post
+      setTitle("");
+      setContent("");
+      setFile(null);
+    } catch (error) {
+      console.error("Failed to create post:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
+  };
 
   return (
     <div className="border border-text rounded-lg p-4 w-[712px] mx-auto">
@@ -36,6 +65,7 @@ const PostCard3: React.FC<PostCard3Props> = ({ name, position, date }) => {
         rows={1}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        required
       />
       <textarea
         className="w-full p-2 border rounded-lg"
@@ -43,27 +73,33 @@ const PostCard3: React.FC<PostCard3Props> = ({ name, position, date }) => {
         rows={6}
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        required
       />
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center w-[220px]">
           <Label htmlFor="picture"></Label>
-          <Input id="picture" type="file" />
+          <Input
+            id="picture"
+            type="file"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+          />
         </div>
         <div className="flex items-center space-x-2">
           <button
             className="py-2 rounded-lg bg-text text-fill w-[64px] dark:text-common"
-            onClick={async () => {
-              setIsLoading(true);
-              await handlePostCreation(title, content);
-              setTitle("");
-              setContent("");
-              setIsLoading(false);
-            }}
+            onClick={handleSubmit}
             disabled={isLoading}
           >
             {isLoading ? "Posting..." : "Post"}
           </button>
-          <button className="px-4 py-2 rounded-lg border border-text text-text">
+          <button
+            className="px-4 py-2 rounded-lg border border-text text-text"
+            onClick={() => {
+              setTitle("");
+              setContent("");
+              setFile(null);
+            }}
+          >
             Cancel
           </button>
         </div>

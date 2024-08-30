@@ -8,12 +8,19 @@ interface PostCardProps {
   title: string;
   content: string;
   author: string;
-  upvotes: number;
-  downvotes: number;
+  upvotes: number | null;
+  downvotes: number | null;
   commentsCount: number;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ title, content, author, upvotes, downvotes, commentsCount }) => {
+const PostCard: React.FC<PostCardProps> = ({
+  title,
+  content,
+  author,
+  upvotes,
+  downvotes,
+  commentsCount,
+}) => {
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
       <div className="flex items-center mb-2">
@@ -25,14 +32,16 @@ const PostCard: React.FC<PostCardProps> = ({ title, content, author, upvotes, do
           className="mr-4"
         />
         <div className="flex-1">
-          <CardTitle className="text-lg font-bold text-common">{title}</CardTitle>
+          <CardTitle className="text-lg font-bold text-common">
+            {title}
+          </CardTitle>
           <p className="text-detail text-[#6B7280]">By {author}</p>
         </div>
         <div className="flex">
           <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center">
+            <div className="flex items-center">
               <span>
-                <ArrowBigUp fill="#0E462C" size={30}/>
+                <ArrowBigUp fill="#0E462C" size={30} />
               </span>
               <span className="text-text">{upvotes}</span>
             </div>

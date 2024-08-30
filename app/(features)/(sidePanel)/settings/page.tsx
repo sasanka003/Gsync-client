@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ContentLayout } from "@/components/dashboard/content-layout";
+import { useGetAllPostsQuery } from "@/app/services/postSlice";
+import { error } from "console";
 
 const schema = z
   .object({
@@ -34,6 +36,8 @@ const schema = z
   });
 
 const ProfileForm = () => {
+  const { data: post, isLoading, isError, error } = useGetAllPostsQuery();
+  !isError ? console.log(post) : console.log(error);
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
