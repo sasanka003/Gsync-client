@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Clock } from "lucide-react";
-
-import { Card, CardContent } from "../../../../components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface SuggestedActionCardProps {
   actions: { date: string; title: string; daysLeft: number }[];
@@ -34,7 +33,9 @@ const SuggestedActionCard: React.FC<SuggestedActionCardProps> = ({
               </div>
               <div className="text-right flex-shrink-0">
                 <button className="text-p">Add Reminder</button>
-                <div className="text-p text-muted-foreground">{action.daysLeft} days left</div>
+                <div className="text-p text-muted-foreground">
+                  {action.daysLeft} days left
+                </div>
               </div>
             </div>
           ))}
