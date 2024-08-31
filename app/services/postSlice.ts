@@ -26,7 +26,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ['postList']
     }),
+    getCommentsByPostId: builder.query<PostComment[], number>({
+      query: (postId) => `/comments/${postId}`,
+    }),
   }),
 });
 
-export const { useGetAllPostsQuery, useCreatePostMutation } = userApiSlice;
+export const { useGetAllPostsQuery, useCreatePostMutation, useGetCommentsByPostIdQuery} = userApiSlice;
