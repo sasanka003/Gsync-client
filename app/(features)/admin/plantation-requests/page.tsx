@@ -1,12 +1,12 @@
-import { ContentLayout } from "@/components/dashboard copy/content-layout";
 import React from "react";
-import SystemAdminDashboard from "../components/PlantationRequests";
+import PlantationRequests from "../components/PlantationRequests";
+import { ContentLayout } from "@/components/dashboard/content-layout";
 
 export default function RequestPage() {
   return (
     <ContentLayout title="Community">
       <div>
-        <SystemAdminDashboard />
+        <PlantationRequests />
       </div>
     </ContentLayout>
   );

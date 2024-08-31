@@ -105,7 +105,7 @@ const DatePickerButton = () => {
   );
 };
 
-const SystemAdminDashboard = () => {
+const PlantationRequests = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -255,4 +255,4 @@ const SystemAdminDashboard = () => {
   );
 };
 
-export default SystemAdminDashboard;
+export default PlantationRequests;
