@@ -81,6 +81,7 @@ export default function CommunityPage() {
               {allPosts.map((post, index) => (
                 <PostCard
                   key={post.post_id}
+                  post_id={post.post_id}
                   title={post.title}
                   content={post.content}
                   createdAt={post.created_at}

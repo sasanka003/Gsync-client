@@ -2,8 +2,10 @@ import React from "react";
 import { Card, CardContent, CardTitle } from "./ui/card";
 import Image from "next/image";
 import { ArrowDownIcon, ArrowUpIcon, MessageCircleIcon } from "./Icons";
+import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 
 interface PostCardProps {
+  post_id: number;
   title: string;
   content: string;
   author: string;
@@ -29,12 +31,21 @@ const PostCard: React.FC<PostCardProps> = ({
   title,
   content,
   author,
+  post_id,
   upvotes,
   downvotes,
   commentsCount,
   createdAt,
 }) => {
   const formattedDate = formatDate(createdAt);
+
+  // const {
+  //   data = [],
+  //   error,
+  //   isLoading,
+  //   isFetching,
+  // } = useGetCommentsByPostIdQuery(post_id);
+  // console.log(data);
 
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
