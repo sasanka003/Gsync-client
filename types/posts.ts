@@ -20,3 +20,4 @@ type CreatePost = {
     parent_post_id: string | null;
     file?: File;
 }
+
