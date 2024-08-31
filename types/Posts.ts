@@ -4,6 +4,8 @@ type Post = {
     content: string;
     post_type: string;
     user_id: string;
+    user_name: string;
+    created_at: string;
     parent_post_id: string | null;
     upvotes: number | null;
     downvotes: number | null;

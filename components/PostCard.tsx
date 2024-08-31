@@ -1,8 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardTitle } from "./ui/card";
-import { ThumbsUp, MessageSquare } from "lucide-react";
 import Image from "next/image";
-import { ArrowBigUp, ArrowBigDown } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, MessageCircleIcon } from "./Icons";
 
 interface PostCardProps {
   title: string;
@@ -11,7 +10,20 @@ interface PostCardProps {
   upvotes: number | null;
   downvotes: number | null;
   commentsCount: number;
+  createdAt: string;
 }
+
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+};
 
 const PostCard: React.FC<PostCardProps> = ({
   title,
@@ -20,7 +32,10 @@ const PostCard: React.FC<PostCardProps> = ({
   upvotes,
   downvotes,
   commentsCount,
+  createdAt,
 }) => {
+  const formattedDate = formatDate(createdAt);
+
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
       <div className="flex items-center mb-2">
@@ -37,23 +52,23 @@ const PostCard: React.FC<PostCardProps> = ({
           </CardTitle>
           <p className="text-detail text-[#6B7280]">By {author}</p>
         </div>
-        <div className="flex">
-          <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center">
+          <div className="flex items-center justify-between">
             <div className="flex items-center">
               <span>
-                <ArrowBigUp fill="#0E462C" size={30} />
+                <ArrowUpIcon />
               </span>
-              <span className="text-text">{upvotes}</span>
+              <span className="text-list">123</span>
             </div>
             <div className="flex items-center">
               <span>
-                <ArrowBigDown size={30} />
+                <ArrowDownIcon />
               </span>
               <span className="text-text">{downvotes}</span>
             </div>
             <div className="flex items-center">
               <span className="mr-2">
-                <MessageSquare style={{ color: "#105535" }} />
+                <MessageCircleIcon />
               </span>
               <span className="text-text">{commentsCount}</span>
             </div>
@@ -64,7 +79,7 @@ const PostCard: React.FC<PostCardProps> = ({
         {content}
       </CardContent>
       <div className="flex items-center text-[#6B7280] text-detail ml-14">
-        "12th December 2024, 12:30AM"
+        {formattedDate}
       </div>
     </Card>
   );
