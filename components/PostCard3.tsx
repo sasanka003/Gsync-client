@@ -29,7 +29,7 @@ const PostCard3: React.FC<PostCard3Props> = ({ name, position, date }) => {
       content,
       post_type: "Question",
       user_id: "fd81d387-abc6-4c2f-bc45-55c5e98192d8",
-      parent_post_id: "0",
+      parent_post_id: null,
       file: file || undefined,
     };
 
