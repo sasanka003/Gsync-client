@@ -29,10 +29,3 @@ type PostComment ={
     last_updated: string | null;
     post_id: number;
 }
-
-type createComment = {
-    content: string;
-    user_id: string;
-    post_id: number;
-}
-
