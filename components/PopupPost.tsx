@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardTitle } from "./ui/card";
 import Image from "next/image";
-import { ArrowDownIcon, ArrowUpIcon, MessageCircleIcon } from "./Icons";
 
 interface PostCardProps {
   title: string;
@@ -31,15 +30,19 @@ const PopupPost: React.FC<PostCardProps> = ({
   createdAt,
 }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
   const formattedDate = formatDate(createdAt);
 
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
   };
 
+  const toggleContentExpand = () => {
+    setIsContentExpanded(!isContentExpanded);
+  };
 
   return (
-    <Card className="p-4 mb-4 w-auto max-w-[680px]">
+    <Card className="p-4 mb-4 w-auto max-w-[680px] border border-white shadow-lg">
       <div className="flex items-center mb-2">
         <Image
           src="/images/profile.png"
@@ -52,30 +55,39 @@ const PopupPost: React.FC<PostCardProps> = ({
           <CardTitle className="text-lg font-bold text-common">
             {title}
           </CardTitle>
-          <p className="text-detail text-[#6B7280]">By {author}</p>
+          <p className="text-detail text-muted-foreground">By {author}</p>
         </div>
       </div>
       <CardContent className="text-common p-0 mb-4 ml-14">
-        {content}
+        <div
+          className={`relative ${isContentExpanded ? "" : "line-clamp-3"}`}
+          style={{ maxHeight: isContentExpanded ? "none" : "4.5rem" }}
+        >
+          {content}
+        </div>
+        {!isContentExpanded && (
+          <button
+            className="text-blue-500 hover:underline"
+            onClick={toggleContentExpand}
+          >
+            See More...
+          </button>
+        )}
+        {isContentExpanded && (
+          <button
+            className="mt-2 text-blue-500 hover:underline"
+            onClick={toggleContentExpand}
+          >
+            See Less...
+          </button>
+        )}
       </CardContent>
+
       <div className="flex items-center text-[#6B7280] text-detail ml-14">
         {formattedDate}
       </div>
 
-      {isPopupVisible && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg relative w-80">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-              onClick={togglePopup}
-            >
-              X
-            </button>
-            <h2 className="text-xl font-bold mb-4">Comments</h2>
-            <p>This is where the comments would go.</p>
-          </div>
-        </div>
-      )}
+      
     </Card>
   );
 };
