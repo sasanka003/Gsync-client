@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardTitle } from "./ui/card";
-import Image from "next/image";
 import { ArrowDownIcon, ArrowUpIcon, MessageCircleIcon } from "./Icons";
-import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 import PopupPost from "./PopupPost";
-import CommentCards from "./CommentCards";
-import CreateComment from "./CreateComment";
 import ProfilePicture from "./ProfilePicture";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 
 interface PostCardProps {
   post_id: number;
@@ -41,21 +45,9 @@ const PostCard: React.FC<PostCardProps> = ({
   commentsCount,
   createdAt,
 }) => {
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const formattedDate = formatDate(createdAt);
 
-  const togglePopup = () => {
-    setIsPopupVisible(!isPopupVisible);
-  };
-
-  const {
-    data: comments = [],
-    error,
-    isLoading,
-    isFetching,
-  } = useGetCommentsByPostIdQuery(post_id);
-
-  console.log("Fetched Comments:", comments);
+  const { data: comments = [] } = useGetCommentsByPostIdQuery(post_id);
 
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
@@ -80,12 +72,30 @@ const PostCard: React.FC<PostCardProps> = ({
             </span>
             <span className="text-text">{downvotes}</span>
           </div>
-          <div className="flex items-center">
-            <span className="mr-2 cursor-pointer" onClick={togglePopup}>
-              <MessageCircleIcon />
-            </span>
-            <span className="text-text">{comments.length}</span>
-          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="flex items-center cursor-pointer">
+                <span className="mr-2">
+                  <MessageCircleIcon />
+                </span>
+                <span className="text-text">{comments.length}</span>
+              </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[680px] max-h-[98%] overflow-hidden p-4">
+              <DialogTitle className="text-h3 text-center mb-4">
+                Post: {title}
+              </DialogTitle>
+              <PopupPost
+                post_id={post_id}
+                title={title}
+                content={content}
+                author={author}
+                createdAt={formattedDate}
+                upvotes={upvotes}
+                downvotes={downvotes}
+              />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <CardContent className="text-common p-0 mb-4 ml-14">
@@ -94,76 +104,6 @@ const PostCard: React.FC<PostCardProps> = ({
       <div className="flex items-center text-[#6B7280] text-detail ml-14">
         {formattedDate}
       </div>
-
-      {isPopupVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-fill p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
-            <div className="pb-6 flex items-center justify-between">
-              <h2 className="text-h3 font-bold text-common pl-10 ml-4">
-                POST : {title}
-              </h2>
-              <button
-                className="absolute top-2 right-2 pt-4 pr-4 text-common hover:text-gray-700"
-                onClick={togglePopup}
-              >
-                X
-              </button>
-            </div>
-
-            <PopupPost
-              title={title}
-              content={content}
-              author={author}
-              createdAt={formattedDate}
-            />
-
-            <div className="pt-4 border-t border-gray-200 mt-4 max-h-60 overflow-y-auto space-y-4">
-              <CommentCards
-                title={title}
-                content={content}
-                author={author}
-                post_id={post_id}
-                upvotes={upvotes}
-                downvotes={downvotes}
-                commentsCount={commentsCount}
-                createdAt={createdAt}
-              />
-              <CommentCards
-                title={title}
-                content={content}
-                author={author}
-                post_id={post_id}
-                upvotes={upvotes}
-                downvotes={downvotes}
-                commentsCount={commentsCount}
-                createdAt={createdAt}
-              />
-            </div>
-
-            <div className="pt-4 border-t border-gray-200 mt-4">
-              <CreateComment name="hello" position="hello" postId={0} />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Display comments data for debugging purposes */}
-      {/* <div className="mt-4 ml-14">
-        <h3 className="text-lg font-bold">Comments:</h3>
-        {isLoading ? (
-          <p>Loading comments...</p>
-        ) : error ? (
-          <p>Error loading comments</p>
-        ) : (
-          <ul className="list-disc pl-5">
-            {comments.map((comment, index) => (
-              <li key={index} className="text-sm text-[#6B7280]">
-                {JSON.stringify(comment)}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div> */}
     </Card>
   );
 };

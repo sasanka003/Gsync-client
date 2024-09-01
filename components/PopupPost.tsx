@@ -1,94 +1,114 @@
-"use client";
-
 import React, { useState } from "react";
 import { Card, CardContent, CardTitle } from "./ui/card";
-import Image from "next/image";
+import ProfilePicture from "./ProfilePicture";
+import CommentCards from "./CommentCards";
+import CreateComment from "./CreateComment";
+import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 
-interface PostCardProps {
+interface PopupPostProps {
+  post_id: number;
   title: string;
   content: string;
   author: string;
   createdAt: string;
+  upvotes: number | null;
+  downvotes: number | null;
 }
 
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleString("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  });
-};
-
-const PopupPost: React.FC<PostCardProps> = ({
+const PopupPost: React.FC<PopupPostProps> = ({
+  post_id,
   title,
   content,
   author,
   createdAt,
+  upvotes,
+  downvotes,
 }) => {
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const formattedDate = formatDate(createdAt);
-
-  const togglePopup = () => {
-    setIsPopupVisible(!isPopupVisible);
-  };
 
   const toggleContentExpand = () => {
     setIsContentExpanded(!isContentExpanded);
   };
 
+  const {
+    data: comments = [],
+    error,
+    isLoading,
+    isFetching,
+  } = useGetCommentsByPostIdQuery(post_id);
+
+  console.log("Fetched Comments:", comments);
+
   return (
-    <Card className="p-4 mb-4 w-auto max-w-[680px] border border-white shadow-lg">
-      <div className="flex items-center mb-2">
-        <Image
-          src="/images/profile.png"
-          width={40}
-          height={40}
-          alt="Profile picture"
-          className="mr-4"
-        />
-        <div className="flex-1">
-          <CardTitle className="text-lg font-bold text-common">
-            {title}
-          </CardTitle>
-          <p className="text-detail text-muted-foreground">By {author}</p>
+    <div className="flex-1 overflow-y-auto">
+      <Card className="p-4 w-full border border-white shadow-lg">
+        <div className="flex items-center mb-2">
+          <ProfilePicture name={author} className="mr-4" />
+          <div className="flex-1">
+            <CardTitle className="text-lg font-bold text-common">
+              {title}
+            </CardTitle>
+            <p className="text-detail text-muted-foreground">By {author}</p>
+          </div>
         </div>
-      </div>
-      <CardContent className="text-common p-0 mb-4 ml-14">
-        <div
-          className={`relative ${isContentExpanded ? "" : "line-clamp-3"}`}
-          style={{ maxHeight: isContentExpanded ? "none" : "4.5rem" }}
-        >
-          {content}
+        <CardContent className="text-common p-0 mb-4 ml-14">
+          <div
+            className={`relative ${isContentExpanded ? "" : "line-clamp-3"}`}
+            style={{ maxHeight: isContentExpanded ? "none" : "4.5rem" }}
+          >
+            {content}
+          </div>
+          {!isContentExpanded && (
+            <button
+              className="text-blue-500 hover:underline"
+              onClick={toggleContentExpand}
+            >
+              See More...
+            </button>
+          )}
+          {isContentExpanded && (
+            <button
+              className="mt-2 text-blue-500 hover:underline"
+              onClick={toggleContentExpand}
+            >
+              See Less...
+            </button>
+          )}
+        </CardContent>
+
+        <div className="flex items-center text-[#6B7280] text-detail ml-14">
+          {createdAt}
         </div>
-        {!isContentExpanded && (
-          <button
-            className="text-blue-500 hover:underline"
-            onClick={toggleContentExpand}
-          >
-            See More...
-          </button>
-        )}
-        {isContentExpanded && (
-          <button
-            className="mt-2 text-blue-500 hover:underline"
-            onClick={toggleContentExpand}
-          >
-            See Less...
-          </button>
-        )}
-      </CardContent>
+      </Card>
 
-      <div className="flex items-center text-[#6B7280] text-detail ml-14">
-        {formattedDate}
+      <div className="border-t border-gray-200 pt-4">
+        {isLoading ? (
+          <p>Loading comments...</p>
+        ) : error ? (
+          <p>Error loading comments</p>
+        ) : (
+          <div className="space-y-4">
+            {comments.map((comment: any) => (
+              <CommentCards
+                key={comment.id}
+                title={comment.title}
+                content={comment.content}
+                author={comment.author}
+                post_id={comment.post_id}
+                upvotes={comment.upvotes}
+                downvotes={comment.downvotes}
+                commentsCount={comment.commentsCount}
+                createdAt={comment.createdAt}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      
-    </Card>
+      <div className="border-t border-gray-200 pt-4">
+        <CreateComment name={author} position="Commenter" postId={post_id} />
+      </div>
+    </div>
   );
 };
 
