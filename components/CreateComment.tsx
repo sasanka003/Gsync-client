@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -13,24 +13,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateCommentMutation } from "@/app/services/postSlice"; 
 import { createClient } from "@/utils/supabase/client";
+import { useCreateCommentMutation } from "@/app/services/postSlice";
 
 const formSchema = z.object({
   content: z.string().min(1, "Content is required"),
-  post_id: z.number().min(1, "Post ID is required"), 
+  post_id: z.number().min(1, "Post ID is required"),
 });
 
 interface CommentProps {
   name: string;
   position: string;
-  postId: number; 
+  postId: number;
 }
 
 const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
   const supabase = createClient();
-
   const [user, setUser] = useState<any | null>(null);
+  const [createComment, { isLoading }] = useCreateCommentMutation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -45,8 +45,6 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
     fetchUser();
   }, [supabase]);
 
-  const [createComment, { isLoading }] = useCreateCommentMutation();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,29 +53,23 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!user?.id) {
-      console.error("User ID is not available.");
-      return;
-    }
-
-    const commentData = {
-      content: values.content,
-      user_id: user.id,
-      post_id: values.post_id,
-    };
-
-    try {
-      await createComment(commentData).unwrap(); 
-      console.log("Comment created successfully.");
-      form.reset(); 
-    } catch (error) {
-      console.error("Failed to create comment:", error);
-    }
-  };
-
   const handleCancel = () => {
     form.reset();
+  };
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (user) {
+      try {
+        await createComment({
+          content: values.content,
+          user_id: user.id,
+          post_id: values.post_id,
+        }).unwrap();
+        form.reset();
+      } catch (error) {
+        console.error("Failed to create comment:", error);
+      }
+    }
   };
 
   return (
@@ -105,7 +97,7 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
               <FormItem>
                 <FormControl>
                   <Textarea
-                    placeholder="You comment here..."
+                    placeholder="Your comment here..."
                     className="resize-none"
                     {...field}
                   />
