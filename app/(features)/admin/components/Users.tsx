@@ -26,8 +26,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import EditGardener from "@/components/EditGardener";
-import AddGardeners from "@/components/AddGardeners";
+import EditGardener from "@/app/(features)/admin/components/EditGardener";
+import AddGardeners from "@/app/(features)/admin/components/AddGardeners";
 import {
   Pagination,
   PaginationContent,

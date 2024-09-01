@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreatePostMutation } from "@/app/services/postSlice";
 import { createClient } from "@/utils/supabase/client";
-import ProfilePicture from "./ProfilePicture";
+import ProfilePicture from "@/components/ProfilePicture";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -28,7 +28,7 @@ interface PostCardProps {
   position: string;
 }
 
-const PostCard3: React.FC<PostCardProps> = ({ position }) => {
+const CreatePost: React.FC<PostCardProps> = ({ position }) => {
   const supabase = createClient();
 
   const [user, setUser] = useState<any | null>(null);
@@ -171,4 +171,4 @@ const PostCard3: React.FC<PostCardProps> = ({ position }) => {
   );
 };
 
-export default PostCard3;
+export default CreatePost;

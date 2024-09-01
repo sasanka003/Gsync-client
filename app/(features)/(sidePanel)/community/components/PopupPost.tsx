@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardTitle } from "./ui/card";
-import ProfilePicture from "./ProfilePicture";
+import {
+  Card,
+  CardContent,
+  CardTitle,
+} from "../../../../../components/ui/card";
+import ProfilePicture from "../../../../../components/ProfilePicture";
 import CreateComment from "./CreateComment";
 import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 import CommentCard from "./CommentCard";

@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ContentLayout } from "@/components/dashboard/content-layout";
-import PostCard from "@/components/PostCard";
-import TrendingTopics from "@/components/TrendingTopics";
-import ActiveUsers from "@/components/ActiveUsers";
-import PostCard3 from "@/components/PostCard3";
+import PostCard from "@/app/(features)/(sidePanel)/community/components/PostCard";
+import TrendingTopics from "@/app/(features)/(sidePanel)/community/components/TrendingTopics";
+import ActiveUsers from "@/app/(features)/(sidePanel)/community/components/ActiveUsers";
 import { useGetAllPostsQuery } from "@/app/services/postSlice";
+import CreatePost from "./components/CreatePost";
 
 const POSTS_PER_PAGE = 3;
 
@@ -68,7 +68,7 @@ export default function CommunityPage() {
     <ContentLayout title="Community">
       <div className="flex flex-row gap-5 justify-between pl-8 pr-20 pt-10">
         <div className="flex flex-col items-center">
-          <PostCard3 position="Farmer" />
+          <CreatePost position="Farmer" />
           <div className="w-[712px] border border-text rounded-lg mt-6 p-4">
             <div className="text-h2 mb-4 text-common">Community Posts</div>
             <div
