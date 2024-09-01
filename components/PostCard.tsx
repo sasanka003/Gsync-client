@@ -6,7 +6,7 @@ import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 import PopupPost from "./PopupPost";
 import CommentCards from "./CommentCards"; // Import the CommentCard component
 import CreateComment from "./CreateComment";
-import { useGetAllPostsQuery } from "@/app/services/postSlice";
+import ProfilePicture from "./ProfilePicture";
 
 interface PostCardProps {
   post_id: number;
@@ -60,13 +60,7 @@ const PostCard: React.FC<PostCardProps> = ({
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
       <div className="flex items-center mb-2">
-        <Image
-          src="/images/profile.png"
-          width={40}
-          height={40}
-          alt="Profile picture"
-          className="mr-4"
-        />
+        <ProfilePicture name={author} className="mr-4" />
         <div className="flex-1">
           <CardTitle className="text-lg font-bold text-common">
             {title}
@@ -102,64 +96,45 @@ const PostCard: React.FC<PostCardProps> = ({
       </div>
 
       {isPopupVisible && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
-      <div className="pb-6 flex items-center justify-between">
-        <h2 className="text-h3 font-bold text-common">POST : {title}</h2>
-        <button
-          className="absolute top-2 right-2 pt-4 pr-4 text-common hover:text-gray-700"
-          onClick={togglePopup}
-        >
-          X
-        </button>
-      </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
+            <div className="pb-6 flex items-center justify-between">
+              <h2 className="text-h3 font-bold text-common">POST : {title}</h2>
+              <button
+                className="absolute top-2 right-2 pt-4 pr-4 text-common hover:text-gray-700"
+                onClick={togglePopup}
+              >
+                X
+              </button>
+            </div>
 
-      <PopupPost 
+            <PopupPost
               title={title}
               content={content}
               author={author}
               createdAt={formattedDate}
             />
 
-      {/* Comments Section */}
-      <div className="pt-4 border-t border-gray-200 mt-4">
-        <CommentCards
-          title={title}
-          content={content}
-          author={author}
-          post_id={post_id}
-          upvotes={upvotes}
-          downvotes={downvotes}
-          commentsCount={commentsCount}
-          createdAt={createdAt}
-        />
-      </div>
+            {/* Comments Section */}
+            <div className="pt-4 border-t border-gray-200 mt-4">
+              <CommentCards
+                title={title}
+                content={content}
+                author={author}
+                post_id={post_id}
+                upvotes={upvotes}
+                downvotes={downvotes}
+                commentsCount={commentsCount}
+                createdAt={createdAt}
+              />
+            </div>
 
-      <div className="pt-4 border-t border-gray-200 mt-4">
-        <CreateComment name="hello" position="hello" postId={0} />
-      </div>
-    </div>
-  </div>
-)}
-
-
-      {/* Display comments data for debugging purposes */}
-      {/* <div className="mt-4 ml-14">
-        <h3 className="text-lg font-bold">Comments:</h3>
-        {isLoading ? (
-          <p>Loading comments...</p>
-        ) : error ? (
-          <p>Error loading comments</p>
-        ) : (
-          <ul className="list-disc pl-5">
-            {comments.map((comment, index) => (
-              <li key={index} className="text-sm text-[#6B7280]">
-                {JSON.stringify(comment)}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div> */}
+            <div className="pt-4 border-t border-gray-200 mt-4">
+              <CreateComment name="hello" position="hello" postId={0} />
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

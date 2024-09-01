@@ -68,7 +68,7 @@ export default function CommunityPage() {
     <ContentLayout title="Community">
       <div className="flex flex-row gap-5 justify-between pl-8 pr-20 pt-10">
         <div className="flex flex-col items-center">
-          <PostCard3 position="Farmer" name="Waruna Parakrama" />
+          <PostCard3 position="Farmer" />
           <div className="w-[712px] border border-text rounded-lg mt-6 p-4">
             <div className="text-h2 mb-4 text-common">Community Posts</div>
             <div

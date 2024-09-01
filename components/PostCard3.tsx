@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreatePostMutation } from "@/app/services/postSlice";
 import { createClient } from "@/utils/supabase/client";
+import ProfilePicture from "./ProfilePicture";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -24,11 +25,10 @@ const formSchema = z.object({
 });
 
 interface PostCardProps {
-  name: string;
   position: string;
 }
 
-const PostCard3: React.FC<PostCardProps> = ({ name, position }) => {
+const PostCard3: React.FC<PostCardProps> = ({ position }) => {
   const supabase = createClient();
 
   const [user, setUser] = useState<any | null>(null);
@@ -95,12 +95,11 @@ const PostCard3: React.FC<PostCardProps> = ({ name, position }) => {
   return (
     <div className="border border-text rounded-lg p-4 w-[712px] mx-auto">
       <div className="flex items-center mb-4">
-        <img
-          src="/images/Avatar.png"
-          alt="User profile"
-          className="w-10 h-10 rounded-full"
+        <ProfilePicture
+          name={user?.user_metadata?.name ?? "Anonymous"}
+          className="mr-4"
         />
-        <div className="ml-4">
+        <div className="">
           <div className="font-semibold text-large text-common">
             {user?.user_metadata.name}
           </div>
