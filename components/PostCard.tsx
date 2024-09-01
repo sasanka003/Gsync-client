@@ -97,7 +97,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
       {isPopupVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-fill p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
+          <div className="bg-fill p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
             <div className="pb-6 flex items-center justify-between">
               <h2 className="text-h3 font-bold text-common pl-10 ml-4">
                 POST : {title}

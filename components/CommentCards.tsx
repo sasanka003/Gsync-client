@@ -52,9 +52,9 @@ const PostCard: React.FC<PostCardProps> = ({
   };
 
   return (
-    <Card className="border border-text rounded-md p-4 max-w-[680px] shadow-sm ml-6 mr-6">
+    <Card className="border border-text rounded-md p-4 pb-0 max-w-[680px] shadow-sm ml-6 mr-6">
       {comments.map((comment, index) => (
-        <div key={index} className="flex items-start mb-4">
+        <div key={index} className="flex items-start">
           <Image
             src="/images/profile.png"
             width={40}
