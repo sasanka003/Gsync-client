@@ -101,56 +101,54 @@ const PostCard: React.FC<PostCardProps> = ({
       </div>
 
       {isPopupVisible && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-  <div className="bg-fill p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
-      <div className="pb-6 flex items-center justify-between">
-          <h2 className="text-h3 font-bold text-common pl-10 ml-4">POST : {title}</h2>
-          <button
-              className="absolute top-2 right-2 pt-4 pr-4 text-common hover:text-gray-700"
-              onClick={togglePopup}
-          >
-              X
-          </button>
-      </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-fill p-6 rounded-lg shadow-lg w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
+            <div className="pb-6 flex items-center justify-between">
+              <h2 className="text-h3 font-bold text-common pl-10 ml-4">POST : {title}</h2>
+              <button
+                className="absolute top-2 right-2 pt-4 pr-4 text-common hover:text-gray-700"
+                onClick={togglePopup}
+              >
+                X
+              </button>
+            </div>
 
-      <PopupPost 
-          title={title}
-          content={content}
-          author={author}
-          createdAt={formattedDate}
-      />
-
-      <div className="pt-4 border-t border-gray-200 mt-4 max-h-60 overflow-y-auto space-y-4">
-          <CommentCards
+            <PopupPost 
               title={title}
               content={content}
               author={author}
-              post_id={post_id}
-              upvotes={upvotes}
-              downvotes={downvotes}
-              commentsCount={commentsCount}
-              createdAt={createdAt}
-          />
-                <CommentCards
-              title={title}
-              content={content}
-              author={author}
-              post_id={post_id}
-              upvotes={upvotes}
-              downvotes={downvotes}
-              commentsCount={commentsCount}
-              createdAt={createdAt}
-          />
-      </div>
+              createdAt={formattedDate}
+            />
 
-      <div className="pt-4 border-t border-gray-200 mt-4">
-          <CreateComment name="hello" position="hello" postId={0} />
-      </div>
-  </div>
-</div>
+            <div className="pt-4 border-t border-gray-200 mt-4 max-h-60 overflow-y-auto space-y-4">
+              <CommentCards
+                title={title}
+                content={content}
+                author={author}
+                post_id={post_id}
+                upvotes={upvotes}
+                downvotes={downvotes}
+                commentsCount={commentsCount}
+                createdAt={createdAt}
+              />
+              <CommentCards
+                title={title}
+                content={content}
+                author={author}
+                post_id={post_id}
+                upvotes={upvotes}
+                downvotes={downvotes}
+                commentsCount={commentsCount}
+                createdAt={createdAt}
+              />
+            </div>
 
-)}
-
+            <div className="pt-4 border-t border-gray-200 mt-4">
+              <CreateComment name="hello" position="hello" postId={0} />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Display comments data for debugging purposes */}
       {/* <div className="mt-4 ml-14">
