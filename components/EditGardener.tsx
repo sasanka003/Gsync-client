@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,31 +12,59 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useEditGardenerMutation } from "@/app/services/systemAdminSlice";
+import { useToast } from "./ui/use-toast";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address").min(1, "Email is required"),
-  address: z.string().min(1, "Address is required"),
-  contactNumber: z
-    .string()
-    .min(1, "Contact Number is required")
-    .regex(/^\+?\d{10,15}$/, "Invalid contact number"),
+  phone: z.string(),
 });
 
-const GardenerForm = () => {
+const GardenerForm = ({
+  gardener,
+  closePopup,
+}: {
+  gardener: any;
+  closePopup: () => void;
+}) => {
+  const [editGardener] = useEditGardenerMutation();
+
+  const { toast } = useToast();
+
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "Waruna Parackkrama",
-      email: "wparackkrama@gmail.com",
-      address: "221/B, Baker St, Colombo 07",
-      contactNumber: "+94 77 123 4567",
+      name: gardener?.name || "",
+      email: gardener?.email || "",
+      phone: gardener?.phone || "",
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Form data:", data);
-    form.reset();
+  const onSubmit = async (data: any) => {
+    try {
+      await editGardener({
+        user_id: gardener.user_id,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+      }).unwrap();
+
+      toast({
+        title: "Success!",
+        description: "Gardener has been edited successfully.",
+      });
+
+      form.reset();
+      closePopup(); // Close the popup
+    } catch (error) {
+      console.error("Failed to edit gardener:", error);
+      toast({
+        title: "Error",
+        description: "Failed to edit gardener.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -53,7 +79,7 @@ const GardenerForm = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Waruna Parackkrama" />
+                  <Input {...field} placeholder="" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -67,7 +93,7 @@ const GardenerForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="wparackkrama@gmail.com" />
+                  <Input {...field} placeholder="" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -76,26 +102,12 @@ const GardenerForm = () => {
 
           <FormField
             control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="221/B, Baker St, Colombo 07" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="contactNumber"
+            name="phone"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Contact Number</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="+94 77 123 4567" />
+                  <Input {...field} placeholder="" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,7 +116,7 @@ const GardenerForm = () => {
 
           <div className="flex justify-end space-x-4">
             <Button type="submit">Edit Gardener</Button>
-            <Button variant="outline" onClick={() => window.location.reload()}>
+            <Button variant="outline" onClick={closePopup}>
               Cancel
             </Button>
           </div>

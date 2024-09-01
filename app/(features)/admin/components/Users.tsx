@@ -19,61 +19,39 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { CalendarIcon, Edit, Ellipsis } from "lucide-react";
+import { CalendarIcon, Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import EditGardener from "@/components/EditGardener";
 import AddGardeners from "@/components/AddGardeners";
-
-const Pagination = ({
-  totalItems,
-  itemsPerPage,
-  currentPage,
-  onPageChange,
-}: {
-  totalItems: number;
-  itemsPerPage: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}) => {
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  return (
-    <div className="flex justify-center mt-4">
-      <button
-        onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
-        disabled={currentPage === 1}
-        className="px-4 py-2 mr-2 bg-background rounded-md text-muted-foreground"
-      >
-        Previous
-      </button>
-      {Array.from({ length: totalPages }, (_, index) => (
-        <button
-          key={index + 1}
-          onClick={() => onPageChange(index + 1)}
-          className={`px-4 py-2 mr-2 rounded-md hover:bg-gray-200 ${
-            currentPage === index + 1
-              ? "bg-background text-muted-foreground"
-              : "bg-background"
-          }`}
-        >
-          {index + 1}
-        </button>
-      ))}
-      <button
-        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
-        disabled={currentPage === totalPages}
-        className="px-4 py-2 mr-2 bg-background rounded-md text-muted-foreground"
-      >
-        Next
-      </button>
-    </div>
-  );
-};
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  useDeleteGardenerMutation,
+  useGetAllGardenersQuery,
+} from "@/app/services/systemAdminSlice";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const DatePickerButton = () => {
   const [selectedMonth, setSelectedMonth] = useState("January");
@@ -114,33 +92,50 @@ const DatePickerButton = () => {
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
+
   const itemsPerPage = 10;
+
   const [selectedGardeners, setSelectedGardeners] = useState<Set<string>>(
     new Set()
   );
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const [popupContent, setPopupContent] = useState<JSX.Element | null>(null);
 
-  const gardeners = Array.from({ length: 44 }, (_, index) => ({
-    id: `#${String(index + 1).padStart(4, "0")}`,
-    name: index === 0 ? "gsyncuser1" : "Waruna Parackkrama",
-    email: "warunapara@gmail.com",
-    address: "221/B, Baker St, Colombo 06",
-    contact: "94 77 123 4567",
-  }));
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const [deleteGardener] = useDeleteGardenerMutation();
+
+  const { toast } = useToast();
+
+  // const isAdmin = useAdminAccess();
+  const { data, isLoading, isError } = useGetAllGardenersQuery(
+    { page: currentPage, page_size: itemsPerPage }
+    // { skip: !isAdmin }
+  );
+
+  // if (!isAdmin) {
+  //   return <div>You do not have permission to view this page.</div>;
+  // }
+
+  if (isLoading) {
+    return <div>Loading gardeners...</div>;
+  }
+
+  if (isError) {
+    return <div>Error loading gardeners.</div>;
+  }
+
+  const gardeners = data || [];
+  const totalItems = data?.length || 0;
 
   const filteredGardeners = gardeners.filter((gardener) =>
     gardener.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredGardeners.slice(
-    indexOfFirstItem,
-    indexOfLastItem
   );
 
   const handleCheckboxChange = (id: string) => {
@@ -161,13 +156,46 @@ const Users = () => {
 
   const handleDropdownSelect = (option: string, gardener: any) => {
     if (option === "edit") {
-      setPopupContent(<EditGardener />);
+      setPopupContent(
+        <EditGardener
+          gardener={gardener}
+          closePopup={() => setIsPopupOpen(false)}
+        />
+      );
       setIsPopupOpen(true);
+    } else if (option === "remove") {
+      setSelectedGardeners(new Set([gardener.user_id]));
+      setOpenDialog(true);
     } else if (option === "add") {
       setPopupContent(<AddGardeners />);
       setIsPopupOpen(true);
     }
   };
+
+  const confirmDelete = async () => {
+    if (selectedGardeners.size > 0) {
+      try {
+        const userIds = Array.from(selectedGardeners);
+        for (const userId of userIds) {
+          await deleteGardener(userId).unwrap(); // Use unwrap to handle promise
+        }
+        toast({
+          title: "Success!",
+          description: "Gardener has been deleted successfully.",
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to delete gardener.",
+          variant: "destructive",
+        });
+      }
+      setSelectedGardeners(new Set());
+      setOpenDialog(false);
+    }
+  };
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   return (
     <div className="pt-10 pl-10 pr-5">
@@ -187,7 +215,10 @@ const Users = () => {
               <MagnifyingGlassIcon className="absolute left-2 top-2 h-6 w-6 text-muted-foreground" />
             </div>
             <DatePickerButton />
-            <Button className="bg-accent-foreground text-fill">
+            <Button
+              className="bg-accent-foreground text-fill"
+              onClick={() => handleDropdownSelect("add", null)}
+            >
               + Add Gardener
             </Button>
           </div>
@@ -197,7 +228,7 @@ const Users = () => {
             <p className="text-p-ui-medium text-common mt-2">
               All Gardeners{" "}
               <span className=" ml-2 text-p-ui-medium text-muted-foreground">
-                {gardeners.length}
+                {totalItems}
               </span>
             </p>
           </div>
@@ -215,78 +246,120 @@ const Users = () => {
               <TableHead>USER ID</TableHead>
               <TableHead>NAME</TableHead>
               <TableHead>EMAIL</TableHead>
-              <TableHead>ADDRESS</TableHead>
-              <TableHead>CONTACT NUMBER</TableHead>
+              <TableHead>PHONE</TableHead>
               <TableHead className="w-10 p-0" />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentItems.map((gardener) => (
-              <TableRow key={gardener.id}>
+            {filteredGardeners.map((gardener) => (
+              <TableRow key={gardener.user_id}>
                 <TableCell className="w-10 p-0">
                   <Checkbox
-                    checked={selectedGardeners.has(gardener.id)}
-                    onCheckedChange={() => handleCheckboxChange(gardener.id)}
+                    checked={selectedGardeners.has(gardener.user_id)}
+                    onCheckedChange={() =>
+                      handleCheckboxChange(gardener.user_id)
+                    }
                   />
                 </TableCell>
-                <TableCell>{gardener.id}</TableCell>
+                <TableCell>{gardener.user_id}</TableCell>
                 <TableCell>{gardener.name}</TableCell>
                 <TableCell>{gardener.email}</TableCell>
-                <TableCell>{gardener.address}</TableCell>
-                <TableCell>{gardener.contact}</TableCell>
+                <TableCell>{gardener.phone}</TableCell>
                 <TableCell className="w-10 p-0">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        onClick={() => handleDropdownOpen(gardener.id)}
+                  <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          onClick={() => handleDropdownOpen(gardener.user_id)}
+                        >
+                          <Ellipsis className="text-muted-foreground" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="bg-white border border-gray-200 rounded-md shadow-md"
                       >
-                        <Ellipsis className="text-muted-foreground" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      sideOffset={5}
-                      className="bg-white border border-gray-200 rounded-md shadow-md"
-                    >
-                      <DropdownMenuItem
-                        className="px-4 py-2 text-muted-forground hover:bg-accent"
-                        onClick={() => handleDropdownSelect("view", gardener)}
-                      >
-                        View Gardener
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="px-4 py-2 text-muted-forground hover:bg-accent"
-                        onClick={() => handleDropdownSelect("edit", gardener)}
-                      >
-                        Edit Gardener
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="px-4 py-2 text-red-600 hover:bg-accent"
-                        onClick={() => handleDropdownSelect("remove", gardener)}
-                      >
-                        Remove Gardener
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                        <DropdownMenuItem
+                          className="px-4 py-2 text-muted-forground hover:bg-accent"
+                          onClick={() => handleDropdownSelect("view", gardener)}
+                        >
+                          View Gardener
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="px-4 py-2 text-muted-forground hover:bg-accent"
+                          onClick={() => handleDropdownSelect("edit", gardener)}
+                        >
+                          Edit Gardener
+                        </DropdownMenuItem>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem
+                            className="px-4 py-2 text-red-600 hover:bg-accent"
+                            onClick={() =>
+                              handleDropdownSelect("remove", gardener)
+                            }
+                          >
+                            Remove Gardener
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your account and remove your data from our
+                          servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmDelete}>
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        <div className="flex justify-between">
-          <div className="text-p text-common mt-5">
-            Showing {indexOfFirstItem + 1} to{" "}
-            {Math.min(indexOfLastItem, filteredGardeners.length)} of{" "}
-            {filteredGardeners.length} results
+        <div className="flex justify-between items-center mt-4">
+          <div className="text-p text-common">
+            Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+            {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}{" "}
+            results
           </div>
-
-          <Pagination
-            totalItems={filteredGardeners.length}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-          />
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    onClick={() => setCurrentPage(index + 1)}
+                    isActive={currentPage === index + 1}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() =>
+                    setCurrentPage(Math.min(totalPages, currentPage + 1))
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
 
