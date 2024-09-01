@@ -14,6 +14,15 @@ export interface EditGardenerRequest {
   phone: string;
 }
 
+export interface Plantation {
+  plantation_id: number;
+  type: string;
+  user_id: string;
+  city: string;
+  createdAt: string;
+  status: string;
+}
+
 export const adminApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllGardeners: builder.query<Gardener[], { page: number; page_size: number }>({
@@ -22,7 +31,6 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['gardnersList'],
-      // You can add caching or other options here if needed
     }),
     editGardener: builder.mutation<void, EditGardenerRequest>({
       query: ({ user_id, ...data }) => ({
@@ -39,7 +47,19 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['gardnersList'],
     }),
+    getPlantationDetails: builder.query<Plantation[], void>({
+      query: () => ({
+        url: `/main/admin/plantations`,
+        method: 'GET',
+      }),
+      providesTags: ['plantationList'],
+    }),
   }),
 });
 
-export const { useGetAllGardenersQuery, useEditGardenerMutation, useDeleteGardenerMutation } = adminApiSlice;
+export const { 
+  useGetAllGardenersQuery, 
+  useEditGardenerMutation, 
+  useDeleteGardenerMutation, 
+  useGetPlantationDetailsQuery
+} = adminApiSlice;
