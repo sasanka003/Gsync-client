@@ -12,7 +12,6 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateCommentMutation } from "@/app/services/postSlice"; 
 import { createClient } from "@/utils/supabase/client";
@@ -82,7 +81,7 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
   };
 
   return (
-    <div className="border border-text rounded-lg p-4 w-auto mx-auto">
+    <div className="border border-fill rounded-lg p-4 w-auto mx-auto ml-2 mr-2">
       <div className="flex items-center mb-4">
         <img
           src="/images/Avatar.png"
@@ -106,7 +105,7 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
               <FormItem>
                 <FormControl>
                   <Textarea
-                    placeholder="What's on your mind..."
+                    placeholder="You comment here..."
                     className="resize-none"
                     {...field}
                   />
@@ -116,9 +115,9 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
             )}
           />
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-start space-x-2">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Posting..." : "Post Comment"}
+              {isLoading ? "Posting..." : "Add Comment"}
             </Button>
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancel

@@ -37,9 +37,8 @@ const PopupPost: React.FC<PostCardProps> = ({
     setIsPopupVisible(!isPopupVisible);
   };
 
-
   return (
-    <Card className="p-4 mb-4 w-auto max-w-[680px]">
+    <Card className="p-4 mb-4 w-auto max-w-[680px] border border-white shadow-lg">
       <div className="flex items-center mb-2">
         <Image
           src="/images/profile.png"
@@ -56,8 +55,9 @@ const PopupPost: React.FC<PostCardProps> = ({
         </div>
       </div>
       <CardContent className="text-common p-0 mb-4 ml-14">
-        {content}
+        <div className="overflow-y-auto max-h-[4.5rem]">{content}</div>
       </CardContent>
+
       <div className="flex items-center text-[#6B7280] text-detail ml-14">
         {formattedDate}
       </div>

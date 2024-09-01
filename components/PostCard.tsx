@@ -4,9 +4,8 @@ import Image from "next/image";
 import { ArrowDownIcon, ArrowUpIcon, MessageCircleIcon } from "./Icons";
 import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 import PopupPost from "./PopupPost";
-import CommentCards from "./CommentCards"; // Import the CommentCard component
+import CommentCards from "./CommentCards"; 
 import CreateComment from "./CreateComment";
-import { useGetAllPostsQuery } from "@/app/services/postSlice";
 
 interface PostCardProps {
   post_id: number;
@@ -71,7 +70,7 @@ const PostCard: React.FC<PostCardProps> = ({
           <CardTitle className="text-lg font-bold text-common">
             {title}
           </CardTitle>
-          <p className="text-detail text-[#6B7280]">By {author}</p>
+          <p className="text-detail text-muted-foreground">By {author}</p>
         </div>
         <div className="flex items-center">
           <div className="flex items-center">
@@ -103,43 +102,53 @@ const PostCard: React.FC<PostCardProps> = ({
 
       {isPopupVisible && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
+  <div className="bg-fill p-6 rounded-lg shadow-lg w-full max-w-2xl relative">
       <div className="pb-6 flex items-center justify-between">
-        <h2 className="text-h3 font-bold text-common">POST : {title}</h2>
-        <button
-          className="absolute top-2 right-2 pt-4 pr-4 text-common hover:text-gray-700"
-          onClick={togglePopup}
-        >
-          X
-        </button>
+          <h2 className="text-h3 font-bold text-common pl-10 ml-4">POST : {title}</h2>
+          <button
+              className="absolute top-2 right-2 pt-4 pr-4 text-common hover:text-gray-700"
+              onClick={togglePopup}
+          >
+              X
+          </button>
       </div>
 
       <PopupPost 
-              title={title}
-              content={content}
-              author={author}
-              createdAt={formattedDate}
-            />
-
-      {/* Comments Section */}
-      <div className="pt-4 border-t border-gray-200 mt-4">
-        <CommentCards
           title={title}
           content={content}
           author={author}
-          post_id={post_id}
-          upvotes={upvotes}
-          downvotes={downvotes}
-          commentsCount={commentsCount}
-          createdAt={createdAt}
-        />
+          createdAt={formattedDate}
+      />
+
+      <div className="pt-4 border-t border-gray-200 mt-4 max-h-60 overflow-y-auto space-y-4">
+          <CommentCards
+              title={title}
+              content={content}
+              author={author}
+              post_id={post_id}
+              upvotes={upvotes}
+              downvotes={downvotes}
+              commentsCount={commentsCount}
+              createdAt={createdAt}
+          />
+                <CommentCards
+              title={title}
+              content={content}
+              author={author}
+              post_id={post_id}
+              upvotes={upvotes}
+              downvotes={downvotes}
+              commentsCount={commentsCount}
+              createdAt={createdAt}
+          />
       </div>
 
       <div className="pt-4 border-t border-gray-200 mt-4">
-        <CreateComment name="hello" position="hello" postId={0} />
+          <CreateComment name="hello" position="hello" postId={0} />
       </div>
-    </div>
   </div>
+</div>
+
 )}
 
 
