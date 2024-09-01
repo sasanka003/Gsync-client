@@ -18,18 +18,32 @@ export const userApiSlice = apiSlice.injectEndpoints({
           formData.append('file', file);
         }
         return {
-          url: '/post/create',  // Corrected URL
+          url: '/post/create',
           method: 'POST',
           body: formData,
           formData: true,
         };
       },
-      invalidatesTags: ['postList']
+      invalidatesTags: ['postList'],
     }),
     getCommentsByPostId: builder.query<PostComment[], number>({
       query: (postId) => `/comments/${postId}`,
     }),
+    // New createComment mutation
+    createComment: builder.mutation<Comment, { content: string; user_id: string; post_id: number }>({
+      query: (data) => ({
+        url: '/comments/create', // Correct endpoint URL for creating a comment
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['commentList'], // Assuming you have a tag to refresh comments
+    }),
   }),
 });
 
-export const { useGetAllPostsQuery, useCreatePostMutation, useGetCommentsByPostIdQuery} = userApiSlice;
+export const {
+  useGetAllPostsQuery,
+  useCreatePostMutation,
+  useGetCommentsByPostIdQuery,
+  useCreateCommentMutation, // Export the new hook
+} = userApiSlice;

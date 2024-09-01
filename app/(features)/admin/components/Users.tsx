@@ -19,7 +19,15 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { CalendarIcon, Ellipsis } from "lucide-react";
+import { CalendarIcon, Edit, Ellipsis } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import EditGardener from "@/components/EditGardener";
+import AddGardeners from "@/components/AddGardeners";
 
 const Pagination = ({
   totalItems,
@@ -104,13 +112,17 @@ const DatePickerButton = () => {
   );
 };
 
-const users = () => {
+const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [selectedGardeners, setSelectedGardeners] = useState<Set<string>>(
     new Set()
   );
+
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupContent, setPopupContent] = useState<JSX.Element | null>(null);
 
   const gardeners = Array.from({ length: 44 }, (_, index) => ({
     id: `#${String(index + 1).padStart(4, "0")}`,
@@ -141,6 +153,20 @@ const users = () => {
       }
       return newSelected;
     });
+  };
+
+  const handleDropdownOpen = (id: string) => {
+    setOpenDropdown(openDropdown === id ? null : id);
+  };
+
+  const handleDropdownSelect = (option: string, gardener: any) => {
+    if (option === "edit") {
+      setPopupContent(<EditGardener />);
+      setIsPopupOpen(true);
+    } else if (option === "add") {
+      setPopupContent(<AddGardeners />);
+      setIsPopupOpen(true);
+    }
   };
 
   return (
@@ -209,9 +235,40 @@ const users = () => {
                 <TableCell>{gardener.address}</TableCell>
                 <TableCell>{gardener.contact}</TableCell>
                 <TableCell className="w-10 p-0">
-                  <Button variant="ghost">
-                    <Ellipsis className="text-muted-foreground" />
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        onClick={() => handleDropdownOpen(gardener.id)}
+                      >
+                        <Ellipsis className="text-muted-foreground" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      sideOffset={5}
+                      className="bg-white border border-gray-200 rounded-md shadow-md"
+                    >
+                      <DropdownMenuItem
+                        className="px-4 py-2 text-muted-forground hover:bg-accent"
+                        onClick={() => handleDropdownSelect("view", gardener)}
+                      >
+                        View Gardener
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="px-4 py-2 text-muted-forground hover:bg-accent"
+                        onClick={() => handleDropdownSelect("edit", gardener)}
+                      >
+                        Edit Gardener
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="px-4 py-2 text-red-600 hover:bg-accent"
+                        onClick={() => handleDropdownSelect("remove", gardener)}
+                      >
+                        Remove Gardener
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
@@ -232,8 +289,16 @@ const users = () => {
           />
         </div>
       </div>
+
+      {isPopupOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-auto">
+            {popupContent}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default users;
+export default Users;

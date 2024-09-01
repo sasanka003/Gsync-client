@@ -19,5 +19,5 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery,
   endpoints: () => ({}),
-  tagTypes: ["postList"]
+  tagTypes: ["postList", "commentList"],
 });

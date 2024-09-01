@@ -21,3 +21,18 @@ type CreatePost = {
     file?: File;
 }
 
+type PostComment ={
+    content: string;
+    created_at: string;
+    user_id: string;
+    comment_id: number;
+    last_updated: string | null;
+    post_id: number;
+}
+
+type createComment = {
+    content: string;
+    user_id: string;
+    post_id: number;
+}
+
