@@ -26,7 +26,11 @@ const formatDate = (dateString: string): string => {
   });
 };
 
-const PostCard: React.FC<PostCardProps> = ({ post_id, createdAt }) => {
+const PostCard: React.FC<PostCardProps> = ({
+  post_id,
+  createdAt,
+}) => {
+  const [expandedComments, setExpandedComments] = useState<Set<number>>(new Set()); // Track expanded comments
   const formattedDate = formatDate(createdAt);
 
   const {
@@ -35,22 +39,47 @@ const PostCard: React.FC<PostCardProps> = ({ post_id, createdAt }) => {
     isLoading,
   } = useGetCommentsByPostIdQuery(post_id);
 
+  const toggleExpand = (index: number) => {
+    setExpandedComments(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
   return (
     <Card className="border border-text rounded-md p-4 max-w-[680px] shadow-sm ml-6 mr-6">
       {comments.map((comment, index) => (
-        <div key={index} className="flex items-start">
+        <div key={index} className="flex items-start mb-4">
           <Image
             src="/images/profile.png"
             width={40}
             height={40}
             alt="Profile picture"
-            className="rounded-full"
+            className="rounded-full mr-4"
           />
           <div className="flex-1">
             <CardContent className="text-[#374151]">
               <div className="text-detail pb-4">{comment.user_id}</div>
-              <div className="overflow-y-auto max-h-[4.5rem]">
-                {comment.content}
+              <div className={`relative ${expandedComments.has(index) ? "" : "line-clamp-3"}`}>
+                <div
+                  className={`overflow-hidden ${expandedComments.has(index) ? "" : "line-clamp-3"}`}
+                  style={{ maxHeight: expandedComments.has(index) ? "none" : "4.5rem" }}
+                >
+                  {comment.content}
+                </div>
+                {!expandedComments.has(index) && (
+                  <button
+                    className="text-blue-500 hover:underline"
+                    onClick={() => toggleExpand(index)}
+                  >
+                    See More...
+                  </button>
+                )}
               </div>
             </CardContent>
           </div>
