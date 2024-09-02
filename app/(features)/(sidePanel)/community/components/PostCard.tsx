@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -19,6 +19,13 @@ import {
   DialogTrigger,
 } from "../../../../../components/ui/dialog";
 import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
+import { upvotePost, downvotePost } from "@/lib/vote-actions";
+import { createClient } from "@/utils/supabase/client";
+import { toast } from "@/components/ui/use-toast";
+
+
+const supabase = createClient();
+
 
 interface PostCardProps {
   post_id: number;
@@ -54,8 +61,53 @@ const PostCard: React.FC<PostCardProps> = ({
   createdAt,
 }) => {
   const formattedDate = formatDate(createdAt);
-
+  const [voteCounts, setVoteCounts] = React.useState({ upvotes: upvotes || 0, downvotes: downvotes || 0 });
   const { data: comments = [] } = useGetCommentsByPostIdQuery(post_id);
+
+  useEffect(() => {
+    const channel = supabase.channel(
+      "community-vote-channel"
+    )
+    .on('postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'votes',
+        filter: `post_id=eq.${post_id}`,
+      },
+      (payload) => {
+        console.log('Change received!', payload);
+      }
+    )
+    .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [post_id]);
+
+  const handleUpvote = () => {
+    // if (!userId) {
+    //   toast({
+    //     title: "Error",
+    //     description: "You need to be logged in to vote.",
+    //     variant: "destructive",
+    //   });
+    // }
+    upvotePost(post_id, "");
+  };
+
+  const handleDownvote = () => {
+    // if (!userId) {
+    //   toast({
+    //     title: "Error",
+    //     description: "You need to be logged in to vote.",
+    //     variant: "destructive",
+    //   });
+    // }
+    downvotePost(post_id, "");
+  };
+
 
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
@@ -99,8 +151,8 @@ const PostCard: React.FC<PostCardProps> = ({
                 content={content}
                 author={author}
                 createdAt={formattedDate}
-                upvotes={upvotes}
-                downvotes={downvotes}
+                upvotes={voteCounts.upvotes}
+                downvotes={voteCounts.downvotes}
               />
             </DialogContent>
           </Dialog>
