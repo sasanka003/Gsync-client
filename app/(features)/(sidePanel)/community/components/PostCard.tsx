@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,18 +14,10 @@ import ProfilePicture from "../../../../../components/ProfilePicture";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../../../../../components/ui/dialog";
 import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
-import { upvotePost, downvotePost } from "@/lib/vote-actions";
-import { createClient } from "@/utils/supabase/client";
-import { toast } from "@/components/ui/use-toast";
-
-
-const supabase = createClient();
-
 
 interface PostCardProps {
   post_id: number;
@@ -55,61 +47,28 @@ const PostCard: React.FC<PostCardProps> = ({
   content,
   author,
   post_id,
-  upvotes,
-  downvotes,
+  upvotes: initialUpvotes,
+  downvotes: initialDownvotes,
   commentsCount,
   createdAt,
 }) => {
   const formattedDate = formatDate(createdAt);
-  const [voteCounts, setVoteCounts] = React.useState({ upvotes: upvotes || 0, downvotes: downvotes || 0 });
+  
+  // Initialize state with the provided upvotes and downvotes
+  const [upvotes, setUpvotes] = useState(initialUpvotes || 0);
+  const [downvotes, setDownvotes] = useState(initialDownvotes || 0);
+
   const { data: comments = [] } = useGetCommentsByPostIdQuery(post_id);
 
-  useEffect(() => {
-    const channel = supabase.channel(
-      "community-vote-channel"
-    )
-    .on('postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'votes',
-        filter: `post_id=eq.${post_id}`,
-      },
-      (payload) => {
-        console.log('Change received!', payload);
-      }
-    )
-    .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [post_id]);
-
   const handleUpvote = () => {
-    // uncomment the following lines to enable voting only for logged in users
-    // if (!userId) {
-    //   toast({
-    //     title: "Error",
-    //     description: "You need to be logged in to vote.",
-    //     variant: "destructive",
-    //   });
-    // }
-    upvotePost(post_id, "");
+    // This is where you'd call your API to register the upvote
+    setUpvotes(upvotes + 1);
   };
 
   const handleDownvote = () => {
-    // uncomment the following lines to enable voting only for logged in users
-    // if (!userId) {
-    //   toast({
-    //     title: "Error",
-    //     description: "You need to be logged in to vote.",
-    //     variant: "destructive",
-    //   });
-    // }
-    downvotePost(post_id, "");
+    // This is where you'd call your API to register the downvote
+    setDownvotes(downvotes + 1);
   };
-
 
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
@@ -122,24 +81,22 @@ const PostCard: React.FC<PostCardProps> = ({
           <p className="text-detail text-muted-foreground">By {author}</p>
         </div>
         <div className="flex items-center">
-          <div className="flex items-center">
-            <span>
+          <div className="flex items-center mr-4">
+            <button onClick={handleUpvote}>
               <ArrowUpIcon />
-            </span>
-            <span className="text-list">{upvotes}</span>
+            </button>
+            <span className="text-list ml-2">{upvotes}</span>
           </div>
-          <div className="flex items-center">
-            <span>
+          <div className="flex items-center mr-4">
+            <button onClick={handleDownvote}>
               <ArrowDownIcon />
-            </span>
-            <span className="text-text">{downvotes}</span>
+            </button>
+            <span className="text-list ml-2">{downvotes}</span>
           </div>
           <Dialog>
             <DialogTrigger asChild>
               <div className="flex items-center cursor-pointer">
-                <span className="mr-2">
-                  <MessageCircleIcon />
-                </span>
+                <MessageCircleIcon />
                 <span className="text-text">{comments.length}</span>
               </div>
             </DialogTrigger>
@@ -153,8 +110,8 @@ const PostCard: React.FC<PostCardProps> = ({
                 content={content}
                 author={author}
                 createdAt={formattedDate}
-                upvotes={voteCounts.upvotes}
-                downvotes={voteCounts.downvotes}
+                upvotes={upvotes}
+                downvotes={downvotes}
               />
             </DialogContent>
           </Dialog>
