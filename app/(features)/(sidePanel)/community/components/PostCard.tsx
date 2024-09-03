@@ -1,15 +1,23 @@
 import React from "react";
-import { Card, CardContent, CardTitle } from "./ui/card";
-import { ArrowDownIcon, ArrowUpIcon, MessageCircleIcon } from "./Icons";
+import {
+  Card,
+  CardContent,
+  CardTitle,
+} from "../../../../../components/ui/card";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  MessageCircleIcon,
+} from "../../../../../components/Icons";
 import PopupPost from "./PopupPost";
-import ProfilePicture from "./ProfilePicture";
+import ProfilePicture from "../../../../../components/ProfilePicture";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "../../../../../components/ui/dialog";
 import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
 
 interface PostCardProps {

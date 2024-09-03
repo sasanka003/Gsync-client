@@ -12,22 +12,23 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateCommentMutation } from "@/app/services/postSlice"; 
+import { useCreatePostMutation } from "@/app/services/postSlice";
 import { createClient } from "@/utils/supabase/client";
+import ProfilePicture from "@/components/ProfilePicture";
 
 const formSchema = z.object({
+  title: z.string().min(1, "Title is required"),
   content: z.string().min(1, "Content is required"),
-  post_id: z.number().min(1, "Post ID is required"), 
+  file: z.instanceof(File).optional(),
 });
 
-interface CommentProps {
-  name: string;
+interface PostCardProps {
   position: string;
-  postId: number; 
 }
 
-const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
+const CreatePost: React.FC<PostCardProps> = ({ position }) => {
   const supabase = createClient();
 
   const [user, setUser] = useState<any | null>(null);
@@ -36,6 +37,7 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
     const fetchUser = async () => {
       const { data, error } = await supabase.auth.getUser();
       if (data?.user) {
+        console.log(data?.user.user_metadata.name);
         setUser(data.user);
       } else {
         console.error("Failed to fetch user:", error);
@@ -45,50 +47,59 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
     fetchUser();
   }, [supabase]);
 
-  const [createComment, { isLoading }] = useCreateCommentMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [createPost, { isLoading }] = useCreatePostMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      title: "",
       content: "",
-      post_id: postId,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!user?.id) {
+    if (!user.id) {
       console.error("User ID is not available.");
       return;
     }
 
-    const commentData = {
+    const postData = {
+      title: values.title,
       content: values.content,
+      post_type: "Question",
       user_id: user.id,
-      post_id: values.post_id,
+      parent_post_id: null,
+      file: values.file,
     };
 
     try {
-      await createComment(commentData).unwrap(); 
-      console.log("Comment created successfully.");
-      form.reset(); 
+      await createPost(postData).unwrap();
+      form.reset();
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
-      console.error("Failed to create comment:", error);
+      console.error("Failed to create post:", error);
     }
   };
 
   const handleCancel = () => {
     form.reset();
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
-    <div className="border border-fill rounded-lg p-4 w-auto mx-auto ml-2 mr-2">
+    <div className="border border-text rounded-lg p-4 w-[712px] mx-auto">
       <div className="flex items-center mb-4">
-        <img
-          src="/images/Avatar.png"
-          alt="User profile"
-          className="w-10 h-10 rounded-full"
+        <ProfilePicture
+          name={user?.user_metadata?.name ?? "Anonymous"}
+          className="mr-4"
         />
-        <div className="ml-4">
+        <div className="">
           <div className="font-semibold text-large text-common">
             {user?.user_metadata.name}
           </div>
@@ -100,12 +111,25 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Title..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="content"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <Textarea
-                    placeholder="You comment here..."
+                    placeholder="What's on your mind..."
                     className="resize-none"
                     {...field}
                   />
@@ -115,9 +139,27 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
             )}
           />
 
-          <div className="flex justify-start space-x-2">
+          <FormField
+            control={form.control}
+            name="file"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    ref={fileInputRef}
+                    type="file"
+                    className="w-60"
+                    onChange={(e) => field.onChange(e.target.files?.[0])}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-end space-x-2">
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Posting..." : "Add Comment"}
+              {isLoading ? "Posting..." : "Post"}
             </Button>
             <Button type="button" variant="outline" onClick={handleCancel}>
               Cancel
@@ -129,4 +171,4 @@ const Comment: React.FC<CommentProps> = ({ name, position, postId }) => {
   );
 };
 
-export default Comment;
+export default CreatePost;

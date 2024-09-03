@@ -1,9 +1,13 @@
 import React from "react";
-import { Card, CardContent, CardTitle } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardTitle,
+} from "../../../../../components/ui/card";
 import { MessageSquare, ArrowBigUp, ArrowBigDown } from "lucide-react";
 import Image from "next/image";
 
-interface PostCard2Props {
+interface PostCardImageProps {
   title: string;
   content: string;
   author: string;
@@ -14,7 +18,7 @@ interface PostCard2Props {
   image2Url: string;
 }
 
-const PostCard2: React.FC<PostCard2Props> = ({
+const PostCardImage: React.FC<PostCardImageProps> = ({
   title,
   content,
   author,
@@ -35,7 +39,9 @@ const PostCard2: React.FC<PostCard2Props> = ({
           className="mr-4 rounded-full"
         />
         <div className="flex-1">
-          <CardTitle className="text-lg font-bold text-common">{title}</CardTitle>
+          <CardTitle className="text-lg font-bold text-common">
+            {title}
+          </CardTitle>
           <p className="text-detail text-grey">By {author}</p>
         </div>
         <div className="flex">
@@ -80,4 +86,4 @@ const PostCard2: React.FC<PostCard2Props> = ({
   );
 };
 
-export default PostCard2;
+export default PostCardImage;

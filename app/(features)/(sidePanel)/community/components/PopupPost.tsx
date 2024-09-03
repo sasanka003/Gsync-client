@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardTitle } from "./ui/card";
-import ProfilePicture from "./ProfilePicture";
-import CommentCards from "./CommentCards";
+import {
+  Card,
+  CardContent,
+  CardTitle,
+} from "../../../../../components/ui/card";
+import ProfilePicture from "../../../../../components/ProfilePicture";
 import CreateComment from "./CreateComment";
 import { useGetCommentsByPostIdQuery } from "@/app/services/postSlice";
+import CommentCard from "./CommentCard";
 
 interface PopupPostProps {
   post_id: number;
@@ -34,7 +38,6 @@ const PopupPost: React.FC<PopupPostProps> = ({
     data: comments = [],
     error,
     isLoading,
-    isFetching,
   } = useGetCommentsByPostIdQuery(post_id);
 
   console.log("Fetched Comments:", comments);
@@ -42,6 +45,7 @@ const PopupPost: React.FC<PopupPostProps> = ({
   return (
     <div className="flex-1 overflow-y-auto">
       <Card className="p-4 w-full border border-white shadow-lg">
+        {/* Post content */}
         <div className="flex items-center mb-2">
           <ProfilePicture name={author} className="mr-4" />
           <div className="flex-1">
@@ -58,20 +62,12 @@ const PopupPost: React.FC<PopupPostProps> = ({
           >
             {content}
           </div>
-          {!isContentExpanded && (
+          {content.length > 150 && (
             <button
               className="text-blue-500 hover:underline"
               onClick={toggleContentExpand}
             >
-              See More...
-            </button>
-          )}
-          {isContentExpanded && (
-            <button
-              className="mt-2 text-blue-500 hover:underline"
-              onClick={toggleContentExpand}
-            >
-              See Less...
+              {isContentExpanded ? "See Less..." : "See More..."}
             </button>
           )}
         </CardContent>
@@ -81,6 +77,7 @@ const PopupPost: React.FC<PopupPostProps> = ({
         </div>
       </Card>
 
+      {/* Comments section */}
       <div className="border-t border-gray-200 pt-4">
         {isLoading ? (
           <p>Loading comments...</p>
@@ -89,22 +86,18 @@ const PopupPost: React.FC<PopupPostProps> = ({
         ) : (
           <div className="space-y-4">
             {comments.map((comment: any) => (
-              <CommentCards
+              <CommentCard
                 key={comment.id}
-                title={comment.title}
                 content={comment.content}
-                author={comment.author}
-                post_id={comment.post_id}
-                upvotes={comment.upvotes}
-                downvotes={comment.downvotes}
-                commentsCount={comment.commentsCount}
-                createdAt={comment.createdAt}
+                user_id={comment.user_id}
+                createdAt={comment.created_at}
               />
             ))}
           </div>
         )}
       </div>
 
+      {/* Create comment section */}
       <div className="border-t border-gray-200 pt-4">
         <CreateComment name={author} position="Commenter" postId={post_id} />
       </div>

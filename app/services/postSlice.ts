@@ -1,3 +1,4 @@
+import { toast } from "@/components/ui/use-toast";
 import { apiSlice } from "@/utils/redux/base/apiSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
@@ -28,15 +29,30 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     getCommentsByPostId: builder.query<PostComment[], number>({
       query: (postId) => `/comments/${postId}`,
+      providesTags: ['comments'],
     }),
-    // New createComment mutation
-    createComment: builder.mutation<Comment, { content: string; user_id: string; post_id: number }>({
-      query: (data) => ({
-        url: '/comments/create', // Correct endpoint URL for creating a comment
+    createComment: builder.mutation<PostComment, { content: string; user_id: string; post_id: number }>({
+      query: (commentData) => ({
+        url: `/comments/${commentData.post_id}`,
         method: 'POST',
-        body: data,
+        body: commentData,
       }),
-      invalidatesTags: ['commentList'], // Assuming you have a tag to refresh comments
+      invalidatesTags: ['comments'],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast({
+            title: "Comment added successfully",
+            description: "Your comment has been posted.",
+          });
+        } catch (err) {
+          toast({
+            title: "Error",
+            description: "Failed to add comment. Please try again.",
+            variant: "destructive",
+          });
+        }
+      },
     }),
   }),
 });
@@ -45,5 +61,5 @@ export const {
   useGetAllPostsQuery,
   useCreatePostMutation,
   useGetCommentsByPostIdQuery,
-  useCreateCommentMutation, // Export the new hook
+  useCreateCommentMutation,
 } = userApiSlice;
