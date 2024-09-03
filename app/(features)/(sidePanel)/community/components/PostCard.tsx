@@ -87,6 +87,7 @@ const PostCard: React.FC<PostCardProps> = ({
   }, [post_id]);
 
   const handleUpvote = () => {
+    // uncomment the following lines to enable voting only for logged in users
     // if (!userId) {
     //   toast({
     //     title: "Error",
@@ -98,6 +99,7 @@ const PostCard: React.FC<PostCardProps> = ({
   };
 
   const handleDownvote = () => {
+    // uncomment the following lines to enable voting only for logged in users
     // if (!userId) {
     //   toast({
     //     title: "Error",
