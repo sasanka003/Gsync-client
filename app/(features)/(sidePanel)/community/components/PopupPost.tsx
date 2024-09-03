@@ -77,7 +77,6 @@ const PopupPost: React.FC<PopupPostProps> = ({
         </div>
       </Card>
 
-      {/* Comments section */}
       <div className="border-t border-gray-200 pt-4">
         {isLoading ? (
           <p>Loading comments...</p>
@@ -97,7 +96,6 @@ const PopupPost: React.FC<PopupPostProps> = ({
         )}
       </div>
 
-      {/* Create comment section */}
       <div className="border-t border-gray-200 pt-4">
         <CreateComment name={author} position="Commenter" postId={post_id} />
       </div>
