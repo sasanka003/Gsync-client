@@ -53,20 +53,17 @@ const PostCard: React.FC<PostCardProps> = ({
   createdAt,
 }) => {
   const formattedDate = formatDate(createdAt);
-  
-  // Initialize state with the provided upvotes and downvotes
+
   const [upvotes, setUpvotes] = useState(initialUpvotes || 0);
   const [downvotes, setDownvotes] = useState(initialDownvotes || 0);
 
   const { data: comments = [] } = useGetCommentsByPostIdQuery(post_id);
 
   const handleUpvote = () => {
-    // This is where you'd call your API to register the upvote
     setUpvotes(upvotes + 1);
   };
 
   const handleDownvote = () => {
-    // This is where you'd call your API to register the downvote
     setDownvotes(downvotes + 1);
   };
 
