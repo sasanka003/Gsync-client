@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 
 interface HelpRequestProps {
@@ -8,7 +9,6 @@ interface HelpRequestProps {
   subject: string;
   message: string;
   imageUrl?: string;
-  onResolve: (requestId: string, comments: string) => void;
 }
 
 const HelpRequest = ({
@@ -19,13 +19,9 @@ const HelpRequest = ({
   subject,
   message,
   imageUrl,
-  onResolve,
 }: HelpRequestProps) => {
+  // State for handling comments
   const [comments, setComments] = useState("");
-
-  const handleResolve = () => {
-    onResolve(requestId, comments);
-  };
 
   return (
     <div className="w-[936px] p-6 border rounded-lg shadow-md bg-white ml-10 mt-10">
@@ -35,40 +31,47 @@ const HelpRequest = ({
       <div className="mb-4">
         <div className="flex gap-20 text-common mb-4">
           <div className="flex space-x-1">
-            <div className="text-p-ui-medium w-[85px]"><strong>Username:</strong></div>
+            <div className="text-p-ui-medium w-[85px]">
+              <strong>Username:</strong>
+            </div>
             <span className="text-muted-foreground">{username}</span>
           </div>
           <div className="flex space-x-1">
-            <div className="text-p-ui-medium w-[85px] ml-9"><strong>User Type:</strong></div>
+            <div className="text-p-ui-medium w-[85px] ml-9">
+              <strong>User Type:</strong>
+            </div>
             <span className="text-muted-foreground">{userType}</span>
           </div>
           <div className="flex space-x-1">
-          <div className="text-p-ui-medium w-[85px] ml-8"><strong>Date:</strong></div>
+            <div className="text-p-ui-medium w-[85px] ml-8">
+              <strong>Date:</strong>
+            </div>
             <span className="text-muted-foreground">{date}</span>
           </div>
         </div>
       </div>
       <div className="flex justify-between items-start mb-4 gap-10">
         <div className="w-[500px]">
-          <p className="text-muted-foreground mt-4">
-            <div className="text-p-ui-medium text-common"><strong>Subject:</strong></div> {subject}
-          </p>
-          <p className="text-muted-foreground mt-4">
-          <div className="text-p-ui-medium text-common"><strong>Message:</strong></div> {message}
-          </p>
+          <div className="text-p-ui-medium text-muted-foreground mt-4">
+            <strong className="text-common">Subject : </strong>
+            {subject}
+          </div>
+          <div className="text-p-ui-medium text-muted-foreground mt-4">
+            <strong className="text-common">Message : </strong>
+            {message}
+          </div>
         </div>
         {imageUrl && (
           <div className="ml-4 mt-4 flex-1">
             <div className="flex space-x-1">
-              <div className="text-p-ui-medium w-[85px]"><strong>Images:</strong></div>
-              <span>
-                {" "}
-                <img
-                  src={imageUrl}
-                  alt="Related to the issue"
-                  className="w-[312px] h-[192px] rounded border"
-                />
-              </span>
+              <div className="text-p-ui-medium w-[85px]">
+                <strong>Images:</strong>
+              </div>
+              <img
+                src={imageUrl}
+                alt="Related to the issue"
+                className="w-[250px] h-[192px] rounded border"
+              />
             </div>
           </div>
         )}
@@ -87,10 +90,7 @@ const HelpRequest = ({
         />
       </div>
       <div className="mt-4 flex justify-end space-x-4">
-        <button
-          onClick={handleResolve}
-          className="bg-primary text-white px-4 py-2 rounded-md"
-        >
+        <button className="bg-primary text-white px-4 py-2 rounded-md">
           Mark as Resolved
         </button>
         <button className="border border-gray-400 text-gray-700 px-4 py-2 rounded-md">
