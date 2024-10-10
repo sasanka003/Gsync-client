@@ -15,12 +15,18 @@ export interface EditGardenerRequest {
 }
 
 export interface Plantation {
+  plantationName: string | undefined;
+  name: string;
   plantation_id: number;
   type: string;
   user_id: string;
   city: string;
+  province: string;
+  country: string;
   createdAt: string;
   status: string;
+  plantation_length: GLfloat;
+  plantation_width: GLfloat;
 }
 
 export const adminApiSlice = apiSlice.injectEndpoints({
