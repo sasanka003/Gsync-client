@@ -73,13 +73,13 @@ const Plantations = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPlantations, setSelectedPlantations] = useState<number[]>([]);
   const itemsPerPage = 10;
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter(); 
 
   const {
     data: plantations,
     isLoading,
     isError,
-  } = useGetPlantationDetailsQuery(); // Fetch plantation details
+  } = useGetPlantationDetailsQuery();
 
   if (isLoading) {
     return <div>Loading plantations...</div>;
@@ -89,7 +89,6 @@ const Plantations = () => {
     return <div>Error loading plantations.</div>;
   }
 
-  // Logging to verify data
   console.log("Plantations data: ", plantations);
 
   const filteredPlantations =
