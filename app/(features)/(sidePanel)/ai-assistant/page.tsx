@@ -1,7 +1,12 @@
-import React from "react";
+"use client";
 
-const page = () => {
-  return <div>page</div>;
-};
+import { ContentLayout } from "@/components/dashboard/content-layout";
+import ChatUI from "@/app/(features)/(sidePanel)/ai-assistant/components/ChatUI";
 
-export default page;
+export default function chat() {
+ return (
+    <ContentLayout title="AI Assistant">
+      <ChatUI/>
+    </ContentLayout>
+  );
+}

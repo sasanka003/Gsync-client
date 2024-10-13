@@ -15,8 +15,8 @@ const inter = Inter({
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Gsync - Analytical and Automation for in-House Plantation",
+  description: "Analytical and Automation for in-House Plantation",
 };
 
 export default function RootLayout({

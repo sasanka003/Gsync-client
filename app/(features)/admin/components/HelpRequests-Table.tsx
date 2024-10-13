@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useGetPlantationDetailsQuery } from "@/app/services/systemAdminSlice"; 
+import { useGetPlantationDetailsQuery } from "@/app/services/systemAdminSlice"; // Import the hook
 import {
   Pagination,
   PaginationContent,
@@ -29,7 +29,6 @@ import {
 import { CalendarIcon, Ellipsis } from "lucide-react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation"; 
 
 const DatePickerButton = () => {
   const [selectedMonth, setSelectedMonth] = useState("January");
@@ -73,13 +72,12 @@ const Plantations = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPlantations, setSelectedPlantations] = useState<number[]>([]);
   const itemsPerPage = 10;
-  const router = useRouter(); 
 
   const {
     data: plantations,
     isLoading,
     isError,
-  } = useGetPlantationDetailsQuery();
+  } = useGetPlantationDetailsQuery(); // Fetch plantation details
 
   if (isLoading) {
     return <div>Loading plantations...</div>;
@@ -88,8 +86,6 @@ const Plantations = () => {
   if (isError) {
     return <div>Error loading plantations.</div>;
   }
-
-  console.log("Plantations data: ", plantations);
 
   const filteredPlantations =
     plantations?.filter((plantation) =>
@@ -112,11 +108,8 @@ const Plantations = () => {
   };
 
   const handleDelete = () => {
+    // Add delete functionality here
     console.log("Deleting:", selectedPlantations);
-  };
-
-  const handleRedirect = (plantation_id: number) => {
-    router.push(`/admin/plantation-requests-approval`);
   };
 
   return (
@@ -148,10 +141,7 @@ const Plantations = () => {
             <div className="text-p text-common">
               {selectedPlantations.length} items selected
             </div>
-            <Button
-              className="bg-destructive text-fill disabled:hover:bg-destructive disabled:hover:text-fill"
-              onClick={handleDelete}
-            >
+            <Button className="bg-destructive text-fill disabled:hover:bg-destructive disabled:hover:text-fill">
               Delete
             </Button>
           </div>
@@ -185,45 +175,32 @@ const Plantations = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {displayedPlantations.length > 0 ? (
-              displayedPlantations.map((plantation) => (
-                <TableRow key={plantation.plantation_id}>
-                  <TableCell>
-                    <input
-                      type="checkbox"
-                      checked={selectedPlantations.includes(
-                        plantation.plantation_id
-                      )}
-                      onChange={() =>
-                        handleSelectPlantation(plantation.plantation_id)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell
-                    className="cursor-pointer text-primary hover:underline"
-                    onClick={() => handleRedirect(plantation.plantation_id)}
-                  >
-                    {plantation.plantation_id}
-                  </TableCell>
-                  <TableCell>{plantation.type}</TableCell>
-                  <TableCell>{plantation.user_id}</TableCell>
-                  <TableCell>{plantation.city}</TableCell>
-                  <TableCell>
-                    {new Date(plantation.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{plantation.status}</TableCell>
-                  <TableCell>
-                    <Ellipsis className="text-muted-foreground" />
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={8} className="text-center">
-                  No plantations found
+            {displayedPlantations.map((plantation) => (
+              <TableRow key={plantation.plantation_id}>
+                <TableCell>
+                  <input
+                    type="checkbox"
+                    checked={selectedPlantations.includes(
+                      plantation.plantation_id
+                    )}
+                    onChange={() =>
+                      handleSelectPlantation(plantation.plantation_id)
+                    }
+                  />
+                </TableCell>
+                <TableCell>{plantation.plantation_id}</TableCell>
+                <TableCell>{plantation.type}</TableCell>
+                <TableCell>{plantation.user_id}</TableCell>
+                <TableCell>{plantation.city}</TableCell>
+                <TableCell>
+                  {new Date(plantation.createdAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell>{plantation.status}</TableCell>
+                <TableCell>
+                  <Ellipsis className="text-muted-foreground" />
                 </TableCell>
               </TableRow>
-            )}
+            ))}
           </TableBody>
         </Table>
 

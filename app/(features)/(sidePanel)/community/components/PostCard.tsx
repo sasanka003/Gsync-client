@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,6 @@ import ProfilePicture from "../../../../../components/ProfilePicture";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../../../../../components/ui/dialog";
@@ -48,14 +47,25 @@ const PostCard: React.FC<PostCardProps> = ({
   content,
   author,
   post_id,
-  upvotes,
-  downvotes,
+  upvotes: initialUpvotes,
+  downvotes: initialDownvotes,
   commentsCount,
   createdAt,
 }) => {
   const formattedDate = formatDate(createdAt);
 
+  const [upvotes, setUpvotes] = useState(initialUpvotes || 0);
+  const [downvotes, setDownvotes] = useState(initialDownvotes || 0);
+
   const { data: comments = [] } = useGetCommentsByPostIdQuery(post_id);
+
+  const handleUpvote = () => {
+    setUpvotes(upvotes + 1);
+  };
+
+  const handleDownvote = () => {
+    setDownvotes(downvotes + 1);
+  };
 
   return (
     <Card className="p-4 mb-4 w-auto max-w-[680px]">
@@ -68,24 +78,22 @@ const PostCard: React.FC<PostCardProps> = ({
           <p className="text-detail text-muted-foreground">By {author}</p>
         </div>
         <div className="flex items-center">
-          <div className="flex items-center">
-            <span>
+          <div className="flex items-center mr-4">
+            <button onClick={handleUpvote}>
               <ArrowUpIcon />
-            </span>
-            <span className="text-list">{upvotes}</span>
+            </button>
+            <span className="text-list ml-2">{upvotes}</span>
           </div>
-          <div className="flex items-center">
-            <span>
+          <div className="flex items-center mr-4">
+            <button onClick={handleDownvote}>
               <ArrowDownIcon />
-            </span>
-            <span className="text-text">{downvotes}</span>
+            </button>
+            <span className="text-list ml-2">{downvotes}</span>
           </div>
           <Dialog>
             <DialogTrigger asChild>
               <div className="flex items-center cursor-pointer">
-                <span className="mr-2">
-                  <MessageCircleIcon />
-                </span>
+                <MessageCircleIcon />
                 <span className="text-text">{comments.length}</span>
               </div>
             </DialogTrigger>
