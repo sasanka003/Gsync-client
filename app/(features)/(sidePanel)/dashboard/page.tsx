@@ -58,6 +58,13 @@ const PlantationInfo = () => {
     { id: "2", name: "Device 02", status: "Offline" },
   ];
 
+  const wateringSystemData = {
+    title: "AI Assistant",
+    altText: "Last prompt 1 hour ago",
+    icon: <Clock />,
+  };
+  
+
   return (
     <ContentLayout title="Dashboard">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-10 ml-4 mb-10">
@@ -83,6 +90,7 @@ const PlantationInfo = () => {
             devices={devices}
             lastUpdated="1 hour ago"
           />
+          <PlantCard {...wateringSystemData} />
         </div>
       </div>
     </ContentLayout>
