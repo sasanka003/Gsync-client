@@ -5,6 +5,7 @@ import Features from "./(features)/Home/layouts/Features";
 import Plans from "./(features)/Home/layouts/Plans";
 import Contact from "./(features)/Home/layouts/Contact";
 import Navbar from "@/components/layouts/Navbar";
+import Footer from "./(features)/Home/layouts/Footer";
 
 export default async function Index() {
   const canInitSupabaseClient = () => {
@@ -35,6 +36,9 @@ export default async function Index() {
         </div>
         <div id="contact">
           <Contact />
+        </div>
+        <div id="footer">
+          <Footer />
         </div>
       </div>
     </>
