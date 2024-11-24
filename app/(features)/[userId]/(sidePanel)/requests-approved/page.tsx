@@ -26,7 +26,7 @@ const StatusCards = [
   },
 ];
 
-export default function RequestsPending() {
+export default function RequestsApproved() {
   return (
     <ContentLayout title="Dashboard">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-10 ml-4 mb-10">
@@ -42,7 +42,10 @@ export default function RequestsPending() {
           ))}
         </div>
         <div className="col-span-1 lg:col-span-2 flex flex-col justify-center items-center mt-6 space-y-1">
-          <p className="text-center" style={{ fontSize: "var(--fs-h2)", fontWeight: "var(--fw-h2)" }}>
+          <p
+            className="text-center"
+            style={{ fontSize: "var(--fs-h2)", fontWeight: "var(--fw-h2)" }}
+          >
             Plantation Request Approved!
           </p>
           <p
@@ -51,7 +54,8 @@ export default function RequestsPending() {
           >
             Please proceed with your payment to set up your plantation.
           </p>
-          <Button className="mt-4">Continue to Checkout</Button> {/* Adds a button */}
+          <Button className="mt-4">Continue to Checkout</Button>{" "}
+          {/* Adds a button */}
         </div>
       </div>
     </ContentLayout>

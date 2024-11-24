@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Card, CardContent } from "../../../../../components/ui/card";
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface CommentCardProps {
   content: string;

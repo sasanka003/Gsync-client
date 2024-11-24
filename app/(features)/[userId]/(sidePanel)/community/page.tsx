@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ContentLayout } from "@/components/dashboard/content-layout";
-import PostCard from "@/app/(features)/(sidePanel)/community/components/PostCard";
-import TrendingTopics from "@/app/(features)/(sidePanel)/community/components/TrendingTopics";
-import ActiveUsers from "@/app/(features)/(sidePanel)/community/components/ActiveUsers";
 import { useGetAllPostsQuery } from "@/app/services/postSlice";
 import CreatePost from "./components/CreatePost";
+import PostCard from "./components/PostCard";
+import ActiveUsers from "./components/ActiveUsers";
+import TrendingTopics from "./components/TrendingTopics";
 
 const POSTS_PER_PAGE = 3;
 

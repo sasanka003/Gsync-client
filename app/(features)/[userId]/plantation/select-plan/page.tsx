@@ -1,5 +1,5 @@
+import Plans from "@/app/(features)/Home/layouts/Plans";
 import React from "react";
-import Plans from "../../Home/layouts/Plans";
 
 const plan = () => {
   return (

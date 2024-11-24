@@ -1,11 +1,7 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardTitle,
-} from "../../../../../components/ui/card";
 import { MessageSquare, ArrowBigUp, ArrowBigDown } from "lucide-react";
 import Image from "next/image";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 interface PostCardImageProps {
   title: string;

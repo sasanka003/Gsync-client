@@ -26,8 +26,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import EditGardener from "@/app/(features)/admin/components/EditGardener";
-import AddGardeners from "@/app/(features)/admin/components/AddGardeners";
 import {
   Pagination,
   PaginationContent,
@@ -52,6 +50,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
+import EditGardener from "./EditGardener";
+import AddGardeners from "./AddGardeners";
 
 const DatePickerButton = () => {
   const [selectedMonth, setSelectedMonth] = useState("January");

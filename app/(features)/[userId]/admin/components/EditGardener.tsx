@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEditGardenerMutation } from "@/app/services/systemAdminSlice";
-import { useToast } from "../../../../components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 const schema = z.object({
   name: z.string().min(1, "Name is required"),

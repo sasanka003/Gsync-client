@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Sidebar } from "./sidebar";
 
-export default function AdminPanelLayout({
+export default function SidePanelLayout({
   children,
 }: {
   children: React.ReactNode;

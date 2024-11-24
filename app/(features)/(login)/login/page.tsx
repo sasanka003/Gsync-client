@@ -64,7 +64,7 @@ const CreateAccountForm = () => {
     toast({
       title: "Login Successfully",
     });
-    router.push("/dashboard");
+    router.push(`/${data.user.id}/dashboard`);
   }
 
   const handleLoginWithOAuth = (provider: "google" | "apple" | "facebook") => {
