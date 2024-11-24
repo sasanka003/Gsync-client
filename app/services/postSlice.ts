@@ -29,7 +29,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     getCommentsByPostId: builder.query<PostComment[], number>({
       query: (postId) => `/comments/${postId}`,
-      providesTags: ['comments'],
+      providesTags: ['commentList'],
     }),
     createComment: builder.mutation<PostComment, { content: string; user_id: string; post_id: number }>({
       query: (commentData) => ({
@@ -37,7 +37,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: commentData,
       }),
-      invalidatesTags: ['comments'],
+      invalidatesTags: ['commentList'],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;

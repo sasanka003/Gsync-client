@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +22,9 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useRegisterPlantationMutation } from "@/app/services/plantSlice";
+import { createClient } from "@/utils/supabase/client";
+import { Subscription } from "@/types/plantations";
 
 const schema = z.object({
   plantationName: z.string().min(1, "Plantation name is required"),
@@ -30,13 +33,21 @@ const schema = z.object({
   city: z.string().min(1, "City is required"),
   province: z.string().min(1, "Province is required"),
   country: z.string().min(1, "Country is required"),
-  plantationLength: z.string().min(1, "Plantation length is required"),
-  plantationWidth: z.string().min(1, "Plantation width is required"),
+  plantationLength: z
+    .string()
+    .min(1, "Plantation length is required")
+    .transform((val) => parseFloat(val)),
+  plantationWidth: z
+    .string()
+    .min(1, "Plantation width is required")
+    .transform((val) => parseFloat(val)),
   agreeToTerms: z.boolean().refine((val) => val, "You must agree to the terms"),
 });
 
+type FormValues = z.infer<typeof schema>;
+
 const PlantationForm = () => {
-  const form = useForm({
+  const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       plantationName: "",
@@ -45,37 +56,72 @@ const PlantationForm = () => {
       city: "",
       province: "",
       country: "",
-      plantationLength: "",
-      plantationWidth: "",
       agreeToTerms: false,
     },
   });
+  const supabase = createClient();
+  const [user, setUser] = useState<any | null>(null);
+  const [registerPlantation] = useRegisterPlantationMutation();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const plan = searchParams.get("plan");
+  const plan = (searchParams.get("plan") as Subscription) || Subscription.Basic;
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
   const [plantationCount, setPlantationCount] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    form.reset();
-    setCity("");
-    setProvince("");
-    setCountry("");
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const plantationData = {
+        user_id: user.id,
+        name: data.plantationName,
+        type: data.plantationType,
+        location: {
+          city: data.city,
+          province: data.province,
+          region: data.country,
+        },
+        area: {
+          length: data.plantationLength,
+          width: data.plantationWidth,
+        },
+        subscription: plan,
+      };
 
-    if (plan === "Gardener") {
-      setShowPopup(true);
-      router.push("/dashboard");
-    } else if (plan === "Enterprise") {
-      setPlantationCount(plantationCount + 1);
-      if (plantationCount + 1 >= 3) {
-        // Logic to navigate to the next form if required
+      await registerPlantation(plantationData).unwrap();
+
+      form.reset();
+      setCity("");
+      setProvince("");
+      setCountry("");
+
+      if (plan === Subscription.Gardener) {
+        setShowPopup(true);
+        router.push("/dashboard");
+      } else if (plan === Subscription.Enterprise) {
+        setPlantationCount(plantationCount + 1);
+        if (plantationCount + 1 >= 3) {
+          // Logic to navigate to the next form if required
+        }
       }
+    } catch (error) {
+      console.error("Failed to register plantation:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (data?.user) {
+        setUser(data.user);
+      } else {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [supabase]);
 
   return (
     <div className="w-[992px] mx-auto p-4">
