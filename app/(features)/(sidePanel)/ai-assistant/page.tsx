@@ -1,5 +1,4 @@
-"use client";
-
+import React from "react";
 import { ContentLayout } from "@/components/dashboard/content-layout";
 import ChatUI from "@/app/(features)/(sidePanel)/ai-assistant/components/ChatUI";
 
