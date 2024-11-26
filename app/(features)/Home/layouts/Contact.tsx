@@ -17,8 +17,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 const schema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  Name: z.string().min(1, "Name is required"),
+  Email: z.string().min(1, "Email is required"),
   enterprise: z.string().optional(),
   subject: z.string().min(1, "Subject is required"),
   message: z.string().min(1, "Message is required"),
@@ -28,8 +28,8 @@ const ContactForm = () => {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      Name: "",
+      Email: "",
       enterprise: "",
       subject: "",
       message: "",
@@ -58,17 +58,17 @@ const ContactForm = () => {
             <div className="flex-1 space-y-2 min-w-[262px] md:min-w-[262px] lg:min-w-[440px] lg:space-y-4">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="Name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-h4 text-common">
-                      First Name*
+                      Name*
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         className="h-10"
-                        placeholder="your first name"
+                        placeholder="your name"
                       />
                     </FormControl>
                     <FormMessage />
@@ -77,17 +77,17 @@ const ContactForm = () => {
               />
               <FormField
                 control={form.control}
-                name="lastName"
+                name="Email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-h4 text-common">
-                      Last Name*
+                      Email*
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         className="h-10"
-                        placeholder="your last name"
+                        placeholder="your Email"
                       />
                     </FormControl>
                     <FormMessage />

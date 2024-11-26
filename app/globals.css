@@ -6,7 +6,7 @@
     :root {
       /* Shadcn variables */
 
-      --background: 0 0% 95%; /* #F3F3F3 */
+      --background: 0 0% 100%; /* #FEFEFE - Changed from F3F3F3*/
       --foreground: 0 0% 0%; /* #000000 */
 
       --card: 0 0% 100%; /* #FEFEFE */
