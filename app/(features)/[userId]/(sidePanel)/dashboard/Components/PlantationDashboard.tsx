@@ -5,28 +5,33 @@ import SuggestedActionCard from "./SuggestedActions";
 import CameraFootageCard from "./CameraFootage";
 import IoTDevicesCard from "./IoTDevices";
 import { Clock, Leaf } from "lucide-react";
+import { UserPlantation } from "@/types/plantations";
 
-const PlantationDashboard = () => {
-  const plantationData = [
-    {
-      title: "Plant Type",
-      content: "Bell Pepper",
-      altText: "Plantation added on 07.08.2023",
-      icon: <Leaf />,
-    },
-    {
-      title: "Plantation Health",
-      content: "Good",
-      altText: "Last checked 1 hour ago",
-      icon: <Clock />,
-    },
-    {
-      title: "Pest Infests",
-      content: "None",
-      altText: "Last checked 30 minutes ago",
-      icon: <Clock />,
-    },
-  ];
+interface PlantationDashboardProps {
+  plantationData: UserPlantation | undefined;
+}
+
+const PlantationDashboard = ({ plantationData }: PlantationDashboardProps) => {
+  // const plantationData = {
+  //   title: "Plant Type",
+  //   content: "Bell Pepper",
+  //   altText: "Plantation added on 07.08.2023",
+  //   icon: <Leaf />,
+  // };
+
+  const plantatainHealthData = {
+    title: "Plantation Health",
+    content: "Good",
+    altText: "Last checked 1 hour ago",
+    icon: <Clock />,
+  };
+
+  const plantationInfestsData = {
+    title: "Pest Infests",
+    content: "None",
+    altText: "Last checked 30 minutes ago",
+    icon: <Clock />,
+  };
 
   const environmentalData = {
     title: "Environment",
@@ -59,15 +64,24 @@ const PlantationDashboard = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-10 ml-4 mb-10">
       <div className="flex space-x-4 col-span-1 lg:col-span-2">
-        {plantationData.map((data, index) => (
-          <PlantCard
-            key={index}
-            title={data.title}
-            content={data.content}
-            altText={data.altText}
-            icon={data.icon}
-          />
-        ))}
+        <PlantCard
+          title={plantationData?.name}
+          content={plantationData?.type || "N/A"}
+          altText=""
+          icon={<Leaf />}
+        />
+        <PlantCard
+          title={plantatainHealthData.title}
+          content={plantatainHealthData.content}
+          altText={plantatainHealthData.altText}
+          icon={plantatainHealthData.icon}
+        />
+        <PlantCard
+          title={plantationInfestsData.title}
+          content={plantationInfestsData.content}
+          altText={plantationInfestsData.altText}
+          icon={plantationInfestsData.icon}
+        />
       </div>
       <div className="flex gap-4">
         <EnvironmentDetails {...environmentalData} />

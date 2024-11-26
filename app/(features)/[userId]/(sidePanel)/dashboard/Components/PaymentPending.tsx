@@ -1,36 +1,24 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
-import StatusCard from "../requests-pending/Components/StatusCard";
+import StatusCard from "./StatusCard";
+import { Subscription } from "@/types/plantations";
 
-const StatusCards = [
-  {
-    plantationName: "My Plantation 01",
-    status: "in Review",
-    requestDate: "03.06.2024",
-  },
+interface PaymentPendingProps {
+  plantations: Array<{
+    plantationName: string;
+    status: string;
+  }>;
+}
 
-  {
-    plantationName: "My Plantation 02",
-    status: "in Review",
-    requestDate: "03.05.2024",
-  },
-  {
-    plantationName: "My Plantation 03",
-    status: "in Review",
-    requestDate: "03.04.2024",
-  },
-];
-
-export default function PaymentPending() {
+export default function PaymentPending({ plantations }: PaymentPendingProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-10 ml-4 mb-10">
       <div className="flex space-x-4 col-span-1 lg:col-span-2">
-        {StatusCards.map((data, index) => (
+        {plantations.map((data, index) => (
           <StatusCard
             key={index}
             plantationName={data.plantationName}
             status={data.status}
-            requestDate={data.requestDate}
+            // requestDate={data.requestDate}
           />
         ))}
       </div>
@@ -47,8 +35,7 @@ export default function PaymentPending() {
         >
           Please proceed with your payment to set up your plantation.
         </p>
-        <Button className="mt-4">Continue to Checkout</Button>{" "}
-        {/* Adds a button */}
+        <Button className="mt-4">Continue to Checkout</Button>
       </div>
     </div>
   );

@@ -23,6 +23,21 @@ export interface Plantation {
     area: Area;
     subscription: Subscription;
 }
+
+export interface UserPlantation{
+    plantation_id: string;
+    name: string;
+    type: string;
+    city: string;
+    province: string;
+    country: string;
+    plantation_length: number;
+    plantation_width: number;
+    verified: boolean;
+    subscription: Subscription;
+    payment_status: boolean;
+    user_id: string;
+}
   
 export interface PlantationResponse {
     message: string;
