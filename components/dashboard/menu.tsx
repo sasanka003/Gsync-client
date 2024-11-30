@@ -9,13 +9,31 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getAdminMenuList, getMenuList } from "@/lib/menu-list";
 import { signout } from "@/app/auth/actions";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
 
 export function Menu() {
+  const supabase = createClient();
+  const [userId, setUserId] = useState<string>("");
   const pathname = usePathname();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUserId(session.user.id);
+      }
+    };
+
+    getUser();
+  }, []);
+
   const isAdminRoute = pathname.startsWith("/admin");
   const menuList = isAdminRoute
-    ? getAdminMenuList(pathname)
-    : getMenuList(pathname);
+    ? getAdminMenuList(pathname, userId)
+    : getMenuList(pathname, userId);
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">

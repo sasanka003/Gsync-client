@@ -28,48 +28,48 @@ type Group = {
   menus: Menu[];
 };
 
-export function getMenuList(pathname: string): Group[] {
+export function getMenuList(pathname: string, userId: string): Group[] {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: "/dashboard",
+          href: `/${userId}/dashboard`,
           label: "Dashboard",
           active: pathname.includes("/dashboard"),
           icon: House,
           submenus: []
         },
         {
-          href: "/ai-assistant",
+          href: `/${userId}/ai-assistant`,
           label: "Ai Assistant",
           active: pathname.includes("/ai-assistant"),
           icon: MessageCircle,
           submenus: []
         },
         {
-          href: "/devices",
+          href: `/${userId}/devices`,
           label: "Devices",
           active: pathname.includes("/devices"),
           icon: Joystick,
           submenus: []
         },
         {
-          href: "/analytics",
+          href: `/${userId}/analytics`,
           label: "Analytics",
           active: pathname.includes("/analytics"),
           icon: ChartColumnIncreasing,
           submenus: []
         },
         {
-          href: "/community",
+          href: `/${userId}/community`,
           label: "Community",
           active: pathname.includes("/community"),
           icon: Users,
           submenus: []
         },
         {
-          href: "/settings",
+          href: `/${userId}/settings`,
           label: "Settings",
           active: pathname.includes("/settings"),
           icon: Cog,
@@ -79,27 +79,28 @@ export function getMenuList(pathname: string): Group[] {
     },
   ];
 }
-export function getAdminMenuList(pathname: string): Group[] {
+
+export function getAdminMenuList(pathname: string, userId: string): Group[] {
   return [
     {
       groupLabel: "",
       menus: [
         {
-          href: "/admin/dashboard",
+          href: `/${userId}/admin/dashboard`,
           label: "Dashboard",
           active: pathname.includes("/admin/dashboard"),
           icon: House,
           submenus: []
         },
         {
-          href: "/admin/users",
+          href: `/${userId}/admin/users`,
           label: "Users",
           active: pathname.includes("/admin/users"),
           icon: Users,
           submenus: []
         },
         {
-          href: "/admin/plantation-requests",
+          href: `/${userId}/admin/plantation-requests`,
           label: "Plantations",
           active: pathname.includes("/admin/plantation-requests"),
           icon: Leaf,
