@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { LogOut, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,10 @@ export function Menu() {
   const [userId, setUserId] = useState<string>("");
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSignOutLoading, setIsSignOutLoading] = useState(false);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const getUser = async () => {
@@ -55,6 +57,23 @@ export function Menu() {
 
     getUser();
   }, []);
+
+  const handleSignout = async () => {
+    setIsSignOutLoading(true);
+    try {
+      const result = await signout();
+
+      if (result?.success) {
+        router.push("/login");
+      } else {
+        console.error(result?.error);
+        setIsSignOutLoading(false);
+      }
+    } catch (error) {
+      console.error("Signout failed", error);
+      setIsSignOutLoading(false);
+    }
+  };
 
   const toggleSubmenu = (label: string) => {
     setOpenMenus((prev) => ({
@@ -172,14 +191,24 @@ export function Menu() {
           ))}
           <li className="w-full grow flex items-end">
             <Button
-              onClick={() => signout}
+              onClick={handleSignout}
               variant="outline"
+              disabled={isLoading}
               className="w-full justify-center h-10 mt-5"
             >
-              <span className="mr-4">
-                <LogOut size={18} />
-              </span>
-              <p className="whitespace-nowrap">Sign out</p>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <span>Signing out...</span>
+                </>
+              ) : (
+                <>
+                  <span className="mr-4">
+                    <LogOut size={18} />
+                  </span>
+                  <p className="whitespace-nowrap">Sign out</p>
+                </>
+              )}
             </Button>
           </li>
         </ul>
