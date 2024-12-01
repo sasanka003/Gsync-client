@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut } from "lucide-react";
+import { LogOut, ChevronDown, ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 export function Menu() {
   const supabase = createClient();
   const [userId, setUserId] = useState<string>("");
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const pathname = usePathname();
 
   useEffect(() => {
@@ -24,16 +26,36 @@ export function Menu() {
       } = await supabase.auth.getSession();
       if (session?.user) {
         setUserId(session.user.id);
+
+        // Fetch the user's role from Supabase
+        const { data: userData, error: userError } = await supabase
+          .from("profiles")
+          .select("type")
+          .eq("user_id", session.user.id)
+          .single();
+
+        if (userError) {
+          console.error("Error fetching user role:", userError.message);
+        } else {
+          setUserRole(userData.type);
+        }
       }
     };
 
     getUser();
   }, []);
 
-  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminRoute = userRole === "SysAdmin";
   const menuList = isAdminRoute
     ? getAdminMenuList(pathname, userId)
     : getMenuList(pathname, userId);
+
+  const toggleSubmenu = (label: string) => {
+    setOpenMenus((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
@@ -46,24 +68,78 @@ export function Menu() {
                   {groupLabel}
                 </p>
               )}
-              {menus.map(({ href, label, icon: Icon, active }, index) => (
-                <div className="w-full mt-2" key={index}>
-                  <Button
-                    variant={active ? "secondary" : "ghost"}
-                    className="w-full justify-start h-10 mb-1"
-                    asChild
-                  >
-                    <Link href={href}>
-                      <span className="mr-4">
-                        <Icon size={18} />
-                      </span>
-                      <p className="max-w-[200px] text-p-ui-medium text-text truncate">
-                        {label}
-                      </p>
-                    </Link>
-                  </Button>
-                </div>
-              ))}
+              {menus.map(
+                ({ href, label, icon: Icon, active, submenus }, index) => (
+                  <div className="w-full mt-2" key={index}>
+                    <div className="w-full">
+                      <Button
+                        variant={active ? "secondary" : "ghost"}
+                        className="w-full justify-start h-10 mb-1"
+                        onClick={() => {
+                          if (submenus.length > 0) {
+                            toggleSubmenu(label);
+                          }
+                        }}
+                        asChild={submenus.length === 0}
+                      >
+                        {submenus.length > 0 ? (
+                          <div className="flex items-center w-full">
+                            <div className="flex items-center flex-grow">
+                              <span className="mr-4">
+                                <Icon size={18} />
+                              </span>
+                              <p className="max-w-[200px] text-p-ui-medium text-text truncate">
+                                {label}
+                              </p>
+                            </div>
+                            {submenus.length > 0 && (
+                              <span>
+                                {openMenus[label] ? (
+                                  <ChevronDown size={16} />
+                                ) : (
+                                  <ChevronRight size={16} />
+                                )}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <Link
+                            href={href}
+                            className="flex items-center w-full"
+                          >
+                            <span className="mr-4">
+                              <Icon size={18} />
+                            </span>
+                            <p className="max-w-[200px] text-p-ui-medium text-text truncate">
+                              {label}
+                            </p>
+                          </Link>
+                        )}
+                      </Button>
+                    </div>
+
+                    {/* Submenu dropdown */}
+                    {submenus.length > 0 && openMenus[label] && (
+                      <div className="pl-8 mt-1 space-y-1">
+                        {submenus.map((submenu, subIndex) => (
+                          <Button
+                            key={subIndex}
+                            variant={submenu.active ? "secondary" : "ghost"}
+                            className="w-full justify-start h-8 mb-1"
+                            asChild
+                          >
+                            <Link href={submenu.href}>
+                              <p className="max-w-[200px] text-p-ui-medium text-text truncate">
+                                {submenu.label}
+                              </p>
+                            </Link>
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              )}
             </li>
           ))}
           <li className="w-full grow flex items-end">

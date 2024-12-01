@@ -6,7 +6,8 @@ import {
   House,
   Users,
   Cog,
-  Leaf
+  Leaf,
+  CircleHelp
 } from "lucide-react";
 
 type Submenu = {
@@ -97,13 +98,43 @@ export function getAdminMenuList(pathname: string, userId: string): Group[] {
           label: "Users",
           active: pathname.includes("/admin/users"),
           icon: Users,
-          submenus: []
+          submenus: [
+            {
+              href: `/${userId}/admin/users/gardeners`,
+              label: "Gardeners",
+              active: pathname.includes("/admin/users/gardeners")
+            },
+            {
+              href: `/${userId}/admin/users/enterprises`,
+              label: "Enterprises",
+              active: pathname.includes("/admin/users/enterprises")
+            },
+            {
+              href: `/${userId}/admin/users/admins`,
+              label: "Admins",
+              active: pathname.includes("/admin/users/admins")
+            }
+          ]
         },
         {
           href: `/${userId}/admin/plantation-requests`,
           label: "Plantations",
           active: pathname.includes("/admin/plantation-requests"),
           icon: Leaf,
+          submenus: []
+        },
+        {
+          href: `/${userId}/admin/help-requests`,
+          label: "Help Requests",
+          active: pathname.includes("/admin/help-requests"),
+          icon: CircleHelp,
+          submenus: []
+        },
+        {
+          href: `/${userId}/admin/settings`,
+          label: "Settings",
+          active: pathname.includes("/admin/settings"),
+          icon: Cog,
           submenus: []
         }
       ]
