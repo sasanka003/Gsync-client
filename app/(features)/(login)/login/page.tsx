@@ -52,19 +52,43 @@ const CreateAccountForm = () => {
       email: values.email,
       password: values.password,
     });
-    console.log(data);
+
     if (error) {
+      setIsLoading(false);
       return toast({
         title: "Error",
         description: error.message,
         variant: "destructive",
       });
     }
+
+    // Fetch the user's role from the Supabase database
+    const { data: userData, error: userError } = await supabase
+      .from("profiles")
+      .select("type")
+      .eq("user_id", data.user.id)
+      .single();
+
+    if (userError) {
+      setIsLoading(false);
+      return toast({
+        title: "Error",
+        description: userError.message,
+        variant: "destructive",
+      });
+    }
+
     setIsLoading(false);
     toast({
       title: "Login Successfully",
     });
-    router.push(`/${data.user.id}/dashboard`);
+
+    // Redirect the user based on their role
+    if (userData.type === "SysAdmin") {
+      router.push(`/${data.user.id}/admin/dashboard`);
+    } else {
+      router.push(`/${data.user.id}/dashboard`);
+    }
   }
 
   const handleLoginWithOAuth = (provider: "google" | "apple" | "facebook") => {
