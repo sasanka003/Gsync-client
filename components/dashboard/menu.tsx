@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, ChevronDown, ChevronRight } from "lucide-react";
+import { LogOut, ChevronDown, ChevronRight, Loader2 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -11,44 +11,50 @@ import { getAdminMenuList, getMenuList } from "@/lib/menu-list";
 import { signout } from "@/app/auth/actions";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
+import { MenuSkeletonLoader } from "./menuskeletonloader";
 
 export function Menu() {
   const supabase = createClient();
   const [userId, setUserId] = useState<string>("");
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const pathname = usePathname();
 
   useEffect(() => {
     const getUser = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUserId(session.user.id);
+      setIsLoading(true);
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-        // Fetch the user's role from Supabase
-        const { data: userData, error: userError } = await supabase
-          .from("profiles")
-          .select("type")
-          .eq("user_id", session.user.id)
-          .single();
+        if (session?.user) {
+          setUserId(session.user.id);
 
-        if (userError) {
-          console.error("Error fetching user role:", userError.message);
-        } else {
-          setUserRole(userData.type);
+          // Fetch the user's role from Supabase
+          const { data: userData, error: userError } = await supabase
+            .from("profiles")
+            .select("type")
+            .eq("user_id", session.user.id)
+            .single();
+
+          if (userError) {
+            console.error("Error fetching user role:", userError.message);
+            setUserRole(null);
+          } else {
+            setUserRole(userData.type);
+          }
         }
+      } catch (error) {
+        console.error("Error in getUser:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     getUser();
   }, []);
-
-  const isAdminRoute = userRole === "SysAdmin";
-  const menuList = isAdminRoute
-    ? getAdminMenuList(pathname, userId)
-    : getMenuList(pathname, userId);
 
   const toggleSubmenu = (label: string) => {
     setOpenMenus((prev) => ({
@@ -56,6 +62,28 @@ export function Menu() {
       [label]: !prev[label],
     }));
   };
+
+  // Determine the menu list based on role or loading state
+  const getMenuListToRender = () => {
+    if (isLoading) {
+      return []; // Return empty to prevent rendering
+    }
+
+    return userRole === "SysAdmin"
+      ? getAdminMenuList(pathname, userId)
+      : getMenuList(pathname, userId);
+  };
+
+  // If loading, return a loading state
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full w-full">
+        <MenuSkeletonLoader />
+      </div>
+    );
+  }
+
+  const menuList = getMenuListToRender();
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
