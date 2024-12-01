@@ -117,9 +117,9 @@ export function getAdminMenuList(pathname: string, userId: string): Group[] {
           ]
         },
         {
-          href: `/${userId}/admin/plantation-requests`,
+          href: `/${userId}/admin/plantations`,
           label: "Plantations",
-          active: pathname.includes("/admin/plantation-requests"),
+          active: pathname.includes("/admin/plantations"),
           icon: Leaf,
           submenus: []
         },

@@ -25,12 +25,20 @@ export interface Plantation {
   country: string;
   createdAt: string;
   status: string;
-  plantation_length: GLfloat;
-  plantation_width: GLfloat;
+  plantation_length: number;
+  plantation_width: number;
+}
+
+export interface UpdatePlantationRequest {
+  plantation_width: number;
+  plantation_length: number;
+  comment: string;
+  is_approved: boolean;
 }
 
 export const adminApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    // Existing endpoints...
     getAllGardeners: builder.query<Gardener[], { page: number; page_size: number }>({
       query: ({ page, page_size }) => ({
         url: `/main/admin/gardeners/?page=${page}&page_size=${page_size}`,
@@ -55,10 +63,24 @@ export const adminApiSlice = apiSlice.injectEndpoints({
     }),
     getPlantationDetails: builder.query<Plantation[], void>({
       query: () => ({
-        url: `/main/admin/plantations`,
+        url: `/admin/plantations`,
         method: 'GET',
       }),
       providesTags: ['plantationList'],
+    }),
+    // New endpoints
+    getPlantationById: builder.query<Plantation, number>({
+      query: (plantation_id) => ({
+        url: `/admin/plantation/${plantation_id}`,
+        method: 'GET',
+      }),
+    }),
+    updatePlantationStatus: builder.mutation<void, { plantation_id: number; data: UpdatePlantationRequest }>({
+      query: ({ plantation_id, data }) => ({
+        url: `/main/admin/plantations/${plantation_id}`,
+        method: 'PUT',
+        body: data,
+      })
     }),
   }),
 });
@@ -67,5 +89,7 @@ export const {
   useGetAllGardenersQuery, 
   useEditGardenerMutation, 
   useDeleteGardenerMutation, 
-  useGetPlantationDetailsQuery
+  useGetPlantationDetailsQuery,
+  useGetPlantationByIdQuery,
+  useUpdatePlantationStatusMutation,
 } = adminApiSlice;

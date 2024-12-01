@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useGetPlantationDetailsQuery } from "@/app/services/systemAdminSlice"; 
+import { useGetPlantationDetailsQuery } from "@/app/services/systemAdminSlice";
 import {
   Pagination,
   PaginationContent,
@@ -29,7 +29,7 @@ import {
 import { CalendarIcon, Ellipsis } from "lucide-react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation"; 
+import { useRouter, usePathname, useParams } from "next/navigation";
 
 const DatePickerButton = () => {
   const [selectedMonth, setSelectedMonth] = useState("January");
@@ -73,7 +73,8 @@ const Plantations = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPlantations, setSelectedPlantations] = useState<number[]>([]);
   const itemsPerPage = 10;
-  const router = useRouter(); 
+  const router = useRouter();
+  const pathname = usePathname();
 
   const {
     data: plantations,
@@ -116,7 +117,12 @@ const Plantations = () => {
   };
 
   const handleRedirect = (plantation_id: number) => {
-    router.push(`/admin/plantation-requests-approval`);
+    const userId = pathname.split("/")[1];
+    if (userId) {
+      router.push(`/${userId}/admin/plantations/${plantation_id}`);
+    } else {
+      console.error("User ID not found");
+    }
   };
 
   return (
