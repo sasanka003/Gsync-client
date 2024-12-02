@@ -98,6 +98,21 @@ const sendMessage = async (message: string) => {
             return await response.json().then((data) => data.output);
           },
         }),
+        fetchIoTReport: tool({
+          description:
+            "fetch data from an executed agent system for enterprise tasks.",
+          parameters: z.object({
+            query: z
+              .string()
+              .describe("Well designed query to fetch data from the web"),
+          }),
+          execute: async ({ query }) => {
+            const response = await fetch(
+              `http://127.0.0.1:8080/iot?input=${encodeURIComponent(query)}`
+            );
+            return await response.json().then((data) => data.output);
+          },
+        }),
     },
     maxSteps: 5,
   });
