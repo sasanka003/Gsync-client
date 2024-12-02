@@ -65,6 +65,8 @@ const PlantationForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const plan = (searchParams.get("plan") as Subscription) || Subscription.Basic;
+  const [plantationType, setPlantationType] = useState("");
+  const [plantType, setPlantType] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
@@ -77,6 +79,7 @@ const PlantationForm = () => {
         user_id: user.id,
         name: data.plantationName,
         type: data.plantationType,
+        // have to add plant type as well?
         location: {
           city: data.city,
           province: data.province,
@@ -92,6 +95,8 @@ const PlantationForm = () => {
       await registerPlantation(plantationData).unwrap();
 
       form.reset();
+      setPlantationType("");
+      setPlantType("");
       setCity("");
       setProvince("");
       setCountry("");
@@ -182,11 +187,27 @@ const PlantationForm = () => {
                         </div>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter plantation type"
-                          className="placeholder:text-p"
-                        />
+                        <Select
+                          value={plantationType}
+                          onValueChange={(value) => {
+                            setPlantationType(value);
+                            field.onChange(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-full px-4 py-2 border rounded bg-transparent">
+                            <input
+                              type="text"
+                              placeholder="Select Plantation Type"
+                              value={plantationType}
+                              readOnly
+                              className="w-full bg-transparent placeholder:text-p text-gray-900"
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="indoor">Indoor</SelectItem>
+                            <SelectItem value="outdoor">Outdoor</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -201,11 +222,28 @@ const PlantationForm = () => {
                         <div className="text-p text-common">Plant Type</div>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter plant type"
-                          className="placeholder:text-p"
-                        />
+                      <Select
+                          value={plantType}
+                          onValueChange={(value) => {
+                            setPlantType(value);
+                            field.onChange(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-full px-4 py-2 border rounded bg-transparent">
+                            <input
+                              type="text"
+                              placeholder="Select Plant Type"
+                              value={plantType}
+                              readOnly
+                              className="w-full bg-transparent placeholder:text-p text-gray-900"
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="bellpepper">Bell Pepper</SelectItem>
+                            <SelectItem value="tomato">Tomato</SelectItem>
+                            <SelectItem value="capsicum">Capsicum</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -310,8 +348,14 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="city1">City 1</SelectItem>
-                            <SelectItem value="city2">City 2</SelectItem>
+                            <SelectItem value="colombo">Colombo</SelectItem>
+                            <SelectItem value="colombo4">Colombo 4</SelectItem>
+                            <SelectItem value="colombo5">Colombo 5</SelectItem>
+                            <SelectItem value="colombo6">Colombo 6</SelectItem>
+                            <SelectItem value="gampaha">Gampaha</SelectItem>
+                            <SelectItem value="kaluthara">Kaluthara</SelectItem>
+                            <SelectItem value="hambanthota">Hambanthota</SelectItem>
+                            <SelectItem value="nuwaraeliya">Nuwara Eliya</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -345,11 +389,32 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="province1">
-                              Province 1
+                            <SelectItem value="western">
+                              Western
                             </SelectItem>
-                            <SelectItem value="province2">
-                              Province 2
+                            <SelectItem value="central">
+                              Central
+                            </SelectItem>
+                            <SelectItem value="southern">
+                              Southern
+                            </SelectItem>
+                            <SelectItem value="northwestern">
+                              North Western
+                            </SelectItem>
+                            <SelectItem value="sabaragamuwa">
+                              Sabaragamuwa
+                            </SelectItem>
+                            <SelectItem value="northen">
+                              Northen
+                            </SelectItem>
+                            <SelectItem value="eastern">
+                              Eastern
+                            </SelectItem>
+                            <SelectItem value="uwa">
+                              Uwa
+                            </SelectItem>
+                            <SelectItem value="northcentral">
+                              North Central
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -384,8 +449,7 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="country1">Country 1</SelectItem>
-                            <SelectItem value="country2">Country 2</SelectItem>
+                            <SelectItem value="srilanka">Sri Lanka</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>

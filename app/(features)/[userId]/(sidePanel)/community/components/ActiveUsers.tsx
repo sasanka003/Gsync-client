@@ -3,11 +3,11 @@ import { Calendar } from "lucide-react";
 
 const ActiveUsers = () => {
   const users = [
-    { name: "Waruna Parackkrama", role: "Small-Scale Gardener" },
-    { name: "Waruna Parackkrama", role: "Small-Scale Gardener" },
-    { name: "Waruna Parackkrama", role: "Small-Scale Gardener" },
-    { name: "Waruna Parackkrama", role: "Small-Scale Gardener" },
-    { name: "Waruna Parackkrama", role: "Small-Scale Gardener" },
+    { name: "John Doe", role: "Small-Scale Gardener", avatar: "/images/avatar1.png" },
+    { name: "Samantha Jones", role: "Small-Scale Gardener", avatar: "/images/avatar2.png" },
+    { name: "Alex Nguyen", role: "Enterprise Gardener", avatar: "/images/avatar3.png" },
+    { name: "Priya Patel", role: "Small-Scale Gardener", avatar: "/images/avatar4.png" },
+    { name: "Diego Ramirez", role: "Enterprise Gardener", avatar: "/images/avatar5.png" },
   ];
 
   return (
@@ -16,7 +16,7 @@ const ActiveUsers = () => {
       {users.map((user, index) => (
         <div key={index} className="flex items-center mb-4">
           <img
-            src="/images/Avatar.png"
+            src={user.avatar}
             alt="User profile"
             className="w-10 h-10 rounded-full mr-4"
           />
@@ -32,10 +32,10 @@ const ActiveUsers = () => {
          
         </div>
       ))}
-      <div className="flex items-center mt-4">
+      {/* <div className="flex items-center mt-4">
 <Calendar className="w-5 h-5 mr-2 text-grey" />
-        <span className="text-muted-foreground text-p">Alternate Text</span>
-      </div>
+        <span className="text-muted-foreground text-p">Last Updated Yesterday</span>
+      </div> */}
     </div>
   );
 };
