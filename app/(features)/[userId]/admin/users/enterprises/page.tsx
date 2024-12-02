@@ -87,12 +87,12 @@ const EnterpriseTable = () => {
               </td>
             </>
           )}
-          actions={(enterprise) => (
-            <div className="flex space-x-2">
-              <button className="text-emerald-600 hover:underline">Edit</button>
-              <button className="text-red-500 hover:underline">Remove</button>
-            </div>
-          )}
+          // actions={(enterprise) => (
+          //   <div className="flex space-x-2">
+          //     <button className="text-emerald-600 hover:underline">Edit</button>
+          //     <button className="text-red-500 hover:underline">Remove</button>
+          //   </div>
+          // )}
         />
       </div>
     </ContentLayout>

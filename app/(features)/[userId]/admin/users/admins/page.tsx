@@ -70,7 +70,6 @@ const AdminTable = () => {
               </td>
             </>
           )}
-          
         />
       </div>
     </ContentLayout>
