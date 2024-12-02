@@ -4,11 +4,11 @@ import { Calendar } from "lucide-react";
 
 const TrendingTopics = () => {
   const topics = [
-    "Trending Topic goes here",
-    "Trending Topic goes here",
-    "Trending Topic goes here",
-    "Trending Topic goes here",
-    "Trending Topic goes here",
+    <a href="#" className="underline">Bell pepper harvesting</a>,
+    <a href="#" className="underline">Common pest troubles with ...</a>,
+    <a href="#" className="underline">Tomato leaves get yellow on ...</a>,
+    <a href="#" className="underline">These fertilizer tricks will sho...</a>,
+    <a href="#" className="underline">November update make m...</a>,
   ];
 
   return (
@@ -23,10 +23,10 @@ const TrendingTopics = () => {
           <ArrowRight className="text-text" />
         </div>
       ))}
-      <div className="flex items-center mt-4">
+      {/* <div className="flex items-center mt-4">
         <Calendar className="w-5 h-5 mr-2 text-grey" />
         <div className="text-p text-grey">Alternate Text</div>
-      </div>
+      </div> */}
     </div>
   );
 };
