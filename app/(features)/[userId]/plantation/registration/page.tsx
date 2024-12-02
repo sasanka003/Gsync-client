@@ -349,7 +349,11 @@ const PlantationForm = () => {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="colombo">Colombo</SelectItem>
+                            <SelectItem value="colombo4">Colombo 4</SelectItem>
+                            <SelectItem value="colombo5">Colombo 5</SelectItem>
+                            <SelectItem value="colombo6">Colombo 6</SelectItem>
                             <SelectItem value="gampaha">Gampaha</SelectItem>
+                            <SelectItem value="kaluthara">Kaluthara</SelectItem>
                             <SelectItem value="hambanthota">Hambanthota</SelectItem>
                             <SelectItem value="nuwaraeliya">Nuwara Eliya</SelectItem>
                           </SelectContent>
