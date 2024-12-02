@@ -103,7 +103,7 @@ const PlantationForm = () => {
 
       if (plan === Subscription.Gardener) {
         setShowPopup(true);
-        router.push("/dashboard");
+        router.push(`/${user.id}/dashboard`);
       } else if (plan === Subscription.Enterprise) {
         setPlantationCount(plantationCount + 1);
         if (plantationCount + 1 >= 3) {
@@ -222,7 +222,7 @@ const PlantationForm = () => {
                         <div className="text-p text-common">Plant Type</div>
                       </FormLabel>
                       <FormControl>
-                      <Select
+                        <Select
                           value={plantType}
                           onValueChange={(value) => {
                             setPlantType(value);
@@ -239,7 +239,9 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="bellpepper">Bell Pepper</SelectItem>
+                            <SelectItem value="bellpepper">
+                              Bell Pepper
+                            </SelectItem>
                             <SelectItem value="tomato">Tomato</SelectItem>
                             <SelectItem value="capsicum">Capsicum</SelectItem>
                           </SelectContent>
@@ -354,8 +356,12 @@ const PlantationForm = () => {
                             <SelectItem value="colombo6">Colombo 6</SelectItem>
                             <SelectItem value="gampaha">Gampaha</SelectItem>
                             <SelectItem value="kaluthara">Kaluthara</SelectItem>
-                            <SelectItem value="hambanthota">Hambanthota</SelectItem>
-                            <SelectItem value="nuwaraeliya">Nuwara Eliya</SelectItem>
+                            <SelectItem value="hambanthota">
+                              Hambanthota
+                            </SelectItem>
+                            <SelectItem value="nuwaraeliya">
+                              Nuwara Eliya
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -389,30 +395,18 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="western">
-                              Western
-                            </SelectItem>
-                            <SelectItem value="central">
-                              Central
-                            </SelectItem>
-                            <SelectItem value="southern">
-                              Southern
-                            </SelectItem>
+                            <SelectItem value="western">Western</SelectItem>
+                            <SelectItem value="central">Central</SelectItem>
+                            <SelectItem value="southern">Southern</SelectItem>
                             <SelectItem value="northwestern">
                               North Western
                             </SelectItem>
                             <SelectItem value="sabaragamuwa">
                               Sabaragamuwa
                             </SelectItem>
-                            <SelectItem value="northen">
-                              Northen
-                            </SelectItem>
-                            <SelectItem value="eastern">
-                              Eastern
-                            </SelectItem>
-                            <SelectItem value="uwa">
-                              Uwa
-                            </SelectItem>
+                            <SelectItem value="northen">Northen</SelectItem>
+                            <SelectItem value="eastern">Eastern</SelectItem>
+                            <SelectItem value="uwa">Uwa</SelectItem>
                             <SelectItem value="northcentral">
                               North Central
                             </SelectItem>
