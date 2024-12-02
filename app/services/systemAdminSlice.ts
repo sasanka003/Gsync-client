@@ -41,7 +41,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
     // Existing endpoints...
     getAllGardeners: builder.query<Gardener[], { page: number; page_size: number }>({
       query: ({ page, page_size }) => ({
-        url: `/main/admin/gardeners/?page=${page}&page_size=${page_size}`,
+        url: `/admin/gardeners/?page=${page}&page_size=${page_size}`,
         method: 'GET',
       }),
       providesTags: ['gardnersList'],
