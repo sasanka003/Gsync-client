@@ -8,7 +8,7 @@ export default function RequestPage() {
     <ContentLayout title="Community">
       <div>
         <HelpRequest
-          requestId="0001"
+          requestId="1"
           username="Username"
           userType="Gardener"
           date="06.06.2024"

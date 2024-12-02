@@ -10,7 +10,7 @@ const HelpRequestTable = () => {
   const requests = [
     {
       id: 1,
-      requestId: "#REQ001",
+      requestId: "1",
       name: "Nimal Perera",
       email: "nimal.perera@example.com",
       subject: "Unable to add plantation to the system",
@@ -18,7 +18,7 @@ const HelpRequestTable = () => {
     },
     {
       id: 2,
-      requestId: "#REQ002",
+      requestId: "2",
       name: "Amara Silva",
       email: "amara.silva@example.com",
       subject: "Issue with IoT device connectivity",
@@ -26,7 +26,7 @@ const HelpRequestTable = () => {
     },
     {
       id: 3,
-      requestId: "#REQ003",
+      requestId: "3",
       name: "Kamal Fernando",
       email: "kamal.fernando@example.com",
       subject: "Payment not reflecting on dashboard",
@@ -34,7 +34,7 @@ const HelpRequestTable = () => {
     },
     {
       id: 4,
-      requestId: "#REQ004",
+      requestId: "4",
       name: "Chathurika Bandara",
       email: "chathurika.bandara@example.com",
       subject: "AI assistant not responding properly",
