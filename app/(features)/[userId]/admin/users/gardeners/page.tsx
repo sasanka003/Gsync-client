@@ -102,9 +102,9 @@ const GardenerTable = () => {
 
   return (
     <ContentLayout title="Users">
-      <div className="p-6 border-1 rounded-md mx-4 my-4 shadow-lg">
+      <div className="p-6 border rounded-md mx-4 my-4 shadow-lg">
         <div className="flex items-center justify-between mb-4 space-x-4">
-          <h1 className="text-h2 font-semibold">Gardeners</h1>
+          <h1 className="text-h3 font-semibold">Gardeners</h1>
           <SearchBox
             value={searchTerm}
             onChange={setSearchTerm}
@@ -135,7 +135,7 @@ const GardenerTable = () => {
           )}
           actions={(gardener) => (
             <div className="flex space-x-2">
-              <button className="text-blue-500 hover:underline">Edit</button>
+              <button className="text-emerald-600 hover:underline">Edit</button>
               <button className="text-red-500 hover:underline">Remove</button>
             </div>
           )}

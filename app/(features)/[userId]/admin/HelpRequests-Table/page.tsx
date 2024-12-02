@@ -4,7 +4,7 @@ import { ContentLayout } from "@/components/dashboard/content-layout";
 
 export default function RequestPage() {
   return (
-    <ContentLayout title="Community">
+    <ContentLayout title="Help Requests">
       <div>
         <PlantationRequests />
       </div>
