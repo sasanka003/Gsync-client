@@ -310,8 +310,10 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="city1">City 1</SelectItem>
-                            <SelectItem value="city2">City 2</SelectItem>
+                            <SelectItem value="colombo">Colombo</SelectItem>
+                            <SelectItem value="gampaha">Gampaha</SelectItem>
+                            <SelectItem value="hambanthota">Hambanthota</SelectItem>
+                            <SelectItem value="nuwaraeliya">Nuwara Eliya</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -345,11 +347,32 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="province1">
-                              Province 1
+                            <SelectItem value="western">
+                              Western
                             </SelectItem>
-                            <SelectItem value="province2">
-                              Province 2
+                            <SelectItem value="central">
+                              Central
+                            </SelectItem>
+                            <SelectItem value="southern">
+                              Southern
+                            </SelectItem>
+                            <SelectItem value="northwestern">
+                              North Western
+                            </SelectItem>
+                            <SelectItem value="sabaragamuwa">
+                              Sabaragamuwa
+                            </SelectItem>
+                            <SelectItem value="northen">
+                              Northen
+                            </SelectItem>
+                            <SelectItem value="eastern">
+                              Eastern
+                            </SelectItem>
+                            <SelectItem value="uwa">
+                              Uwa
+                            </SelectItem>
+                            <SelectItem value="northcentral">
+                              North Central
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -384,8 +407,7 @@ const PlantationForm = () => {
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="country1">Country 1</SelectItem>
-                            <SelectItem value="country2">Country 2</SelectItem>
+                            <SelectItem value="srilanka">Sri Lanka</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
