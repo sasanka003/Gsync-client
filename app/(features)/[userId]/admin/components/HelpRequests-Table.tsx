@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Table,
@@ -10,15 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useGetPlantationDetailsQuery } from "@/app/services/systemAdminSlice"; // Import the hook
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { Input } from "@/components/ui/input";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import {
   Select,
   SelectTrigger,
@@ -27,8 +19,19 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { CalendarIcon, Ellipsis } from "lucide-react";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Input } from "@/components/ui/input";
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { useGetAllHelpRequestsQuery } from "@/app/services/systemAdminSlice";
+
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/router";
 
 const DatePickerButton = () => {
   const [selectedMonth, setSelectedMonth] = useState("January");
@@ -67,63 +70,66 @@ const DatePickerButton = () => {
   );
 };
 
-const Plantations = () => {
+const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedPlantations, setSelectedPlantations] = useState<number[]>([]);
+
   const itemsPerPage = 10;
 
-  const {
-    data: plantations,
-    isLoading,
-    isError,
-  } = useGetPlantationDetailsQuery(); // Fetch plantation details
+  const [selectedHelpRequest, setselectedHelpRequest] = useState<Set<string>>(
+    new Set()
+  );
+
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const [popupContent, setPopupContent] = useState<JSX.Element | null>(null);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const { toast } = useToast();
+
+  // const isAdmin = useAdminAccess();
+  const { data, isLoading, isError } = useGetAllHelpRequestsQuery();
+
+  // if (!isAdmin) {
+  //   return <div>You do not have permission to view this page.</div>;
+  // }
 
   if (isLoading) {
-    return <div>Loading plantations...</div>;
+    return <div>Loading help Requests...</div>;
   }
 
   if (isError) {
-    return <div>Error loading plantations.</div>;
+    return <div>Error help requests.</div>;
   }
 
-  const filteredPlantations =
-    plantations?.filter((plantation) =>
-      plantation.type.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+  const helpRequests = data || [];
+  const totalItems = data?.length || 0;
 
-  const totalItems = filteredPlantations.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const displayedPlantations = filteredPlantations.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const filteredHelpRequest = helpRequests.filter((helpRequests) =>
+    helpRequests.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSelectPlantation = (id: number) => {
-    setSelectedPlantations((prev) =>
-      prev.includes(id)
-        ? prev.filter((plantationId) => plantationId !== id)
-        : [...prev, id]
-    );
+  const handleDropdownOpen = (id: string) => {
+    setOpenDropdown(openDropdown === id ? null : id);
   };
 
-  const handleDelete = () => {
-    // Add delete functionality here
-    console.log("Deleting:", selectedPlantations);
-  };
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   return (
     <div className="pt-10 pl-10 pr-5">
       <div className="p-4 border border-text rounded-lg">
         <div className="flex items-center mb-4 justify-between">
           <div className="mt-3 mr-[200px]">
-            <h1 className="text-h2 font-semibold mb-4">Plantation Requests</h1>
+            <h1 className="text-h2 font-semibold mb-4">Help Requests</h1>
           </div>
-
           <div className="flex space-x-2">
             <div className="relative">
               <Input
-                placeholder="Search Plantations"
+                placeholder="Search HelpRequests"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 w-[304px]"
@@ -133,115 +139,92 @@ const Plantations = () => {
             <DatePickerButton />
           </div>
         </div>
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-p-ui-medium font-semibold">
-            All Plantations {totalItems}
+        <div className="flex justify-between">
+          <div>
+            <p className="text-p-ui-medium text-common mt-2">
+              All Help Requests{" "}
+              <span className=" ml-2 text-p-ui-medium text-muted-foreground">
+                {totalItems}
+              </span>
+            </p>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-p text-common">
-              {selectedPlantations.length} items selected
-            </div>
+          <div className="flex gap-[30px]">
+            <p className="mt-2">{selectedHelpRequest.size} items selected</p>
             <Button className="bg-destructive text-fill disabled:hover:bg-destructive disabled:hover:text-fill">
               Delete
             </Button>
           </div>
         </div>
-
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                <input
-                  type="checkbox"
-                  checked={
-                    selectedPlantations.length === displayedPlantations.length
-                  }
-                  onChange={() =>
-                    setSelectedPlantations(
-                      selectedPlantations.length === displayedPlantations.length
-                        ? []
-                        : displayedPlantations.map((p) => p.plantation_id)
-                    )
-                  }
-                />
-              </TableHead>
-              <TableHead>Plantation ID</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>User ID</TableHead>
-              <TableHead>City</TableHead>
+              <TableHead>Request ID</TableHead>
+              <TableHead>Subject</TableHead>
+              <TableHead>Message</TableHead>
               <TableHead>Created At</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead className="w-10 p-0" />
             </TableRow>
           </TableHeader>
           <TableBody>
-            {displayedPlantations.map((plantation) => (
-              <TableRow key={plantation.plantation_id}>
-                <TableCell>
-                  <input
-                    type="checkbox"
-                    checked={selectedPlantations.includes(
-                      plantation.plantation_id
-                    )}
-                    onChange={() =>
-                      handleSelectPlantation(plantation.plantation_id)
-                    }
-                  />
-                </TableCell>
-                <TableCell>{plantation.plantation_id}</TableCell>
-                <TableCell>{plantation.type}</TableCell>
-                <TableCell>{plantation.user_id}</TableCell>
-                <TableCell>{plantation.city}</TableCell>
-                <TableCell>
-                  {new Date(plantation.createdAt).toLocaleDateString()}
-                </TableCell>
-                <TableCell>{plantation.status}</TableCell>
-                <TableCell>
-                  <Ellipsis className="text-muted-foreground" />
-                </TableCell>
+            {filteredHelpRequest.map((HelpRequest) => (
+              <TableRow key={HelpRequest.help_request_id}>
+                <TableCell>{HelpRequest.help_request_id}</TableCell>
+                <TableCell>{HelpRequest.subject}</TableCell>
+                <TableCell>{HelpRequest.message}</TableCell>
+                <TableCell>{HelpRequest.createdAt}</TableCell>
+                <TableCell>{HelpRequest.name}</TableCell>
+                <TableCell>{HelpRequest.type}</TableCell>
+                <TableCell className="w-10 p-0"></TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-
         <div className="flex justify-between items-center mt-4">
           <div className="text-p text-common">
             Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
             {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}{" "}
             results
           </div>
-          <div>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  />
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    onClick={() => setCurrentPage(index + 1)}
+                    isActive={currentPage === index + 1}
+                  >
+                    {index + 1}
+                  </PaginationLink>
                 </PaginationItem>
-                {[...Array(totalPages)].map((_, index) => (
-                  <PaginationItem key={index}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(index + 1)}
-                      isActive={currentPage === index + 1}
-                    >
-                      {index + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() =>
-                      setCurrentPage(Math.min(totalPages, currentPage + 1))
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() =>
+                    setCurrentPage(Math.min(totalPages, currentPage + 1))
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
+
+      {isPopupOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-auto">
+            {popupContent}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Plantations;
+export default Users;
