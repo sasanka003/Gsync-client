@@ -65,6 +65,7 @@ const PlantationForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const plan = (searchParams.get("plan") as Subscription) || Subscription.Basic;
+  const [plantationType, setPlantationType] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
@@ -92,6 +93,7 @@ const PlantationForm = () => {
       await registerPlantation(plantationData).unwrap();
 
       form.reset();
+      setPlantationType("");
       setCity("");
       setProvince("");
       setCountry("");
@@ -182,11 +184,27 @@ const PlantationForm = () => {
                         </div>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter plantation type"
-                          className="placeholder:text-p"
-                        />
+                        <Select
+                          value={plantationType}
+                          onValueChange={(value) => {
+                            setPlantationType(value);
+                            field.onChange(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-full px-4 py-2 border rounded bg-transparent">
+                            <input
+                              type="text"
+                              placeholder="Select Plantation Type"
+                              value={plantationType}
+                              readOnly
+                              className="w-full bg-transparent placeholder:text-p text-gray-900"
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="indoor">Indoor</SelectItem>
+                            <SelectItem value="outdoor">Outdoor</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
