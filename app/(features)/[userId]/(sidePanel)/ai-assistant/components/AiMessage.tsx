@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { UserIcon, BotIcon } from "./ui/icons";
+import { UserIcon, BotIcon } from "../../../../../../components/ui/icons";
 import { ReactNode } from "react";
 import { StreamableValue, useStreamableValue } from "ai/rsc";
-import { Markdown } from "./ui/markdown";
+import { Markdown } from "../../../../../../components/ui/markdown";
 
 export const TextStreamMessage = ({
   content,
@@ -52,7 +52,9 @@ export const Message = ({
       <div className="flex flex-col gap-1 w-full">
         <div className="text-black dark:text-black flex flex-col gap-4">
           {typeof content === "string" ? (
-            <div className="text-sm"><Markdown>{content}</Markdown></div>
+            <div className="text-sm">
+              <Markdown>{content}</Markdown>
+            </div>
           ) : (
             <div className="flex flex-col gap-4 w-full">{content}</div>
           )}
@@ -64,7 +66,7 @@ export const Message = ({
 
 export const MessageWithComponent = ({
   content,
-  message
+  message,
 }: {
   content: ReactNode;
   message: string;
@@ -76,16 +78,14 @@ export const MessageWithComponent = ({
       animate={{ y: 0, opacity: 1 }}
     >
       <div className="size-[24px] flex flex-col justify-center items-center flex-shrink-0 text-black">
-          <BotIcon />
+        <BotIcon />
       </div>
-      
+
       <div className="text-black dark:text-black">
         <div className="text-sm mb-2 p-3 bg-gray-50 rounded-lg shadow-inner">
           <Markdown>{message}</Markdown>
         </div>
-        <div className="pt-2">
-          {content}
-        </div>
+        <div className="pt-2">{content}</div>
       </div>
     </motion.div>
   );
