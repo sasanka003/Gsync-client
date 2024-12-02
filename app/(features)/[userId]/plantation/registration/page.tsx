@@ -66,6 +66,7 @@ const PlantationForm = () => {
   const searchParams = useSearchParams();
   const plan = (searchParams.get("plan") as Subscription) || Subscription.Basic;
   const [plantationType, setPlantationType] = useState("");
+  const [plantType, setPlantType] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
@@ -78,6 +79,7 @@ const PlantationForm = () => {
         user_id: user.id,
         name: data.plantationName,
         type: data.plantationType,
+        // have to add plant type as well?
         location: {
           city: data.city,
           province: data.province,
@@ -94,6 +96,7 @@ const PlantationForm = () => {
 
       form.reset();
       setPlantationType("");
+      setPlantType("");
       setCity("");
       setProvince("");
       setCountry("");
@@ -219,11 +222,28 @@ const PlantationForm = () => {
                         <div className="text-p text-common">Plant Type</div>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter plant type"
-                          className="placeholder:text-p"
-                        />
+                      <Select
+                          value={plantType}
+                          onValueChange={(value) => {
+                            setPlantType(value);
+                            field.onChange(value);
+                          }}
+                        >
+                          <SelectTrigger className="w-full px-4 py-2 border rounded bg-transparent">
+                            <input
+                              type="text"
+                              placeholder="Select Plant Type"
+                              value={plantType}
+                              readOnly
+                              className="w-full bg-transparent placeholder:text-p text-gray-900"
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="bellpepper">Bell Pepper</SelectItem>
+                            <SelectItem value="tomato">Tomato</SelectItem>
+                            <SelectItem value="capsicum">Capsicum</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
