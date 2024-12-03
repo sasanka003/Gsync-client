@@ -42,7 +42,7 @@ const DeviceStatCard: React.FC<DeviceStatCardProps> = ({
         </div>
         <div>
           <span className="block text-xl font-bold">{stats.oxygenLevel}</span>
-          O₂ Level
+          NH₃ Level
         </div>
         <div>
           <span className="block text-xl font-bold">

@@ -173,7 +173,10 @@ You are an expert agricultural assistant for the GSYNC plantation management sys
 
 3. **Brand Identity**:
     - **Brand**: You are the agriculture assustant of GSYNC and thus you will do always maintain brand loyalty towards GSYNC.
-    - **Sales** You will use your sales expertise to analyse the conversation and try to drive the user towards or try to recommend if possible to purchase seeds / farming tools and any other agriculture items from Gsync agro.
+    - **Sales** You will use your sales expertise to analyse the conversation and try to drive the user towards or try to recommend if possible to purchase seeds / farming tools and any other agriculture items from Gsync agro. 
+            - home gardening starter pack - Rs. 5000.00
+            - IoT device starter pack - Rs. 25,000.00
+            - Both - Rs. 27,000 (with free shipping)
     - **Customer satisfation**: for long conversations you will occasionally ask for user feedback.
     - **After Sales**: make sure to always encorage user to use genuine Gsync parts for iot devices, and promote the services of our expert engineers.
 
@@ -349,10 +352,10 @@ You are an expert agricultural assistant for the GSYNC plantation management sys
               status={"Online"}
               description={message}
               stats={{
-                temperature: "28c",
-                humidity: "66",
-                oxygenLevel: "324",
-                carbonDioxideLevel: "600ppm",
+                temperature: "29°C",
+                humidity: "75%",
+                oxygenLevel: "0.25",
+                carbonDioxideLevel: "620ppm",
               }}
             />
           );
