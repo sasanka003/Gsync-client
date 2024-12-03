@@ -24,12 +24,16 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRegisterPlantationMutation } from "@/app/services/plantSlice";
 import { createClient } from "@/utils/supabase/client";
-import { Subscription } from "@/types/plantations";
+import { Subscription, PlantationType, PlantType } from "@/types/plantations";
 
 const schema = z.object({
   plantationName: z.string().min(1, "Plantation name is required"),
-  plantationType: z.string().min(1, "Plantation type is required"),
-  plantType: z.string().min(1, "Plant type is required"),
+  plantationType: z.nativeEnum(PlantationType, {
+    errorMap: () => ({ message: "Plantation type is required" }),
+  }),
+  plantType: z.nativeEnum(PlantType, {
+    errorMap: () => ({ message: "Plant type is required" }),
+  }),
   city: z.string().min(1, "City is required"),
   province: z.string().min(1, "Province is required"),
   country: z.string().min(1, "Country is required"),
@@ -51,8 +55,8 @@ const PlantationForm = () => {
     resolver: zodResolver(schema),
     defaultValues: {
       plantationName: "",
-      plantationType: "",
-      plantType: "",
+      plantationType: undefined,
+      plantType: undefined,
       city: "",
       province: "",
       country: "",
@@ -65,8 +69,6 @@ const PlantationForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const plan = (searchParams.get("plan") as Subscription) || Subscription.Basic;
-  const [plantationType, setPlantationType] = useState("");
-  const [plantType, setPlantType] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
@@ -78,13 +80,11 @@ const PlantationForm = () => {
       const plantationData = {
         user_id: user.id,
         name: data.plantationName,
-        type: data.plantationType,
-        // have to add plant type as well?
-        location: {
-          city: data.city,
-          province: data.province,
-          region: data.country,
-        },
+        plant_type: data.plantType,
+        plantation_type: data.plantationType,
+        city: data.city,
+        province: data.province,
+        country: data.country,
         area: {
           length: data.plantationLength,
           width: data.plantationWidth,
@@ -95,8 +95,6 @@ const PlantationForm = () => {
       await registerPlantation(plantationData).unwrap();
 
       form.reset();
-      setPlantationType("");
-      setPlantType("");
       setCity("");
       setProvince("");
       setCountry("");
@@ -188,24 +186,27 @@ const PlantationForm = () => {
                       </FormLabel>
                       <FormControl>
                         <Select
-                          value={plantationType}
+                          value={field.value}
                           onValueChange={(value) => {
-                            setPlantationType(value);
-                            field.onChange(value);
+                            field.onChange(value as PlantationType);
                           }}
                         >
                           <SelectTrigger className="w-full px-4 py-2 border rounded bg-transparent">
                             <input
                               type="text"
                               placeholder="Select Plantation Type"
-                              value={plantationType}
+                              value={field.value || ""}
                               readOnly
                               className="w-full bg-transparent placeholder:text-p text-gray-900"
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="indoor">Indoor</SelectItem>
-                            <SelectItem value="outdoor">Outdoor</SelectItem>
+                            <SelectItem value={PlantationType.Indoor}>
+                              Indoor
+                            </SelectItem>
+                            <SelectItem value={PlantationType.Outdoor}>
+                              Outdoor
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -223,27 +224,30 @@ const PlantationForm = () => {
                       </FormLabel>
                       <FormControl>
                         <Select
-                          value={plantType}
+                          value={field.value}
                           onValueChange={(value) => {
-                            setPlantType(value);
-                            field.onChange(value);
+                            field.onChange(value as PlantType);
                           }}
                         >
                           <SelectTrigger className="w-full px-4 py-2 border rounded bg-transparent">
                             <input
                               type="text"
                               placeholder="Select Plant Type"
-                              value={plantType}
+                              value={field.value || ""}
                               readOnly
                               className="w-full bg-transparent placeholder:text-p text-gray-900"
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="bellpepper">
+                            <SelectItem value={PlantType.BellPepper}>
                               Bell Pepper
                             </SelectItem>
-                            <SelectItem value="tomato">Tomato</SelectItem>
-                            <SelectItem value="capsicum">Capsicum</SelectItem>
+                            <SelectItem value={PlantType.Tomato}>
+                              Tomato
+                            </SelectItem>
+                            <SelectItem value={PlantType.Capsicum}>
+                              Capsicum
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
