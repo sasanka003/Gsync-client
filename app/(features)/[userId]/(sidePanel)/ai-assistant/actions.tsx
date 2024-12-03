@@ -1,4 +1,9 @@
-import { TextStreamMessage } from "@/app/(features)/[userId]/(sidePanel)/ai-assistant/components/AiMessage";
+import {
+  MessageWithComponent,
+  TextStreamMessage,
+  ToxicMessage,
+} from "@/app/(features)/[userId]/(sidePanel)/ai-assistant/components/AiMessage";
+import { Markdown } from "@/components/ui/markdown";
 import { openai } from "@ai-sdk/openai";
 import { CoreMessage, generateId, generateText, tool } from "ai";
 import {
@@ -64,51 +69,68 @@ export async function sendMessage(message: string) {
       `,
     messages: messagesClone.get() as CoreMessage[],
     tools: {
-      fetchDataFromAgents: tool({
-        description: "Execute the agent system",
+      fetchDataFromRagAgents: tool({
+        description: "Execute the Rag agent",
         parameters: z.object({
           query: z
             .string()
             .describe(
-              "Well designed query to fetch data from the RAG database"
+              "Well designed query to fetch data from the RAG database consisting accurate and upto date information"
             ),
         }),
         execute: async ({ query }) => {
           const response = await fetch(
-            `http://127.0.0.1:8080/agents?input=${encodeURIComponent(query)}`
+            `http://127.0.0.1:8088/chat/rag?query=${encodeURIComponent(query)}`
           );
           return await response.json().then((data) => data.output);
         },
       }),
-      fetchDataFromEnterprise: tool({
+      fetchDataFromResearchAgents: tool({
         description:
-          "fetch data from an executed agent system for enterprise tasks.",
+          "Execute the Research agent capable of providing research results necessary to answer user question.",
         parameters: z.object({
           query: z
             .string()
-            .describe("Well designed query to fetch data from the web"),
+            .describe(
+              "Well designed query to fetch data from the Research Agent that is capable of researching multiple sources"
+            ),
         }),
         execute: async ({ query }) => {
           const response = await fetch(
-            `http://127.0.0.1:8080/enterprise?input=${encodeURIComponent(
+            `http://127.0.0.1:8088//chat/research?query=${encodeURIComponent(
               query
             )}`
           );
           return await response.json().then((data) => data.output);
         },
       }),
+      fetchDataFromEnterprise: tool({
+        description:
+          "fetch data from an executed agent system for creating enterprise Financial report and Farm status report.",
+        parameters: z.object({
+          query: z.string().describe("Is your role ? : EnterpriseAdmin"),
+        }),
+        execute: async ({ query }) => {
+          if (query.toLowerCase() === "no") {
+            return "UnAuthorised Access";
+          } else {
+            const response = await fetch(
+              `http://127.0.0.1:8088/chat/enterprise/admin`
+            );
+            return await response.json().then((data) => data.output);
+          }
+        },
+      }),
       fetchIoTReport: tool({
         description:
-          "fetch data from an executed agent system for enterprise tasks.",
+          "Use this tool to create and receive report on the IoT devices and your plantation status using collected data from IoT devices.",
         parameters: z.object({
           query: z
             .string()
-            .describe("Well designed query to fetch data from the web"),
+            .describe("Provide a remark to get iot device report."),
         }),
         execute: async ({ query }) => {
-          const response = await fetch(
-            `http://127.0.0.1:8080/iot?input=${encodeURIComponent(query)}`
-          );
+          const response = await fetch(`http://127.0.0.1:8088/chat/iot`);
           return await response.json().then((data) => data.output);
         },
       }),
@@ -156,7 +178,7 @@ You are an expert agricultural assistant for the GSYNC plantation management sys
 - **Non-Response Scenarios**: If the user query contains inappropriate content or violates guidelines, indicate that the query cannot be processed without providing details.
 
 ### **Response Example Format:**
-- **Direct Answer**: Provide a clear and concise answer.
+- **Direct Answer**: Provide a clear and concise answer, use markdown and take full advantage of markdown format.
 - **Additional Context**: Add any necessary background or relevant details to enhance understanding.
 - **Actionable Steps**: If applicable, provide steps or guidance that the user can follow.
 - **Resources**: Mention any relevant resources or tools available within the GSYNC system.
@@ -177,7 +199,100 @@ You are an expert agricultural assistant for the GSYNC plantation management sys
 
       return textComponent;
     },
-    tools: {},
+    tools: {
+      viewSideBySideComparison: {
+        description:
+          "used for providing a side by side comparison of something according to user request.",
+        parameters: z.object({
+          analysis: z
+            .string()
+            .describe(
+              "a markdown table consisting of a point wise analysis of the candidates."
+            ),
+          message: z
+            .string()
+            .describe(
+              "provide an indepth analysis of the candidates based on the comparison points in a well formated answer."
+            ),
+        }),
+        generate: async function* ({ analysis, message }) {
+          const toolCallId = generateId();
+          messages.done([
+            ...(messages.get() as CoreMessage[]),
+            {
+              role: "assistant",
+              content: [
+                {
+                  type: "tool-call",
+                  toolCallId,
+                  toolName: "viewSideBySideComparison",
+                  args: { analysis },
+                },
+              ],
+            },
+            {
+              role: "tool",
+              content: [
+                {
+                  type: "tool-result",
+                  toolName: "viewSideBySideComparison",
+                  toolCallId,
+                  result: "The side by side comparison",
+                },
+              ],
+            },
+          ]);
+          return (
+            <MessageWithComponent
+              content={<Markdown>{analysis}</Markdown>}
+              message={message}
+            />
+          );
+        },
+      },
+      guardRails: {
+        description:
+          "Used when toxic speech / Gibberish / Hate Speech / self harm or any other ethical concern or degratory speech is detected",
+        parameters: z.object({
+          message: z
+            .string()
+            .describe(
+              "The reply message when toxic speech is detected, provide a warning message to the user"
+            ),
+        }),
+        generate: async function* ({ message }) {
+          const toolCallId = generateId();
+          messages.done([
+            ...(messages.get() as CoreMessage[]),
+            {
+              role: "assistant",
+              content: [
+                {
+                  type: "tool-call",
+                  toolCallId,
+                  toolName: "guardRails",
+                  args: { message },
+                },
+              ],
+            },
+            {
+              role: "tool",
+              content: [
+                {
+                  type: "tool-result",
+                  toolName: "guardRails",
+                  toolCallId,
+                  result: `The toxic speech has been detected and the user has been warned`,
+                },
+              ],
+            },
+          ]);
+
+          return <ToxicMessage role="assistant" content={message} />;
+        },
+      },
+
+    },
   });
 
   return stream;
