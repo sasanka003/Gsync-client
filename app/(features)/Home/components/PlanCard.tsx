@@ -35,6 +35,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
     null
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -76,17 +77,50 @@ const PlanCard: React.FC<PlanCardProps> = ({
       return;
     }
 
-    // Determine navigation based on plan
-    if (title === Subscription.Basic) {
-      router.push(`/${user.id}/dashboard`);
-    } else {
-      router.push(`/${user.id}/plantation/registration?plan=${title}`);
+    // Prevent multiple submissions
+    if (isUpdating) return;
+
+    try {
+      setIsUpdating(true);
+
+      // Update subscription in Supabase
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          subscription: title as Subscription,
+        })
+        .eq("user_id", user.id);
+
+      if (error) {
+        throw error;
+      }
+
+      // Update local state
+      setUserSubscription(title as Subscription);
+
+      // Determine navigation based on plan
+      if (title === Subscription.Basic) {
+        router.push(`/${user.id}/dashboard`);
+      } else {
+        router.push(`/${user.id}/plantation/registration?plan=${title}`);
+      }
+
+      // Optional: Show success toast
+      // toast.success(`Successfully upgraded to ${title} plan`);
+    } catch (error) {
+      console.error("Error updating subscription:", error);
+
+      // Optional: Show error toast
+      // toast.error("Failed to update subscription. Please try again.");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   // Determine button and status text
   const getButtonText = () => {
     if (isLoading) return "Loading...";
+    if (isUpdating) return "Updating...";
     return "Choose Plan";
   };
 
@@ -132,7 +166,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
         <Button
           className="w-28 mt-6"
           onClick={handlePlanSelect}
-          disabled={!isPlanSelectionAllowed()}
+          disabled={!isPlanSelectionAllowed() || isUpdating}
         >
           {getButtonText()}
         </Button>

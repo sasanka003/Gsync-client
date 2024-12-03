@@ -7,6 +7,7 @@ import { useGetUserPlantationsQuery } from "@/app/services/plantSlice";
 import { UserPlantation } from "@/types/plantations";
 import RequestsPending from "./Components/RequestPending";
 import PlantationDashboard from "./Components/PlantationDashboard";
+import BasicUserDashboard from "./Components/BasicUserDashboard";
 
 const PlantationInfo = () => {
   const params = useParams();
@@ -41,9 +42,10 @@ const PlantationInfo = () => {
   const renderContent = () => {
     if (!plantations || plantations.length === 0) {
       return (
-        <div className="flex justify-center items-center h-full">
-          No plantations found
-        </div>
+        // <div className="flex justify-center items-center h-full">
+        //   No plantations found
+        // </div>
+        <BasicUserDashboard userId={userId} />
       );
     }
 
