@@ -1,29 +1,28 @@
 "use client";
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 interface PlantImageCardProps {
-  plantType: string;
+  itemTitle: string;
   imageUrl: string;
   description: string;
-  timestamp: string;
 }
 
 const PlantImageCard: React.FC<PlantImageCardProps> = ({
-  plantType,
+  itemTitle,
   imageUrl,
   description,
-  timestamp,
 }) => {
+
   return (
     <div className="border border-gray-300 rounded-lg p-4 bg-white shadow-md w-[400px]">
       <h3 className="font-semibold text-lg text-emerald-950 mb-2">
-        Following is a latest image of your {plantType} plants.
+        {itemTitle}
       </h3>
       <div className="flex items-start">
         <img
           src={imageUrl}
-          alt={`Image of ${plantType}`}
+          alt={`Image of ${itemTitle}`}
           className="w-36 h-36 object-cover rounded-md mr-4"
         />
         <p className="text-gray-600 text-sm">{description}</p>
@@ -43,7 +42,6 @@ const PlantImageCard: React.FC<PlantImageCardProps> = ({
             d="M8 7V3m8 4V3m-9 4h10M5 21h14a2 2 0 002-2V11a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
           ></path>
         </svg>
-        Image taken at: {timestamp}
       </div>
     </div>
   );
