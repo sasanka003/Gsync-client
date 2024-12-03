@@ -6,7 +6,6 @@ import { useParams } from "next/navigation";
 import { useGetUserPlantationsQuery } from "@/app/services/plantSlice";
 import { UserPlantation } from "@/types/plantations";
 import RequestsPending from "./Components/RequestPending";
-import PaymentPending from "./Components/PaymentPending";
 import PlantationDashboard from "./Components/PlantationDashboard";
 
 const PlantationInfo = () => {
@@ -51,30 +50,18 @@ const PlantationInfo = () => {
     const statusCardsData = plantations.map((plantation: UserPlantation) => ({
       plantationName: plantation.name,
       status: plantation.verified ? "Approved" : "In Review",
-      // requestDate: new Date().toLocaleDateString("en-GB"),
     }));
 
     const hasUnverifiedPlantations = plantations.some((p) => !p.verified);
-    const hasVerifiedUnpaidPlantations = plantations.some(
-      (p) => p.verified && !p.payment_status
-    );
-    const hasVerifiedPaidPlantations = plantations.some(
-      (p) => p.verified && p.payment_status
-    );
+    const hasVerifiedPlantations = plantations.some((p) => p.verified);
 
     if (hasUnverifiedPlantations) {
       return <RequestsPending plantations={statusCardsData} />;
     }
 
-    if (hasVerifiedUnpaidPlantations) {
-      return <PaymentPending plantations={statusCardsData} />;
-    }
-
-    if (hasVerifiedPaidPlantations) {
-      // Get the first verified and paid plantation for dashboard display
-      const activePlantation = plantations.find(
-        (p) => p.verified && p.payment_status
-      );
+    if (hasVerifiedPlantations) {
+      // Get the first verified plantation for dashboard display
+      const activePlantation = plantations.find((p) => p.verified);
 
       return <PlantationDashboard plantationData={activePlantation} />;
     }
