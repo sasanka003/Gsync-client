@@ -1,21 +1,13 @@
 "use client";
 import React from "react";
-import HelpRequest from "../components/Help-Requests";
+import HelpRequest1 from "../components/Help-Requests1";
 import { ContentLayout } from "@/components/dashboard/content-layout";
 
 export default function RequestPage() {
   return (
-    <ContentLayout title="Community">
+    <ContentLayout title="Help Requests">
       <div>
-        <HelpRequest
-          requestId="1"
-          username="Username"
-          userType="Gardener"
-          date="06.06.2024"
-          subject="Pest Identification Issue"
-          message="Lorem Ipsum is simply dummy text of the printing and typesetting industry..."
-          imageUrl="/images/plantation.png"
-        />
+        <HelpRequest1 />
       </div>
     </ContentLayout>
   );

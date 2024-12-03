@@ -71,7 +71,7 @@ const LineChart: React.FC<LineChartProps> = ({
       },
       y: {
         min: 0,
-        max: 30,
+        max: 700,
         ticks: {
           stepSize: 10,
         },

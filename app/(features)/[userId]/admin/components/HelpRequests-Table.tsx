@@ -19,6 +19,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { CalendarIcon, Ellipsis } from "lucide-react";
+import Link from "next/link";
 
 import {
   Pagination,
@@ -170,7 +171,14 @@ const Users = () => {
           <TableBody>
             {filteredHelpRequest.map((HelpRequest) => (
               <TableRow key={HelpRequest.help_request_id}>
-                <TableCell>{HelpRequest.help_request_id}</TableCell>
+                <TableCell>
+                  <Link
+                    href={`http://localhost:3000/d09ff37a-1dcd-4d8e-a325-1aa3c05a149f/admin/help-requests/`}
+                    className="text-primary hover:underline"
+                  >
+                    {HelpRequest.help_request_id}
+                  </Link>
+                </TableCell>
                 <TableCell>{HelpRequest.subject}</TableCell>
                 <TableCell>{HelpRequest.message}</TableCell>
                 <TableCell>{HelpRequest.createdAt}</TableCell>
