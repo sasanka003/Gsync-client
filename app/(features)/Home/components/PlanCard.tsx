@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { Subscription } from "@/types/plantations";
-import { useGetUserPlantationsQuery } from "@/app/services/plantSlice";
 
 interface PlanCardProps {
   title: string;
@@ -32,94 +31,42 @@ const PlanCard: React.FC<PlanCardProps> = ({
   const router = useRouter();
   const supabase = createClient();
   const [user, setUser] = useState<any>(null);
+  const [userSubscription, setUserSubscription] = useState<Subscription | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
-
-  // Get user plantations query
-  const { data: userPlantations = [], isLoading: isPlantationsLoading } =
-    useGetUserPlantationsQuery(user?.id ?? "", {
-      skip: !user,
-    });
 
   useEffect(() => {
     const checkUser = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("subscription")
+          .eq("id", user.id)
+          .single();
+        if (!error) {
+          setUserSubscription(profile?.subscription ?? Subscription.Basic);
+        }
+      }
       setUser(user);
       setIsLoading(false);
     };
     checkUser();
   }, []);
 
-  // Determine current user's subscription and plantation count
-  const currentSubscription = user
-    ? userPlantations[0]?.subscription ?? Subscription.Basic
-    : Subscription.Basic;
-  const plantationCount = userPlantations.length;
-
-  // Subscription hierarchy
-  const subscriptionHierarchy = {
-    [Subscription.Basic]: 0,
-    [Subscription.Gardener]: 1,
-    [Subscription.Enterprise]: 2,
-  };
-
   // Determine if plan selection is allowed
-  const canSelectPlan = () => {
+  const isPlanSelectionAllowed = () => {
     // Not authenticated
     if (!user) return false;
 
-    // If any plantation is waiting for verification, block all selections
-    const hasUnverifiedPlantation = userPlantations.some((p) => !p.verified);
-    if (hasUnverifiedPlantation) return false;
+    // No subscription
+    if (!userSubscription) return true;
 
-    // Prevent downgrade
-    if (
-      subscriptionHierarchy[title as Subscription] <
-      subscriptionHierarchy[currentSubscription]
-    ) {
-      return false;
-    }
-
-    // Basic users can upgrade
-    if (currentSubscription === Subscription.Basic) {
-      return true;
-    }
-
-    // Gardener users can only upgrade to Enterprise
-    if (currentSubscription === Subscription.Gardener) {
-      return title === Subscription.Enterprise;
-    }
-
-    // Enterprise users can't change
-    if (currentSubscription === Subscription.Enterprise) {
-      return false;
-    }
-
-    return false;
-  };
-
-  // Determine if plan is already subscribed
-  const isCurrentPlan = user ? title === currentSubscription : false;
-
-  // Determine plan selection restrictions
-  const isPlanSelectionDisabled = () => {
-    // Not authenticated
-    if (!user) return false;
-
-    // Waiting for verification
-    if (userPlantations.some((p) => !p.verified)) return true;
-
-    // Already at max plantations
-    if (
-      (currentSubscription === Subscription.Basic && plantationCount > 0) ||
-      (currentSubscription === Subscription.Gardener && plantationCount >= 1) ||
-      (currentSubscription === Subscription.Enterprise && plantationCount >= 3)
-    )
-      return true;
-
-    // Prevent downgrade or lateral moves
-    return !canSelectPlan();
+    // Subscribed to the same plan
+    return userSubscription !== title;
   };
 
   const handlePlanSelect = async () => {
@@ -139,40 +86,18 @@ const PlanCard: React.FC<PlanCardProps> = ({
 
   // Determine button and status text
   const getButtonText = () => {
-    if (isLoading || isPlantationsLoading) return "Loading...";
+    if (isLoading) return "Loading...";
     return "Choose Plan";
   };
 
   const getButtonStatusText = () => {
-    if (isLoading || isPlantationsLoading) return null;
+    if (isLoading) return null;
 
     if (!user) return null;
 
-    // Waiting for verification
-    if (userPlantations.some((p) => !p.verified)) {
-      return "Waiting for plantation verification";
-    }
-
-    // Already subscribed to this plan
-    if (isCurrentPlan) {
+    // Subscribed to the same plan
+    if (userSubscription === title) {
       return "You are currently on this plan";
-    }
-
-    // Max plantations reached
-    if (
-      (currentSubscription === Subscription.Basic && plantationCount > 0) ||
-      (currentSubscription === Subscription.Gardener && plantationCount >= 1) ||
-      (currentSubscription === Subscription.Enterprise && plantationCount >= 3)
-    ) {
-      return "Maximum plantations reached for your current plan";
-    }
-
-    // Downgrade not allowed
-    if (
-      subscriptionHierarchy[title as Subscription] <
-      subscriptionHierarchy[currentSubscription]
-    ) {
-      return "Cannot downgrade plan";
     }
 
     return null;
@@ -207,7 +132,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
         <Button
           className="w-28 mt-6"
           onClick={handlePlanSelect}
-          disabled={isPlanSelectionDisabled()}
+          disabled={!isPlanSelectionAllowed()}
         >
           {getButtonText()}
         </Button>
