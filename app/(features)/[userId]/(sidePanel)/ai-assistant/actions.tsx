@@ -10,7 +10,8 @@ import {
 import { ReactNode } from "react";
 import { z } from "zod";
 
-const sendMessage = async (message: string) => {
+// Ensure this function is exported
+export async function sendMessage(message: string) {
   "use server";
 
   const messages = getMutableAIState<typeof AI>("messages");
@@ -180,7 +181,7 @@ You are an expert agricultural assistant for the GSYNC plantation management sys
   });
 
   return stream;
-};
+}
 
 export type UIState = Array<ReactNode>;
 

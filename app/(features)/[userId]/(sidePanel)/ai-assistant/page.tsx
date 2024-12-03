@@ -1,11 +1,13 @@
-import React from "react";
 import { ContentLayout } from "@/components/dashboard/content-layout";
-import ChatUI from "./components/ChatUI";
+import { AI } from "./actions";
+import ChatComponent from "./components/ChatComponent";
 
-export default function chat() {
+export default function HomePage() {
   return (
     <ContentLayout title="AI Assistant">
-      <ChatUI />
+      <AI>
+        <ChatComponent />
+      </AI>
     </ContentLayout>
   );
 }
