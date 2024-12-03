@@ -31,24 +31,23 @@ export default function ChatComponent() {
   const suggestedActions = [
     {
       title: "View all",
-      label: "candidates",
-      action: "provide list of all candidates",
+      label: "plantations",
+      action: "Provide a list of all plantations",
     },
     {
-      title: "Show me",
-      label: "the latest news",
-      action: "Show me the latest news on the election",
+      title: "Identify",
+      label: "a plant disease",
+      action: "Help me identify a disease affecting my plants",
     },
     {
       title: "Predict",
-      label: "Parliament election seats?",
-      action:
-        "visualise the seats in the parliament, predicted based on the votes",
+      label: "the best harvest time",
+      action: "Suggest the ideal time to harvest based on current conditions",
     },
     {
       title: "How many",
-      label: "days left till the election?",
-      action: "When is the parliamentary election ?",
+      label: "plants are in my plantation?",
+      action: "Calculate the total number of plants in my plantation",
     },
   ];
 
@@ -64,15 +63,17 @@ export default function ChatComponent() {
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 && (
           <motion.div className="max-w-2xl mx-auto mt-8 p-4 bg-white rounded-lg shadow">
-            <div className="border rounded-lg p-6 flex flex-col gap-4 text-gray-500 text-sm bg-gray-50 border-gray-200">
-              <p className="flex flex-row justify-center gap-4 items-center text-gray-900">
-                {/* <VercelIcon size={16} /> */}
-                {/* <span>+</span> */}
-                {/* <MasonryIcon /> */}
-              </p>
+            <div className="border rounded-lg p-6 flex flex-col gap-4 text-gray-500 text-sm bg-emerald-50 border-gray-200">
+              {/* <img className="w-40 h-40" src="/images/assistant.svg" alt="assistant" /> */}
+              {/* <p className="flex flex-row justify-center gap-4 items-center text-gray-900">
+                <VercelIcon size={16} />
+                <span>+</span>
+                <MasonryIcon />
+              </p> */}
               <p>
-                Welcome to ClearVote political analyst by DataMites. Ask me
-                anything about politics and I will try to help you.
+                Welcome to Gsync AI Assistant! How can I assist you today with
+                your plantations or plant disease concerns? Feel free to ask
+                anything—I’m here to help!
               </p>
             </div>
           </motion.div>
