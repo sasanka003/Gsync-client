@@ -1,8 +1,4 @@
-"use client";
-
-import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const page = async () => {
   return (

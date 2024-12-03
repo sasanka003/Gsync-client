@@ -52,8 +52,9 @@ const PlanCard: React.FC<PlanCardProps> = ({
   }, []);
 
   // Determine current user's subscription and plantation count
-  const currentSubscription =
-    userPlantations[0]?.subscription ?? Subscription.Basic;
+  const currentSubscription = user
+    ? userPlantations[0]?.subscription ?? Subscription.Basic
+    : Subscription.Basic;
   const plantationCount = userPlantations.length;
 
   // Subscription hierarchy
@@ -99,7 +100,7 @@ const PlanCard: React.FC<PlanCardProps> = ({
   };
 
   // Determine if plan is already subscribed
-  const isCurrentPlan = title === currentSubscription;
+  const isCurrentPlan = user ? title === currentSubscription : false;
 
   // Determine plan selection restrictions
   const isPlanSelectionDisabled = () => {
@@ -144,6 +145,8 @@ const PlanCard: React.FC<PlanCardProps> = ({
 
   const getButtonStatusText = () => {
     if (isLoading || isPlantationsLoading) return null;
+
+    if (!user) return null;
 
     // Waiting for verification
     if (userPlantations.some((p) => !p.verified)) {
