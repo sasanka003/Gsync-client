@@ -65,9 +65,9 @@ const ProfileForm = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="flex items-center mb-4">
               <img
-                src="/images/Avatar.png"
+                src="/images/gsync.png"
                 alt="Profile Picture"
-                className="w-20 h-20 rounded-full mr-4"
+                className="w-20 h-20 border rounded-full mr-4"
               />
               <div>
                 <div className="text-p-ui-medium text-text mb-1">
@@ -92,11 +92,11 @@ const ProfileForm = () => {
                       <FormItem>
                         <FormLabel>
                           <div className="text-p-ui-medium text-text">
-                            Display Name
+                            Username
                           </div>
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Waruna Parackkrama" />
+                          <Input {...field} placeholder="GsyncAdmin1" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -116,18 +116,12 @@ const ProfileForm = () => {
                           </div>
                         </FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enterprise Gardener" />
+                          <Input {...field} placeholder="System Administrator" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <div className="text-body text-grey flex items-center">
-                    Profile Category is based on your plan.
-                    <a href="#" className="text-text underline ml-2">
-                      Change my Plan
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>
@@ -163,7 +157,7 @@ const ProfileForm = () => {
                           </div>
                         </FormLabel>
                         <FormControl>
-                          <Input value="warunaparackkrama@gmail.com" readOnly />
+                          <Input value="gsync2024@outlook.com" readOnly />
                         </FormControl>
                       </FormItem>
                     )}
