@@ -124,7 +124,7 @@ export function getAdminMenuList(pathname: string, userId: string): Group[] {
           submenus: []
         },
         {
-          href: `/${userId}/admin/help-requests`,
+          href: `/${userId}/admin/HelpRequests-Table`,
           label: "Help Requests",
           active: pathname.includes("/admin/help-requests"),
           icon: CircleHelp,

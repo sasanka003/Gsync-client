@@ -1,12 +1,12 @@
 import React from "react";
-import PlantationRequests from "../components/PlantationRequests";
+import HelpRequestTable from "../components/HelpRequests-Table";
 import { ContentLayout } from "@/components/dashboard/content-layout";
 
 export default function RequestPage() {
   return (
     <ContentLayout title="Help Requests">
       <div>
-        <PlantationRequests />
+        <HelpRequestTable />
       </div>
     </ContentLayout>
   );

@@ -1,4 +1,5 @@
 import { apiSlice } from "@/utils/redux/base/apiSlice";
+import { number } from "zod";
 
 export interface Gardener {
   user_id: string;
@@ -29,6 +30,15 @@ export interface Plantation {
   plantation_width: number;
 }
 
+export interface HelpRequest {
+  help_request_id: number;
+  subject: string;
+  message: string;
+  createdAt: string;
+  name: string;
+  type: string;
+}
+
 export interface UpdatePlantationRequest {
   plantation_width: number;
   plantation_length: number;
@@ -45,6 +55,13 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         method: 'GET',
       }),
       providesTags: ['gardnersList'],
+    }),
+    getAllHelpRequests: builder.query<HelpRequest[], void>({
+      query: () => ({
+        url: `/admin/helpRequest`,
+        method: 'GET',
+      }),
+      providesTags: ['helpRequestList'],
     }),
     editGardener: builder.mutation<void, EditGardenerRequest>({
       query: ({ user_id, ...data }) => ({
@@ -92,4 +109,5 @@ export const {
   useGetPlantationDetailsQuery,
   useGetPlantationByIdQuery,
   useUpdatePlantationStatusMutation,
+  useGetAllHelpRequestsQuery,
 } = adminApiSlice;
