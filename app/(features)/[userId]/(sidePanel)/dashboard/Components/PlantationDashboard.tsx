@@ -65,9 +65,15 @@ const PlantationDashboard = ({ plantationData }: PlantationDashboardProps) => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-10 ml-4 mb-10">
       <div className="flex space-x-4 col-span-1 lg:col-span-2">
         <PlantCard
-          title={plantationData?.name}
-          content={plantationData?.type || "N/A"}
-          altText=""
+          title={"Plant Type"}
+          content={plantationData?.plant_type || "N/A"}
+          altText="Plantation added on 05.12.2024"
+          icon={<Leaf />}
+        />
+        <PlantCard
+          title={"Plantation Type"}
+          content={plantationData?.plantation_type || "N/A"}
+          altText="Plantation added on 05.12.2024"
           icon={<Leaf />}
         />
         <PlantCard
@@ -76,23 +82,23 @@ const PlantationDashboard = ({ plantationData }: PlantationDashboardProps) => {
           altText={plantatainHealthData.altText}
           icon={plantatainHealthData.icon}
         />
+      </div>
+      <div className="flex gap-4">
+        <IoTDevicesCard
+          totalDevices={devices.length}
+          devices={devices}
+          lastUpdated="1 hour ago"
+        />
+        <EnvironmentDetails {...environmentalData} />
+        <SuggestedActionCard actions={actions} lastUpdated="1 hour ago" />
+      </div>
+      <div className="col-span-1 lg:col-span-2 flex space-x-4">
+        {/* <CameraFootageCard {...cameraFootageData} /> */}
         <PlantCard
           title={plantationInfestsData.title}
           content={plantationInfestsData.content}
           altText={plantationInfestsData.altText}
           icon={plantationInfestsData.icon}
-        />
-      </div>
-      <div className="flex gap-4">
-        <EnvironmentDetails {...environmentalData} />
-        <SuggestedActionCard actions={actions} lastUpdated="1 hour ago" />
-      </div>
-      <div className="col-span-1 lg:col-span-2 flex space-x-4">
-        <CameraFootageCard {...cameraFootageData} />
-        <IoTDevicesCard
-          totalDevices={devices.length}
-          devices={devices}
-          lastUpdated="1 hour ago"
         />
       </div>
     </div>

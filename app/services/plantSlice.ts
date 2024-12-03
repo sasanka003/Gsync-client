@@ -56,11 +56,7 @@ export const plantationApiSlice = apiSlice.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          toast({
-            title: "Error",
-            description: "Failed to fetch user plantations.",
-            variant: "destructive",
-          });
+          console.log(err);
         }
       },
     }),

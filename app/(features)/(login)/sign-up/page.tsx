@@ -82,7 +82,11 @@ const CreateAccountForm = () => {
       title: "Account created",
       description: "Your account has been created successfully",
     });
-    router.push("sign-up/verify");
+    if (data.user) {
+      router.push(`/${data.user.id}/verify`);
+    } else {
+      console.log("User data not available");
+    }
   }
 
   const handleLoginWithOAuth = (provider: "google" | "apple" | "facebook") => {
