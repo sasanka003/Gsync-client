@@ -1,13 +1,13 @@
+import { Subscription } from "@/types/plantations";
 import {
   LucideIcon,
   MessageCircle,
-  Joystick,
   ChartColumnIncreasing,
   House,
   Users,
-  Cog,
   Leaf,
-  CircleHelp
+  CircleHelp,
+  Cog
 } from "lucide-react";
 
 type Submenu = {
@@ -22,6 +22,7 @@ type Menu = {
   active: boolean;
   icon: LucideIcon
   submenus: Submenu[];
+  requiredSubscription?: Subscription[];
 };
 
 type Group = {
@@ -29,56 +30,51 @@ type Group = {
   menus: Menu[];
 };
 
-export function getMenuList(pathname: string, userId: string): Group[] {
-  return [
+export function getMenuList(pathname: string, userId: string, userSubscription: Subscription): Group[] {
+  const allMenus: Menu[] = [
     {
-      groupLabel: "",
-      menus: [
-        {
-          href: `/${userId}/dashboard`,
-          label: "Dashboard",
-          active: pathname.includes("/dashboard"),
-          icon: House,
-          submenus: []
-        },
-        {
-          href: `/${userId}/ai-assistant`,
-          label: "Ai Assistant",
-          active: pathname.includes("/ai-assistant"),
-          icon: MessageCircle,
-          submenus: []
-        },
-        {
-          href: `/${userId}/devices`,
-          label: "Devices",
-          active: pathname.includes("/devices"),
-          icon: Joystick,
-          submenus: []
-        },
-        {
-          href: `/${userId}/analytics`,
-          label: "Analytics",
-          active: pathname.includes("/analytics"),
-          icon: ChartColumnIncreasing,
-          submenus: []
-        },
-        {
-          href: `/${userId}/community`,
-          label: "Community",
-          active: pathname.includes("/community"),
-          icon: Users,
-          submenus: []
-        },
-        {
-          href: `/${userId}/settings`,
-          label: "Settings",
-          active: pathname.includes("/settings"),
-          icon: Cog,
-          submenus: []
-        }
-      ]
+      href: `/${userId}/dashboard`,
+      label: "Dashboard",
+      active: pathname.includes("/dashboard"),
+      icon: House,
+      submenus: [],
+      requiredSubscription: [Subscription.Basic, Subscription.Gardener, Subscription.Enterprise]
     },
+    {
+      href: `/${userId}/ai-assistant`,
+      label: "Ai Assistant",
+      active: pathname.includes("/ai-assistant"),
+      icon: MessageCircle,
+      submenus: [],
+      requiredSubscription: [Subscription.Gardener, Subscription.Enterprise]
+    },
+    {
+      href: `/${userId}/analytics`,
+      label: "Analytics",
+      active: pathname.includes("/analytics"),
+      icon: ChartColumnIncreasing,
+      submenus: [],
+      requiredSubscription: [Subscription.Gardener, Subscription.Enterprise]
+    },
+    {
+      href: `/${userId}/community`,
+      label: "Community",
+      active: pathname.includes("/community"),
+      icon: Users,
+      submenus: [],
+      requiredSubscription: [Subscription.Basic, Subscription.Gardener, Subscription.Enterprise]
+    }
   ];
+
+  // Filter menus based on user subscription
+  const filteredMenus = allMenus.filter(menu => 
+    menu.requiredSubscription?.includes(userSubscription) ?? false
+  );
+
+  return [{
+    groupLabel: "",
+    menus: filteredMenus
+  }];
 }
 
 export function getAdminMenuList(pathname: string, userId: string): Group[] {

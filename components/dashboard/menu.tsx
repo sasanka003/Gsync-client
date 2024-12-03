@@ -12,11 +12,15 @@ import { signout } from "@/app/auth/actions";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { MenuSkeletonLoader } from "./menuskeletonloader";
+import { Subscription } from "@/types/plantations";
 
 export function Menu() {
   const supabase = createClient();
   const [userId, setUserId] = useState<string>("");
   const [userRole, setUserRole] = useState<string | null>(null);
+  const [userSubscription, setUserSubscription] = useState<Subscription>(
+    Subscription.Basic
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isSignOutLoading, setIsSignOutLoading] = useState(false);
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
@@ -34,18 +38,20 @@ export function Menu() {
         if (session?.user) {
           setUserId(session.user.id);
 
-          // Fetch the user's role from Supabase
+          // Fetch the user's role and subscription from Supabase
           const { data: userData, error: userError } = await supabase
             .from("profiles")
-            .select("type")
+            .select("type, subscription")
             .eq("user_id", session.user.id)
             .single();
 
           if (userError) {
-            console.error("Error fetching user role:", userError.message);
+            console.error("Error fetching user data:", userError.message);
             setUserRole(null);
+            setUserSubscription(Subscription.Basic);
           } else {
             setUserRole(userData.type);
+            setUserSubscription(userData.subscription ?? Subscription.Basic);
           }
         }
       } catch (error) {
@@ -90,7 +96,7 @@ export function Menu() {
 
     return userRole === "SysAdmin"
       ? getAdminMenuList(pathname, userId)
-      : getMenuList(pathname, userId);
+      : getMenuList(pathname, userId, userSubscription);
   };
 
   // If loading, return a loading state
