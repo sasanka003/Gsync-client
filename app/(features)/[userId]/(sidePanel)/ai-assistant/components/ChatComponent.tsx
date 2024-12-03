@@ -31,23 +31,23 @@ export default function ChatComponent() {
   const suggestedActions = [
     {
       title: "View all",
-      label: "plantations",
-      action: "Provide a list of all plantations",
+      label: "Device metrics",
+      action: "Provide me the overall metrics of the IoT system",
     },
     {
-      title: "Identify",
-      label: "a plant disease",
-      action: "Help me identify a disease affecting my plants",
+      title: "Get metrics",
+      label: "show Temp. variation",
+      action: "Show me the Temperature variation over time.",
     },
     {
       title: "Predict",
-      label: "the best harvest time",
-      action: "Suggest the ideal time to harvest based on current conditions",
+      label: "the best Crops.",
+      action: "Suggest the ideal crops to be grown in Colombo based on current conditions",
     },
     {
-      title: "How many",
-      label: "plants are in my plantation?",
-      action: "Calculate the total number of plants in my plantation",
+      title: "Step by Step",
+      label: "Guide on home gardening",
+      action: "Provide step by step guide on how to start home gardening with limited budget.",
     },
   ];
 

@@ -3,6 +3,8 @@ import {
   TextStreamMessage,
   ToxicMessage,
 } from "@/app/(features)/[userId]/(sidePanel)/ai-assistant/components/AiMessage";
+import DeviceStatCard from "./components/DeviceStatCard";
+import { MetricsView } from "./components/MetricsViews";
 import { Markdown } from "@/components/ui/markdown";
 import { openai } from "@ai-sdk/openai";
 import { CoreMessage, generateId, generateText, tool } from "ai";
@@ -38,8 +40,13 @@ export async function sendMessage(message: string) {
   ### **Information Gathering:**
   1. Always check the chat history first. If the answer is already available, respond with: **CHECK_HISTORY**, no need to use any tools.
   2. If you do not have the answer in chat history:
-    - Use the **fetchDataFromAgents** tool to execute agent services to get relevant information.
-    - Use the **fetchDataFromEnterprise** tool for enterprise-related tasks like generating monthly/weekly reports and retrieving enterprise-specific data.
+    - Use the **fetchDataFromRagAgents** tool to gather information from our upto date database consisting of reports and official documentation of agriculture in srilanka, released by the department of agriculture.
+    - Use the **fetchDataFromResearchAgents** tool for getting any necessary details, advice and to search the web or any realtime resources to answer user queries.
+    - make sure to use your research capabilities to gather all sufficient data and provide complete answers to the user.
+    - Use the **fetchDataFromEnterprise** to fetch the Enterprise report if the user explicitly asks, always confirm with the user if they actually wants the report before proceeding.
+    - Use the **fetchIoTReport** to fetch the IoT reports, if user asks for the iot reports, asks to check the condition of the plantations / garden  or asks to provide how to improve the current plantation / garden. only use if explicitly asked and always confirm before proceding.
+    - If user only requests for IoT device readings, then you can hand over to the next agent, by replying **SHOW IOT DEVICE READINGS**.
+    - make sure to thoroughly gather information before answering questions and double check if every thing can be answered by gathered data.
   3. Collect all possible information using the appropriate tools to provide a complete and accurate response.
 
   ### **Response Protocol:**
@@ -61,6 +68,7 @@ export async function sendMessage(message: string) {
   ### **Additional Guidelines:**
   - If unsure about certain information, acknowledge the limitation and suggest reliable sources for further research.
   - Include context and background when it enhances the understanding of the topic.
+  - ask clarifying or followup questions if necessary.
   - Be ready to explain complex gardening concepts in simpler terms if requested, particularly for beginners.
   - Your replies should be comprehensive and address the user's query effectively. Avoid dropping or oversimplifying information.
   - Strive to be a comprehensive and reliable source for Gardeners in Sri Lanka, leveraging all available tools to deliver the most accurate and relevant information.
@@ -70,7 +78,8 @@ export async function sendMessage(message: string) {
     messages: messagesClone.get() as CoreMessage[],
     tools: {
       fetchDataFromRagAgents: tool({
-        description: "Execute the Rag agent",
+        description:
+          "Execute the Rag agent and get information necessary for executing query regarding plantations",
         parameters: z.object({
           query: z
             .string()
@@ -97,7 +106,7 @@ export async function sendMessage(message: string) {
         }),
         execute: async ({ query }) => {
           const response = await fetch(
-            `http://127.0.0.1:8088//chat/research?query=${encodeURIComponent(
+            `http://127.0.0.1:8088/chat/research?query=${encodeURIComponent(
               query
             )}`
           );
@@ -135,7 +144,7 @@ export async function sendMessage(message: string) {
         },
       }),
     },
-    maxSteps: 5,
+    maxSteps: 6,
   });
 
   messages.update([
@@ -160,7 +169,16 @@ You are an expert agricultural assistant for the GSYNC plantation management sys
    - **Accuracy**: Use the retrieved information to generate a precise and correct response. Ensure the answer is reliable and matches the context.
    - **Completeness**: Cover all aspects of the user’s question. Do not omit any relevant details found in the retrieved information.
    - **Clarity**: Provide clear explanations, especially if the topic is complex. Use simple language when appropriate, especially for beginners.
-   - **Formatting**: Organize the information using bullet points, numbered lists, or step-by-step instructions if helpful. Keep the response easy to read and understand.
+   - **Formatting**: Organize the information using bullet points, numbered lists, or step-by-step instructions if helpful. Keep the response easy to read and understand. Keep in mind that you are using markdown format and take advantage of it to diliver clarity in responses. (using tables, links, .. etc)
+
+3. **Brand Identity**:
+    - **Brand**: You are the agriculture assustant of GSYNC and thus you will do always maintain brand loyalty towards GSYNC.
+    - **Sales** You will use your sales expertise to analyse the conversation and try to drive the user towards or try to recommend if possible to purchase seeds / farming tools and any other agriculture items from Gsync agro. 
+            - home gardening starter pack - Rs. 5000.00
+            - IoT device starter pack - Rs. 25,000.00
+            - Both - Rs. 27,000 (with free shipping)
+    - **Customer satisfation**: for long conversations you will occasionally ask for user feedback.
+    - **After Sales**: make sure to always encorage user to use genuine Gsync parts for iot devices, and promote the services of our expert engineers.
 
 ### **User Adaptation:**
 - If the user appears to be a beginner, explain technical terms or complex concepts in simple language.
@@ -291,7 +309,99 @@ You are an expert agricultural assistant for the GSYNC plantation management sys
           return <ToxicMessage role="assistant" content={message} />;
         },
       },
+      iotReadings: {
+        description:
+          "Used when user asks to view the IoT device readings, this will show case all last recorded readings",
+        parameters: z.object({
+          message: z
+            .string()
+            .describe(
+              "The reply message when user has requested for the IoT readings."
+            ),
+        }),
+        generate: async function* ({ message }) {
+          const toolCallId = generateId();
+          messages.done([
+            ...(messages.get() as CoreMessage[]),
+            {
+              role: "assistant",
+              content: [
+                {
+                  type: "tool-call",
+                  toolCallId,
+                  toolName: "iotReadings",
+                  args: { message },
+                },
+              ],
+            },
+            {
+              role: "tool",
+              content: [
+                {
+                  type: "tool-result",
+                  toolName: "iotReadings",
+                  toolCallId,
+                  result: `iotReadings will be displayed for device with id 234`,
+                },
+              ],
+            },
+          ]);
+          return (
+            <DeviceStatCard
+              deviceName={"Raspberry pi 4 - device 234"}
+              status={"Online"}
+              description={message}
+              stats={{
+                temperature: "29°C",
+                humidity: "75%",
+                oxygenLevel: "0.25",
+                carbonDioxideLevel: "620ppm",
+              }}
+            />
+          );
+        },
+      },
+      metricViews: {
+        description:
+          "provide an overview of the temperature / humidity / co2 levels over time",
+        parameters: z.object({
+          message: z
+            .enum(["temperature", "co2", "humidity"])
+            .describe(
+              "Select between temperature, co2 and humidity the correct metric the user wants to visualise."
+            ),
+        }),
+        generate: async function* ({ message }) {
+          const toolCallId = generateId();
+          messages.done([
+            ...(messages.get() as CoreMessage[]),
+            {
+              role: "assistant",
+              content: [
+                {
+                  type: "tool-call",
+                  toolCallId,
+                  toolName: "metricViews",
+                  args: { message },
+                },
+              ],
+            },
+            {
+              role: "tool",
+              content: [
+                {
+                  type: "tool-result",
+                  toolName: "metricViews",
+                  toolCallId,
+                  result: `The visualisation for ${message} is successful.`,
+                },
+              ],
+            },
+          ]);
 
+          return <MetricsView type={message} />;
+        },
+      },
     },
   });
 
