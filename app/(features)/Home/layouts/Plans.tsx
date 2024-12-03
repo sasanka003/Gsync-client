@@ -24,7 +24,7 @@ const Plans: React.FC = () => {
     {
       icon: <RocketIcon />,
       title: "Gardener",
-      price: "$9.99",
+      price: "Starts from 4990LKR*",
       features: [
         "Expert support & Connectivity with Gsync community",
         "Smart & Real-time guidance with AI Assistant*",
@@ -35,7 +35,7 @@ const Plans: React.FC = () => {
     {
       icon: <CrownIcon />,
       title: "Enterprise",
-      price: "$19.99",
+      price: "Starts from 12000LKR*",
       features: [
         "Expert support & Connectivity with Gsync community",
         "Smart & Real-time guidance with AI Assistant*",

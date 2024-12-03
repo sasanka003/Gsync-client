@@ -36,12 +36,12 @@ const PlanCard: React.FC<PlanCardProps> = ({
   };
   return (
     <Card className="flex flex-col p-4 gap-6 w-[304px]">
-      <CardHeader className="flex flex-row justify-between items-center p-0">
-        <div className="flex justify-between items-center gap-2">
+      <CardHeader className="grid justify-between p-0">
+        <div className="flex items-start gap-2">
           {icon && <div className="icon">{icon}</div>}
           <CardTitle className="text-h2">{title}</CardTitle>
         </div>
-        <p className="text-h3 font-semibold">{price}</p>
+        <p className="text-h5 font-medium text-gray-600">{price}</p>
       </CardHeader>
       <CardContent className="flex flex-col gap-2 p-0 items-center">
         {availableFeatures?.map((feature) => {
