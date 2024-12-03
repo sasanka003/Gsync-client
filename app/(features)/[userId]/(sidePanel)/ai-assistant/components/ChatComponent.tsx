@@ -61,31 +61,18 @@ export default function ChatComponent() {
 
   return (
     <div className="flex flex-col h-screen bg-white">
-      {/* <Navbar /> */}
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 && (
           <motion.div className="max-w-2xl mx-auto mt-8 p-4 bg-white rounded-lg shadow">
             <div className="border rounded-lg p-6 flex flex-col gap-4 text-gray-500 text-sm bg-gray-50 border-gray-200">
               <p className="flex flex-row justify-center gap-4 items-center text-gray-900">
                 {/* <VercelIcon size={16} /> */}
-                <span>+</span>
+                {/* <span>+</span> */}
                 {/* <MasonryIcon /> */}
               </p>
               <p>
                 Welcome to ClearVote political analyst by DataMites. Ask me
                 anything about politics and I will try to help you.
-              </p>
-              <p>
-                {" "}
-                Learn more about the{" "}
-                <Link
-                  className="text-blue-600"
-                  href="https://elections.gov.lk"
-                  target="_blank"
-                >
-                  2024 presidential Election{" "}
-                </Link>
-                from ClearVote.
               </p>
             </div>
           </motion.div>
