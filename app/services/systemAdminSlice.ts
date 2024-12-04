@@ -1,3 +1,4 @@
+import { Area, PlantationType, PlantType, Subscription } from "@/types/plantations";
 import { apiSlice } from "@/utils/redux/base/apiSlice";
 import { number } from "zod";
 
@@ -16,18 +17,21 @@ export interface EditGardenerRequest {
 }
 
 export interface Plantation {
-  plantationName: string | undefined;
-  name: string;
   plantation_id: number;
-  type: string;
-  user_id: string;
+  name: string;
+  plant_type: PlantType;
+  plantation_type: PlantationType;
   city: string;
   province: string;
   country: string;
-  createdAt: string;
-  status: string;
   plantation_length: number;
   plantation_width: number;
+  verified: boolean;
+  createdAt: string;
+  status: string;
+  
+  user_id: string;
+  subscription: Subscription;
 }
 
 export interface HelpRequest {

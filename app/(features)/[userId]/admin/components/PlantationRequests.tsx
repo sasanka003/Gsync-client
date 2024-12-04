@@ -94,7 +94,7 @@ const Plantations = () => {
 
   const filteredPlantations =
     plantations?.filter((plantation) =>
-      plantation.type.toLowerCase().includes(searchTerm.toLowerCase())
+      plantation.plant_type.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
 
   const totalItems = filteredPlantations.length;
@@ -185,7 +185,6 @@ const Plantations = () => {
               <TableHead>Type</TableHead>
               <TableHead>User ID</TableHead>
               <TableHead>City</TableHead>
-              <TableHead>Created At</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-10 p-0" />
             </TableRow>
@@ -211,13 +210,12 @@ const Plantations = () => {
                   >
                     {plantation.plantation_id}
                   </TableCell>
-                  <TableCell>{plantation.type}</TableCell>
+                  <TableCell>{plantation.plant_type}</TableCell>
                   <TableCell>{plantation.user_id}</TableCell>
                   <TableCell>{plantation.city}</TableCell>
                   <TableCell>
-                    {new Date(plantation.createdAt).toLocaleDateString()}
+                    {plantation.verified ? "Verified" : "Unapproved"}
                   </TableCell>
-                  <TableCell>{plantation.status}</TableCell>
                   <TableCell>
                     <Ellipsis className="text-muted-foreground" />
                   </TableCell>

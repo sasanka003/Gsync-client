@@ -14,11 +14,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  useGetPlantationByIdQuery,
-  useUpdatePlantationStatusMutation,
-} from "@/app/services/systemAdminSlice";
+import { useGetPlantationByIdQuery } from "@/app/services/systemAdminSlice";
 import { useParams, useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const schema = z.object({
   plantationLength: z.string().min(1, "Plantation length is required"),
@@ -27,6 +26,8 @@ const schema = z.object({
 });
 
 const PlantationApprovalForm = () => {
+  const { toast } = useToast();
+  const supabase = createClient();
   const params = useParams();
   const router = useRouter();
   const plantationId = params.plantationId
@@ -41,8 +42,6 @@ const PlantationApprovalForm = () => {
     skip: !plantationId,
   });
 
-  const [updatePlantationStatus] = useUpdatePlantationStatusMutation();
-
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -52,7 +51,6 @@ const PlantationApprovalForm = () => {
     },
   });
 
-  // Prefill form with existing plantation data when available
   useEffect(() => {
     if (plantation) {
       form.setValue(
@@ -71,22 +69,33 @@ const PlantationApprovalForm = () => {
     if (!plantationId) return;
 
     try {
-      await updatePlantationStatus({
-        plantation_id: plantationId,
-        data: {
+      const { error } = await supabase
+        .from("plantation")
+        .update({
+          verified: true,
           plantation_width: parseFloat(data.plantationWidth),
           plantation_length: parseFloat(data.plantationLength),
-          comment: data.additionalComments || "",
-          is_approved: true, // Assuming approval when submitted
-        },
-      }).unwrap();
+        })
+        .eq("plantation_id", plantationId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Plantation Approved",
+        description: `Plantation has been successfully approved.`,
+        variant: "default",
+      });
 
       form.reset();
-      // Redirect back to plantations list or show success message
       router.push(`/${params.userId}/admin/plantations`);
     } catch (error) {
       console.error("Failed to update plantation status", error);
-      // Optionally add error handling
+
+      toast({
+        title: "Approval Failed",
+        description: "There was an error approving the plantation.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -94,20 +103,30 @@ const PlantationApprovalForm = () => {
     if (!plantationId) return;
 
     try {
-      await updatePlantationStatus({
-        plantation_id: plantationId,
-        data: {
-          plantation_width: plantation.plantation_width,
-          plantation_length: plantation.plantation_length,
-          comment: "Plantation request declined",
-          is_approved: false,
-        },
-      }).unwrap();
+      const { error } = await supabase
+        .from("plantation")
+        .update({
+          verified: false,
+        })
+        .eq("plantation_id", plantationId);
 
-      // Redirect back to plantations list or show success message
+      if (error) throw error;
+
+      toast({
+        title: "Plantation Declined",
+        description: `Plantation has been declined.`,
+        variant: "destructive",
+      });
+
       router.push(`/${params.userId}/admin/plantations`);
     } catch (error) {
       console.error("Failed to decline plantation status", error);
+
+      toast({
+        title: "Decline Failed",
+        description: "There was an error declining the plantation.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -149,7 +168,7 @@ const PlantationApprovalForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        value={plantation.type}
+                        value={plantation.plant_type}
                         readOnly
                         className="bg-gray-200 text-p text-common"
                       />
@@ -162,7 +181,7 @@ const PlantationApprovalForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        value={plantation.type || "Not Specified"}
+                        value={plantation.plantation_type || "Not Specified"}
                         readOnly
                         className="bg-gray-200 text-p"
                       />
